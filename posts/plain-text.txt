@@ -1,5 +1,5 @@
 The Beauty of Plain Text
-2026-01-20
+January 2026
 
 Plain text files are immortal. They don't depend on any software, any company, any format.
 

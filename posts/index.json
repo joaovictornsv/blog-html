@@ -1,17 +1,14 @@
 [
   {
     "path": "plain-text.txt",
-    "title": "The Beauty of Plain Text",
-    "date": "2026-01-20"
+    "title": "The Beauty of Plain Text"
   },
   {
     "path": "on-simplicity.txt",
-    "title": "What is valuable for you?",
-    "date": "2026-01-18"
+    "title": "What is valuable for you?"
   },
   {
     "path": "hello-world.txt",
-    "title": "How not to make mistakes twice",
-    "date": "2026-01-15"
+    "title": "How not to make mistakes twice"
   }
 ]
