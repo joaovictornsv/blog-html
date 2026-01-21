@@ -54,8 +54,7 @@ li {
 
 h1 {
   font-size: calc(var(--spacing));
-  font-weight: normal;
-  text-decoration: underline;
+  font-weight: bold;
   margin-bottom: var(--spacing);
 }
 
