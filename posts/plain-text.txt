@@ -1,8 +1,0 @@
-The Beauty of Plain Text
-January 2026
-
-Plain text files are immortal. They don't depend on any software, any company, any format.
-
-A .txt file from 1990 still opens today. Can we say the same about that Word document? That Google Doc?
-
-Write in plain text. Your future self will thank you.
