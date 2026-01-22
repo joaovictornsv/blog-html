@@ -21,6 +21,12 @@ body {
   color: var(--color-text);
 }
 
+@media (max-width: 600px) {
+  body {
+    padding: calc(var(--spacing) * 1.5);
+  }
+}
+
 h2 {
   font-size: 1rem;
   font-weight: normal;
@@ -33,6 +39,7 @@ h2 {
 
 .links {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--spacing);
   margin-top: var(--spacing);
   margin-bottom: calc(var(--spacing) * 2);
@@ -52,14 +59,21 @@ li {
   margin-bottom: calc(var(--spacing) * 2);
 }
 
+#post-list {
+  margin-left: calc(var(--spacing) * 1.2);
+}
+
 h1 {
   font-size: calc(var(--spacing));
   font-weight: bold;
   margin-bottom: var(--spacing);
+  word-wrap: break-word;
 }
 
 #post-body {
   white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 #post-body p {
