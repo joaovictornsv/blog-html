@@ -16,13 +16,11 @@ async function loadPostList() {
   const list = document.getElementById('post-list');
   if (!list) return;
 
-  list.textContent = 'loading...';
-
   try {
     const response = await fetch('posts/index.json');
     const posts = await response.json();
     
-    list.textContent = '';
+    list.innerHTML = '';
     for (const post of posts) {
       const slug = post.path.replace('.txt', '');
       const li = document.createElement('li');
@@ -31,7 +29,7 @@ async function loadPostList() {
     }
   } catch (e) {
     console.error('Failed to load post index:', e);
-    list.textContent = '';
+    list.innerHTML = '';
   }
 }
 
@@ -44,8 +42,6 @@ async function loadPost() {
     document.getElementById('post-title').textContent = 'Post not found';
     return;
   }
-
-  document.getElementById('post-body').textContent = 'loading...';
 
   try {
     const response = await fetch(`posts/${slug}.txt`);
