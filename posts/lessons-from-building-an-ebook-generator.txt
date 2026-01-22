@@ -1,7 +1,6 @@
 What's the best prompt approach?
 March 2025
 
-
 Last Friday, I tried to create a simple ebook generator using Cursor and Claude Sonnet 3.7. The idea is simple: provide a topic as input, and it generates an ebook.
 
 My initial approach was to create the entire script in one shot. However, nothing worked. I experimented with different prompts, packages, and languages, but I always encountered issues with generating or saving files.

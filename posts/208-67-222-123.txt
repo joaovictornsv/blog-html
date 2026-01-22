@@ -1,7 +1,6 @@
 208.67.222.123
 April 2024
 
-
 This DNS can save you.
 
 It's the DNS for OpenDNS Family Shield, a free service by [OpenDNS](https://www.opendns.com/).

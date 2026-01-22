@@ -1,7 +1,6 @@
 Exploring Terraform: Your First Guide to Infrastructure as Code
 February 2023
 
-
 Today, I want to show you the power of Terraform in action with a simple integration that you can follow while as you read the steps below.
 But first, we need to understand what Terraform is.
 

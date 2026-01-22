@@ -1,7 +1,6 @@
 Techocalypse Now: Extreme Hypotheticals for Developers
 March 2024
 
-
 I recently read a blog post called [Extreme brainstorming questions to trigger new, better ideas](https://longform.asmartbear.com/extreme-questions/) written by Jason Cohen. In summary, the text shows several extreme scenarios that can affect a business model and invites the reader to think about what to do in each of them. I have discussed this with friends and it was a good conversation and generated a lot of insights in my head.
 
 So, I decided to write something similar but focused on the developer industry. I hope the following text can provoke some good ideas for you too.

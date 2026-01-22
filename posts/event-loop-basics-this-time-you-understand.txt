@@ -1,7 +1,6 @@
 Event Loop Basics: This Time You Understand
 April 2024
 
-
 The idea of this text is to provide a simple explanation of the Event Loop. At the end of this text, it will be easy to teach your kid or even your grandmother about Event Loop.
 
 ## Introduction
