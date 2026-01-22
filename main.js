@@ -20,7 +20,7 @@ async function loadPostList() {
     const response = await fetch('posts/index.json');
     const posts = await response.json();
     
-    list.innerHTML = '';
+    document.getElementById('post-list-loading')?.remove();
     for (const post of posts) {
       const slug = post.path.replace('.txt', '');
       const li = document.createElement('li');
@@ -29,7 +29,7 @@ async function loadPostList() {
     }
   } catch (e) {
     console.error('Failed to load post index:', e);
-    list.innerHTML = '';
+    document.getElementById('post-list-loading')?.remove();
   }
 }
 
@@ -39,6 +39,7 @@ async function loadPost() {
   const slug = params.get('p');
   
   if (!slug) {
+    document.getElementById('post-loading')?.remove();
     document.getElementById('post-title').textContent = 'Post not found';
     return;
   }
@@ -50,10 +51,12 @@ async function loadPost() {
     const text = await response.text();
     const post = parsePost(text, `${slug}.txt`);
     
+    document.getElementById('post-loading')?.remove();
     document.title = post.title;
     document.getElementById('post-title').textContent = post.title;
     document.getElementById('post-body').textContent = post.content;
   } catch (e) {
+    document.getElementById('post-loading')?.remove();
     document.getElementById('post-title').textContent = 'Post not found';
   }
 }
