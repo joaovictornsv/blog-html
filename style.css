@@ -59,7 +59,7 @@ li {
   margin-bottom: calc(var(--spacing) * 2);
 }
 
-#post-list {
+.list {
   margin-left: calc(var(--spacing) * 1.2);
 }
 
