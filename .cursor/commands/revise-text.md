@@ -39,4 +39,7 @@ Please fix the text and provide a detailed explanation of the changes you made. 
 - Highlight strengths in the original writing
 - Constructive suggestions for future improvements
 
-**Important:** Do NOT change the author's voice, alter main ideas, remove important details, or add new information not in the original.
+**Important Rules:**
+- Do NOT change the author's voice, alter main ideas, remove important details, or add new information
+- Do NOT add punctuation marks like dashes (—, -) or semicolons (;) that weren't in the original text
+- Keep the original punctuation style and frequency
