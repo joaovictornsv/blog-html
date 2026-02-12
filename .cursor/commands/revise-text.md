@@ -20,7 +20,7 @@ Improve the writing by enhancing clarity, grammar, and style while preserving:
 
 **Output Format:**
 
-Please fix the text and provide a detailed explanation of the changes you made. Don't needed to include the final text in the response, just the explanation.
+Please fix the text (directly in the file) and provide a detailed explanation of the changes you made. Don't needed to include the final text in the response, just the explanation.
 
 ### Explanation & Advice
 
