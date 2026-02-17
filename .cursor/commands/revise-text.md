@@ -43,3 +43,4 @@ Please fix the text (directly in the file) and provide a detailed explanation of
 - Do NOT change the author's voice, alter main ideas, remove important details, or add new information
 - Do NOT add punctuation marks like dashes (—, -) or semicolons (;) that weren't in the original text
 - Keep the original punctuation style and frequency
+- Group explanations by paragraph number
