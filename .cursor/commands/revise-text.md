@@ -1,7 +1,3 @@
----
-description: Revise text to improve writing quality, grammar, and clarity
----
-
 You are an expert writer and editor. I need you to revise the selected text or document.
 
 **Your Task:**
@@ -38,6 +34,7 @@ Please fix the text (directly in the file) and provide a detailed explanation of
 **Overall Observations:**
 - Highlight strengths in the original writing
 - Constructive suggestions for future improvements
+- Give a score out of 10 for the writing quality, emotional impact, and coherence. Justify the score, provide specific examples and improvements suggestions if needed.
 
 **Important Rules:**
 - Do NOT change the author's voice, alter main ideas, remove important details, or add new information
