@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Create a Cold Wallet the Simple Way</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <main>
+    <a href="../index.html" class="back">&lt; back</a>
+    
+    <article id="post-content">
+      <h1 id="post-title">How to Create a Cold Wallet the Simple Way</h1>
+      <div id="post-body">February 2026
+
+Few weeks ago I created a cold wallet to protect my satoshis. So I decided to document the process. It's important to note that this guide is for people who understand the basics of Bitcoin. Therefore, I won't be overly detailed. I'm assuming you know the concepts and best practices mentioned below.
+
+=== Why a cold wallet? Why not a hot wallet? ===
+
+First, it's for study purposes. I wanted to learn how to create one and understand the concepts involved. Second, security. If the wallet balance starts to increase, at least it's following best self-custody practices.
+
+Good, let's start. First, you need to set up a secure offline environment. Your seed should be generated in an environment that will never connect to the internet again.
+
+=== Create the offline setup ===
+
+For this, you will need a bootable USB drive with Tails. Tails is an amnesic operating system (OS) focused on security. It boots from a USB drive and all data is cleaned on shutdown.
+
+<a href="https://tails.net/">Install Tails</a> on a USB drive with at least 16GB of storage. After that, configure your BIOS to boot from your USB drive instead of the internal SSD or HD.
+
+The wallet's seed will be generated on this first boot. Whenever you boot Tails, the startup will always be like a fresh setup, since the storage is cleaned on shutdown. So just start the system without any special configuration like "Persistent Storage". With Tails started, you will need to turn on the network (wired or Wi-Fi). This is the only moment you will do it. Connect to the network, access <a href="https://github.com/iancoleman/bip39/releases">https://github.com/iancoleman/bip39/releases</a>, and download the "bip39-standalone.html" file. Then turn off the network.
+
+=== Generate seed ===
+
+Open the HTML file, and you will see the "Mnemonic Code Converter" page. This is where you'll generate your wallet's private seed. Follow these steps:
+
+1. Choose whether it will have 12 or 24 words.
+
+2. Mark the "Show entropy details" checkbox. It will display a text area to input the entropy for your seed. Entropy is a way to ensure your seed is truly random. It accepts binary, base 6, 6-sided dice, base 10, hexadecimal, or cards. Choose your preference and start generating the entropy. For example, if you choose binary, you can use a coin to input entropy: heads is 1, tails is 0. Make sure to input 256 bits of entropy.
+
+3. Generate your passphrase. This part is optional. If you don't want this extra layer of security, you can skip this step.
+
+4. Now save your seed. It's the 12 words (or 24, depending on your choice) from the "BIP39 Mnemonic" field. Save your seed offline. Don't screenshot, don't take a photo, don't copy and paste. Write it on paper, but consider using a more advanced and protected method later, like writing it in metal.
+
+5. Save your passphrase if you added one.
+
+6. Also, write down the final characters of the first receiving address. This will be important during the wallet restore step. To see your receiving addresses, go to the "Derivation Path" section and select "BIP84". Then scroll to "Derived Addresses" and check the "Address" column of the addresses table. Take the first one and write down (or memorize) the final part. You can use the last 4 characters (e.g., "kjh5").
+
+With your seed, passphrase, and address piece saved safely, shut down the system.
+
+=== Access your wallet ===
+
+Boot Tails again. Don't turn on the network. You will never do it again.
+
+Open Electrum Wallet, an app already installed in Tails. You can open it by clicking the menu shortcut, but I recommend opening it via terminal as you may need to run a command first.
+
+Open a terminal and run this command: "export QT_QPA_PLATFORM=xcb". It will force Electrum to use the "xcb" plugin to run the app. It's a workaround for compatibility issues on Linux systems. After that, run "electrum". It will open the wallet app. Now follow these steps:
+
+1. Name your wallet.
+
+2. Choose "Standalone wallet" as the wallet type.
+
+3. Choose the option "I already have a seed".
+
+4. Input your seed.
+
+5. Click "Options" and mark "BIP39" as the seed type. If you created your seed with a passphrase, mark the "Extend this seed with custom words" checkbox.
+
+6. Leave the address type marked as "native segwit".
+
+7. You can skip the password step.
+
+8. With the wallet open, click the "View" menu, then click "Show addresses".
+
+If you entered all the information correctly, the first address in the receiving addresses list will match the characters you noted earlier. Now reboot Tails and follow the steps again to double-check that you saved all the data correctly.
+
+=== Send BTC to your wallet ===
+
+To do this, you need to copy one of the receiving addresses from your wallet. Here you have two options: generate a QR code (a feature of Electrum) or set up a Watch-Only wallet. I recommend setting up a Watch-Only wallet with BlueWallet. BlueWallet always provides an unused address for each transaction, which is a good practice.
+
+To set up your Watch-Only wallet, <a href="https://bluewallet.io/">install BlueWallet</a> on your smartphone and import your wallet by scanning the zpub key with the generated QR code. This key is available in the "Info" option under the "Wallet" menu.
+
+Once your Watch-Only wallet is created, click the "Receive" button and copy the address. Use it to transfer your BTCs. For testing and security purposes, transfer a small amount first. You can check the transaction status on BlueWallet. Once the transaction is confirmed, let's move to the final and most important step.
+
+=== The Final Test! Very Important! Don't Skip ===
+
+This is the full wallet restoration step.
+
+1. Delete your Watch-Only wallet from BlueWallet.
+
+2. Reboot Tails.
+
+3. Follow the steps I mentioned above to access your wallet.
+
+4. Check the addresses.
+
+5. Use the zpub key QR code to import the Watch-Only wallet on BlueWallet again.
+
+If everything is correct, you'll be able to see your balance on the BlueWallet app.
+
+=== Final Advice ===
+
+For legal and tax purposes, don't mix BTC from different sources in the same wallet, such as from different exchanges, P2P transactions, etc.
+
+=== Conclusion ===
+
+Hope this guide has been useful to you! If you have any questions, feel free to contact me.</div>
+    </article>
+  </main>
+</body>
+</html>

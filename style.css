@@ -52,7 +52,7 @@ h2 {
   margin-bottom: 0;
 }
 
-li {
+.list li {
   margin-bottom: var(--spacing);
 }
 
