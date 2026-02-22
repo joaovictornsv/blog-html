@@ -1,5 +1,5 @@
 What's the best prompt approach?
-March 2025
+March 17, 2025
 
 Last Friday, I tried to create a simple ebook generator using Cursor and Claude Sonnet 3.7. The idea is simple: provide a topic as input, and it generates an ebook.
 
