@@ -32,6 +32,7 @@ Please fix the text (directly in the file) and provide a detailed explanation of
 - Explain the reasoning
 
 **Overall Observations:**
+- Revise the title grammatically, check if it's a good and clear title for the post.
 - Highlight strengths in the original writing
 - Constructive suggestions for future improvements
 - Give a score out of 10 for the writing quality, emotional impact, and coherence. Justify the score, provide specific examples and improvements suggestions if needed.
