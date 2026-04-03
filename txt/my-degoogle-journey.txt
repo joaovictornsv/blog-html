@@ -29,7 +29,7 @@ The first and most important thing, in my opinion, was the email service. I crea
 
 I spent about two weeks studying and building a functional DeGoogled setup. I learned new concepts and discovered new tools and strategies, such as app compartmentalization on Android and blocking specific network requests by configuring a firewall.
 
-Now, let's move on to the final part: the list of my app choices. It's important to note that I only use these apps for my personal purposes. I still use some Google services, such as Gmail and Google Drive, for work purposes.
+Now, let's move on to the final part: the list of my app choices. It's important to note that I only use these apps for personal use. I still use some Google services, such as Gmail and Google Drive, for work.
 
 - Browsers: LibreWolf on desktop and IronFox on mobile
 
