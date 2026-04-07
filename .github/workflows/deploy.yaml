@@ -8,6 +8,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Generate RSS feed
+        run: node generate-rss.js
+
       - name: Deploy with Quave Cloud CLI
         uses: zcloud-ws/zcloud-deploy-action@main
         with:
