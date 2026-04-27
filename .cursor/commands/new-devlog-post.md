@@ -27,6 +27,7 @@ Wrap the final content in this structure:
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>[Post Title]</title>
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/devlog.css">
 </head>
 <body>
   <main>
@@ -46,6 +47,7 @@ Links: <a href="[url]" target="_blank">[text]</a></div>
 ```
 
 **Key points:**
+- Include both stylesheets: `../css/style.css` AND `../css/devlog.css`
 - Date at top of post body
 - All links use `target="_blank"`
 - Save to `devlog/[slug].html`
