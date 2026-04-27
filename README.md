@@ -4,33 +4,38 @@ Static files for the main blog and devlog apps.
 
 ## Local Preview
 
-### Blog
-
 Run the static server from the repository root:
 
 ```sh
 python3 -m http.server 8000
 ```
 
-Open the main blog at:
+Then open:
+- **Main blog**: http://localhost:8000/
+- **Devlog**: http://localhost:8000/devlog.html
 
-```text
-http://localhost:8000/
-```
+## Converting Text Posts to HTML
 
-### Devlog
+The `scripts/txt-to-html.js` script converts plain text files into structured HTML pages.
 
-Run the static server from the repository root:
+### Usage
 
 ```sh
-python3 -m http.server 8001
+node scripts/txt-to-html.js <filename.txt>
 ```
 
-Open the devlog at:
+### Example
 
-```text
-http://localhost:8001/devlog.html
+```sh
+node scripts/txt-to-html.js my-new-post.txt
 ```
+
+This will:
+1. Read `scripts/txt/my-new-post.txt`
+2. Parse the first line as the post title
+3. Use remaining lines as the post content
+4. Generate `html/my-new-post.html` with a structured HTML page
+5. Output a snippet to add to `index.html`
 
 ## RSS
 
