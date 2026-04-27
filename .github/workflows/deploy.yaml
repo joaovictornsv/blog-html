@@ -1,7 +1,18 @@
-name: CLI Deploy
+name: Blog Deploy
 on:
   push:
     branches: ['main']
+    paths:
+      - 'index.html'
+      - 'css/style.css'
+      - 'posts/**'
+      - 'my-book-recommendations.html'
+      - 'scripts/generate-rss.js'
+      - 'scripts/rss.js'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - '.github/workflows/deploy.yaml'
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -9,7 +20,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Generate RSS feed
-        run: node generate-rss.js
+        run: node scripts/generate-rss.js
 
       - name: Deploy with Quave Cloud CLI
         uses: zcloud-ws/zcloud-deploy-action@main

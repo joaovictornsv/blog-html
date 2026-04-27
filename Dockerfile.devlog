@@ -1,7 +1,6 @@
 FROM lipanski/docker-static-website:latest
 
-COPY index.html .
-COPY my-book-recommendations.html .
+COPY devlog.html ./index.html
 COPY css ./css
 COPY rss ./rss
-COPY posts ./posts
+COPY devlog ./devlog

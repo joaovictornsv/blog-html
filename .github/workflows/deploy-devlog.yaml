@@ -1,0 +1,31 @@
+name: Devlog Deploy
+on:
+  push:
+    branches: ['main']
+    paths:
+      - 'devlog.html'
+      - 'css/**'
+      - 'devlog/**'
+      - 'scripts/generate-devlog-rss.js'
+      - 'scripts/rss.js'
+      - 'Dockerfile.devlog'
+      - '.dockerignore'
+      - '.github/workflows/deploy-devlog.yaml'
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate devlog RSS feed
+        run: node scripts/generate-devlog-rss.js
+
+      - name: Use devlog Dockerfile
+        run: cp Dockerfile.devlog Dockerfile
+
+      - name: Deploy with Quave Cloud CLI
+        uses: zcloud-ws/zcloud-deploy-action@main
+        with:
+          env-token: ${{ secrets.QUAVE_CLOUD_DEVLOG_ENV_TOKEN }}
+          env: "joaovictornsv-devlog-production"

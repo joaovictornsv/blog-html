@@ -1,9 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-const HTML_DIR = path.join(__dirname, 'html');
-const OUTPUT_FILE = path.join(__dirname, 'feed.xml');
-
 function extractPostData(htmlContent, filename) {
   const titleMatch = htmlContent.match(/<title>([^<]+)<\/title>/);
   const title = titleMatch ? titleMatch[1] : filename;
@@ -21,7 +18,7 @@ function extractPostData(htmlContent, filename) {
         dateObj = null;
       }
     }
-    
+
     content = bodyContent.replace(/<[^>]+>/g, '');
     content = content.replace(/&nbsp;/g, ' ');
     content = content.trim();
@@ -30,19 +27,25 @@ function extractPostData(htmlContent, filename) {
   return { title, date: dateObj, content, filename };
 }
 
-function generateRssXml(posts) {
-  const siteUrl = 'https://joaovictornsv.dev';
-  
+function generateRssXml(posts, config) {
+  const {
+    siteUrl,
+    channelTitle,
+    channelDescription,
+    itemPathPrefix,
+    language = 'en-us'
+  } = config;
+
   let itemsXml = '';
   for (const post of posts) {
-    const link = `${siteUrl}/html/${post.filename}`;
+    const link = `${siteUrl}${itemPathPrefix}${post.filename}`;
     const pubDate = post.date ? post.date.toUTCString() : new Date().toUTCString();
     const contentEscaped = post.content
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
-    
+
     itemsXml += `
     <item>
       <title><![CDATA[${post.title}]]></title>
@@ -57,20 +60,23 @@ function generateRssXml(posts) {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>JV's blog</title>
+    <title>${channelTitle}</title>
     <link>${siteUrl}</link>
-    <description>Thoughts about technology and life</description>
-    <language>en-us</language>
+    <description>${channelDescription}</description>
+    <language>${language}</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>${itemsXml}
   </channel>
 </rss>`;
 }
 
-function generateRss() {
-  const files = fs.readdirSync(HTML_DIR).filter(f => f.endsWith('.html'));
-  
+function generateRss(config) {
+  const { sourceDir, outputFile } = config;
+  const files = fs.existsSync(sourceDir)
+    ? fs.readdirSync(sourceDir).filter(f => f.endsWith('.html'))
+    : [];
+
   const posts = files.map(filename => {
-    const filePath = path.join(HTML_DIR, filename);
+    const filePath = path.join(sourceDir, filename);
     const content = fs.readFileSync(filePath, 'utf-8');
     return extractPostData(content, filename);
   });
@@ -79,10 +85,13 @@ function generateRss() {
     return (b.date || new Date()) - (a.date || new Date());
   });
 
-  const rss = generateRssXml(posts);
-  fs.writeFileSync(OUTPUT_FILE, rss);
-  
-  console.log(`Generated: feed.xml with ${posts.length} posts`);
+  const rss = generateRssXml(posts, config);
+  fs.mkdirSync(path.dirname(outputFile), { recursive: true });
+  fs.writeFileSync(outputFile, rss);
+
+  console.log(`Generated: ${path.basename(outputFile)} with ${posts.length} posts`);
 }
 
-generateRss();
+module.exports = {
+  generateRss
+};
