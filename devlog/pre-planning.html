@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Top-Level Clarity First: Why I'm Pre-Planning Before Planning</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/devlog.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-light.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+</head>
+<body>
+  <main>
+    <a href="../index.html" class="back">&lt; back</a>
+
+    <article id="post-content">
+      <h1 id="post-title">Top-Level Clarity First: Why I'm Pre-Planning Before Planning</h1>
+      <div id="post-body">April 28, 2026
+
+I've been testing a small but meaningful change to my workflow when handling big-medium code changes. My usual process is straightforward: plan, review the plan, then build. All with the same model. (Quick note: <a href="https://akitaonrails.com/en/2026/04/25/llm-benchmarks-vale-a-pena-misturar-2-modelos/" target="_blank">Akita wrote an excellent post about mixing multiple models for different stages</a>, which I recommend checking out.)
+
+The change I'm testing is a pre-planning phase that shifts how I start the work. Instead of dumping context and immediately planning, I've added a round of clarification first. I tell the AI: read what I'm giving you, don't check the code yet, organize the ideas, goals, and demands, then generate a summary document. This document isn't technical. It's a concise, clear statement of what's expected.
+
+What's happening here is I'm feeding maximum context upfront: screenshots, Slack threads, my considerations, proposed solutions, everything. The AI reads this context first, not the codebase, and synthesizes it into a shared understanding. Then I review this document before we dive deeper. If it aligns with the changes at the top level, we move to planning.
+
+Here's a simplified example of the kind of prompt I use (not my actual one, just a reference):
+
+<pre><code class="language-plaintext">You're receiving a request for a feature change. Before we start planning:
+
+1. Read everything I'm providing: screenshots, Slack threads, my notes
+2. Don't check the code yet
+3. Organize the ideas, goals, demands, and constraints
+4. Generate a concise summary document of what should be done
+5. This summary should be clear but not technical
+
+After this pre-planning, I'll review the document. If everything aligns, we start the actual planning.</code></pre>
+
+Once we move to planning, I guide the AI to not assume anything. If it finds anything ambiguous, confused, or that might block the plan in the code itself, it should always ask before moving forward. But ideally, the pre-planning phase should have already resolved ambiguity and confusion at the top level, so we're working from solid ground.
+
+This macro view changed how I see the work. In one case, what I initially thought was one implementation turned into three different plans instead. That shift in perspective comes from having a clear, shared understanding before diving into technical decisions.
+
+I'm keeping this strategy in my workflow. Let's see how it plays out over time.</div>
+    </article>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('pre code').forEach((el) => {
+        hljs.highlightElement(el);
+      });
+    });
+  </script>
+</body>
+</html>
