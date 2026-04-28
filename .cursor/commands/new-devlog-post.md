@@ -15,6 +15,17 @@ You're receiving initial considerations for a new devlog entry. Follow this work
 - Get feedback: Does the tone feel right? Anything missing? Sections to expand or cut?
 - Remember: No em dashes (—). Use commas, periods, or parentheses instead.
 
+### Title Guidelines
+
+Devlog titles should be **specific and detailed**, not generic. Avoid one-word titles. Instead:
+- Focus on the outcome or transformation (e.g., "From One Plan to Three")
+- Describe the technique or approach (e.g., "Top-Level Clarity First: Why I'm Pre-Planning Before Planning")
+- Show what changed or what you learned (e.g., "How Pre-Planning Changes My Workflow")
+- Make it clear what the post is about at a glance
+
+Good: "Top-Level Clarity First: Why I'm Pre-Planning Before Planning"
+Avoid: "Pre-Planning"
+
 ## 2. HTML Structure
 
 Wrap the final content in this structure:
