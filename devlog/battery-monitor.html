@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I Needed to Create My Own Battery Monitor</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/devlog.css">
+</head>
+<body>
+  <main>
+    <a href="../index.html" class="back">&lt; back</a>
+
+    <article id="post-content">
+      <h1 id="post-title">I Needed to Create My Own Battery Monitor</h1>
+      <div id="post-body">April 27, 2026
+
+My Linux Mint setup stopped warning me about low battery. A few weeks ago, my PC just shut down in front of me because the battery drained completely. I searched for a way to re-enable the native warning, but couldn't find a solution.
+
+If you're on Linux Mint or facing the same issue with your distro, here's what I did: I created a simple cron job that runs every minute, checks the battery level, and sends a notification with sound when it gets low. No overcomplicated setup, just something that works.
+
+The script is available on <a href="https://gist.github.com/joaovictornsv/e19c929c945a556768708e33af27e4a3" target="_blank">GitHub</a>. If your OS is missing battery warnings too, feel free to use it or adapt it to your needs.</div>
+    </article>
+  </main>
+</body>
+</html>
