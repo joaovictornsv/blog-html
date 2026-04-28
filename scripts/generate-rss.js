@@ -7,7 +7,7 @@ const OUTPUT_FILE = path.join(__dirname, '..', 'rss', 'feed.xml');
 generateRss({
   sourceDir: HTML_DIR,
   outputFile: OUTPUT_FILE,
-  siteUrl: process.env.SITE_URL || 'https://joaovictornsv.dev',
+  siteUrl: process.env.SITE_URL || 'https://blog.joaovictornsv.dev',
   channelTitle: "JV's blog",
   channelDescription: 'Thoughts about technology and life',
   itemPathPrefix: '/posts/'
