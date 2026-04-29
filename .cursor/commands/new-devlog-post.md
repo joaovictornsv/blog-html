@@ -48,9 +48,7 @@ Wrap the final content in this structure:
       <h1 id="post-title">[Post Title]</h1>
       <div id="post-body">[Date - e.g., "April 27, 2026"]
 
-[Post content here]
-
-Links: <a href="[url]" target="_blank">[text]</a></div>
+[Post content here with links integrated naturally in the text using <a href="[url]" target="_blank">[text]</a>]</div>
     </article>
   </main>
 </body>
@@ -61,6 +59,7 @@ Links: <a href="[url]" target="_blank">[text]</a></div>
 - Include both stylesheets: `../css/style.css` AND `../css/devlog.css`
 - Date at top of post body
 - All links use `target="_blank"`
+- Integrate links naturally within the text, not as a separate "Links:" section at the bottom
 - Save to `devlog/[slug].html`
 
 ## 3. Publish
