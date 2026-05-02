@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MongoDB Troubleshooting Queries: Saving Time on Performance Investigations</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/devlog.css">
+</head>
+<body>
+  <main>
+    <a href="../index.html" class="back">&lt; back</a>
+    
+    <article id="post-content">
+      <h1 id="post-title">MongoDB Troubleshooting Queries: Saving Time on Performance Investigations</h1>
+      <div id="post-body">May 2, 2026
+
+Recently, my team and I investigated a MongoDB performance issue. High CPU usage turned out to be a query problem. Nothing new, but while digging through the database, I realized we kept running the same diagnostic queries over and over.
+
+One query that really helped was checking for long-running operations:
+
+<pre><code>db.currentOp({
+  secs_running: { $gte: 30 }
+})</code></pre>
+
+It immediately showed us which queries were taking too long. After we fixed the issues, I thought: why not save these queries somewhere? Next time this happens (and it will), we won't waste time remembering what to run.
+
+So I created a list of useful MongoDB troubleshooting queries. If you ever find yourself debugging MongoDB performance, it might save you some time: <a href="https://gist.github.com/joaovictornsv/42283d85beee92ccb582b3394896db18#file-mongodb_troubleshooting-md" target="_blank">MongoDB Troubleshooting Queries</a>.
+
+See you next time!</div>
+    </article>
+  </main>
+</body>
+</html>
