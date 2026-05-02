@@ -91,7 +91,6 @@ pre {
   font-family: monospace;
   font-size: 0.9em;
   line-height: 1.5;
-  margin-bottom: var(--spacing);
   max-width: 100%;
   word-wrap: break-word;
   white-space: pre-wrap;
