@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Millions of Documents, COLSCANs on Two Collections, Background Indexes</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/devlog.css">
+</head>
+<body>
+  <main>
+    <a href="../index.html" class="back">&lt; back</a>
+    
+    <article id="post-content">
+      <h1 id="post-title">Millions of Documents, COLSCANs on Two Collections, Background Indexes</h1>
+      <div id="post-body">May 4, 2026
+
+I did not think the MongoDB troubleshooting notes from <a href="https://devlog.joaovictornsv.dev/devlog/mongodb-troubleshooting.html" target="_blank">the last post</a> would pay off this fast. Today I was looking at another CPU peak. This time the root cause showed up almost immediately. I used the same workflow: find the heavy queries, see what they were doing, and notice they were missing indexes. So I added them.
+
+At some point a batch of queries became the bottleneck. They filter millions of documents on one field across two different collections, which meant a lot of COLSCANs. I created the indexes in the background so other work on the database could keep moving and the build itself would not spike CPU even harder. If you have not run into this yet, building indexes synchronously (not in background) can hammer CPU while it runs.
+
+The builds took a few minutes. After they finished, the expensive queries stopped piling up because they could use the indexes. What was left was letting the queries that were already in flight finish. Once they drained, CPU dropped sharply, response times went back to normal, and watching the charts ramp down was oddly satisfying.
+
+See you next time!</div>
+    </article>
+  </main>
+</body>
+</html>
