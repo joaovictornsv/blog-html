@@ -4,7 +4,7 @@ on:
     branches: ['main']
     paths:
       - 'devlog.html'
-      - '404-devlog.html'
+      - 'e404-devlog.html'
       - 'httpd.conf'
       - 'css/**'
       - 'devlog/**'

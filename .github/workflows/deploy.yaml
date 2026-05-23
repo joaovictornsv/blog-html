@@ -4,7 +4,7 @@ on:
     branches: ['main']
     paths:
       - 'index.html'
-      - '404.html'
+      - 'e404.html'
       - 'httpd.conf'
       - 'css/style.css'
       - 'posts/**'
