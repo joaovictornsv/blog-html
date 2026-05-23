@@ -4,6 +4,8 @@ on:
     branches: ['main']
     paths:
       - 'index.html'
+      - '404.html'
+      - 'httpd.conf'
       - 'css/style.css'
       - 'posts/**'
       - 'my-book-recommendations.html'

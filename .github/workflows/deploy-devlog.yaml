@@ -4,6 +4,8 @@ on:
     branches: ['main']
     paths:
       - 'devlog.html'
+      - '404-devlog.html'
+      - 'httpd.conf'
       - 'css/**'
       - 'devlog/**'
       - 'scripts/generate-devlog-rss.js'
