@@ -1,11 +1,10 @@
 FROM lipanski/docker-static-website:latest
 
 COPY httpd.conf .
-COPY e404-devlog.html ./e404.html
-COPY devlog.html ./index.html
+COPY e404.html .
+COPY ./index.html .
 COPY my-book-recommendations.html .
 COPY css ./css
 COPY rss ./rss
-COPY devlog ./devlog
 
 CMD ["/busybox-httpd", "-f", "-v", "-p", "3000", "-c", "httpd.conf"]
