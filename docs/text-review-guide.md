@@ -74,8 +74,9 @@ Deliver the report in this order. Use markdown headings. Be specific: quote shor
 ### 5.1 Executive summary (required)
 
 - **One paragraph:** overall impression, main strength, main opportunity.  
-- **Top 3 actions** I could take if I only have 15 minutes to revise.  
 - **Assumptions** you made (audience, draft language if not English, intent). The report itself is always in English.
+
+Do **not** list “top actions” here. Prioritized next steps belong only in §5.9 (revision checklist).
 
 ---
 
@@ -83,15 +84,17 @@ Deliver the report in this order. Use markdown headings. Be specific: quote shor
 
 **Goals:** Correct important errors; show the best rephrases; teach me something for next time.
 
+I handle grammar and clarity fixes separately (e.g. `revise-text`). This section is for learning and reference in the report, not for my revision checklist.
+
 Include:
 
-1. **Main mistakes** — Group by type (spelling, agreement, tense, articles, prepositions, punctuation, word choice). List only what matters for credibility or clarity; skip trivial typos unless they are frequent patterns.  
-2. **Important rephrases** — Table or list format:
+1. **Main mistakes** — Prose or bullet list. Weave in the mistake type naturally (e.g. “articles,” “agreement”) in the sentence; do **not** use a separate column or label column only for category. Mention where it appears inside the line (short quote or “opening paragraph”), not as a standalone “¶3” column.  
+2. **Important rephrases** — Table with **three columns only**:
 
-   | Location | Original (short quote) | Suggested | Why |
-   |----------|------------------------|-----------|-----|
+   | Original (short quote) | Suggested | Why |
+   |------------------------|-----------|-----|
 
-   Limit to changes that clearly improve grammar or naturalness—not taste-only edits.
+   Embed location in the quote or in **Why** when needed (e.g. “in the closing”). Limit to changes that clearly improve grammar or naturalness—not taste-only edits.
 
 3. **Tips for my writing** — 3–5 short, actionable habits based on **patterns in this draft** (not generic advice).
 
@@ -123,10 +126,10 @@ Do **not** argue that my view is wrong; help me present it more fairly and power
 
 **Goals:** A reader with a different background (culture, age, education, language) still gets the message.
 
-For each unclear or risky passage:
+For each unclear or risky passage, use a **three-column table** (no location-only column):
 
-| Location | Issue | Who might struggle | Suggested fix (wording or structure) |
-|----------|-------|--------------------|--------------------------------------|
+| Issue (include a short quote or phrase from the draft) | Who might struggle | Suggested fix (wording or structure) |
+|--------------------------------------------------------|--------------------|--------------------------------------|
 
 Check for:
 
@@ -165,18 +168,15 @@ Use a simple diagram only when the piece is long or structurally tangled:
 
 **Goals:** Tone matches my intent: helpful, provocative when I want it, never careless.
 
-Describe tone on simple scales (words only, no numeric scores):
+Use **one compact table only** (words on scales, no numeric scores). Do not add paragraphs, bullet lists, or “concrete edits” below the table.
 
-- **Warmth:** cold ↔ warm  
-- **Confidence:** tentative ↔ assertive  
-- **Energy:** calm ↔ urgent  
-- **Posture:** preaching ↔ conversing  
-
-Then answer:
-
-- Is the tone **too aggressive**, **too passive**, or **about right** for this piece?  
-- Where does tone **undermine** the message (e.g. moralizing, sarcasm without clarity, hedging so much the point disappears)?  
-- **2–4 concrete edits** (phrases or sentences) that would align tone with my goals in §2.
+| Dimension | Read (e.g. warm, assertive) | Fit for this piece? | Note (one line, optional quote if tone undermines the message) |
+|-----------|----------------------------|---------------------|----------------------------------------------------------------|
+| Warmth | cold ↔ warm | too cold / about right / too warm | |
+| Confidence | tentative ↔ assertive | | |
+| Energy | calm ↔ urgent | | |
+| Posture | preaching ↔ conversing | | |
+| **Overall** | too aggressive / too passive / about right | | |
 
 ---
 
@@ -202,9 +202,23 @@ List **3–5 specific strengths** with short quotes or references. Genuine prais
 
 ### 5.9 Revision checklist (required)
 
-A short checklist I can use when I revise myself:
+**Purpose:** Action list I use **after** reading the full report. This is the only place for **prioritized** next steps.
 
-- [ ] … (5–10 items derived from this report only)
+**Include**
+
+- **6–10 items**, ordered by priority (**P1** = do first, then **P2**, **P3**).  
+- **Substance over polish:** perspectives, structure/reorder, logic gaps, tone, emotional impact, closing, fairness of claims.  
+- **Self-contained items:** Each line must stand alone. Include a short quote or concrete description of *what* to change and *why*—I should not need to scroll back to earlier sections to understand an item.
+
+**Exclude**
+
+- Grammar, spelling, and routine clarity fixes (I use `revise-text` or similar for those).  
+- Vague items like “fix grammar in ¶3” or “improve clarity.”
+
+**Format (example)**
+
+- [ ] **P1** — Soften the apps vs DIY line: you write “I highly recommend…”; consider “What worked for me was…” so it reads as experience, not prescription (see §5.3).  
+- [ ] **P2** — Move the monthly ritual before the table example so readers get the “how” before the numbers (see §5.5).
 
 ---
 
@@ -231,10 +245,11 @@ Tag suggestions when helpful:
 
 ## 8. How I use the report
 
-1. Read the executive summary and checklist first.  
-2. Apply changes that resonate; ignore the rest.  
-3. Keep lines and ideas that feel like **my signature**, even if the reviewer suggested trimming them.  
-4. Run `revise-text` or a second review pass only after I’ve decided what to keep.
+1. Read the **executive summary** for orientation.  
+2. Read the body sections (grammar through strengths).  
+3. Use **§5.9 revision checklist** as the prioritized action list (P1 → P3).  
+4. Run **`revise-text`** (or similar) for grammar and clarity fixes separately.  
+5. Apply substantive changes that resonate; ignore the rest. Keep lines that feel like **my signature**.
 
 ---
 
@@ -248,6 +263,8 @@ Tag suggestions when helpful:
 | **Audience** | General public; mixed backgrounds |
 | **Provocation level** | Medium—challenge ideas, respect people |
 | **Scores** | Never use numeric ratings (1–10 or similar) |
+| **Grammar/clarity in checklist** | No—handled via `revise-text`; checklist is substance only |
+| **Prioritized actions** | Only in §5.9 (not in executive summary) |
 
 Optional per session: audience nuance, constraints (“don’t touch the opening”), provocation level if this piece is an exception.
 
@@ -266,4 +283,4 @@ Do not rewrite the whole piece in the response—report only.
 
 ---
 
-*Last updated: 2026-05-23 (preferences: English reports, no scores, long-form only)*
+*Last updated: 2026-05-23 (v2: checklist priorities, slimmer tables, tone table-only)*
