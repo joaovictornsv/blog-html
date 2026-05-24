@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>[migrated] Event Loop Basics: This Time You Understand</title>
+  <title>Event Loop Basics: This Time You Understand</title>
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/devlog.css">
 </head>
 <body>
   <main>
     <a href="../index.html" class="back">&lt; back</a>
-    
+
     <article id="post-content">
-      <h1 id="post-title">[migrated] Event Loop Basics: This Time You Understand</h1>
+      <h1 id="post-title">Event Loop Basics: This Time You Understand</h1>
       <div id="post-body">April 11, 2024
 
 <em>This post was migrated from my main blog. <a href="https://blog.joaovictornsv.dev" target="_blank">blog.joaovictornsv.dev</a></em>
 
 The idea of this text is to provide a simple explanation of the Event Loop. At the end of this text, it will be easy to teach your kid or even your grandmother about Event Loop.
 
-## Introduction
+<strong>Introduction</strong>
 
 I believe that the process of understanding a new subject should begin with abstractions and simplifications. And, from there, more explanations, new concepts, and specific details should be added to your knowledge. My suggestion for you: don't try to absolve the entire context at once, put the puzzle together piece by piece.
 
@@ -27,9 +27,9 @@ So, with that in mind, my goal with this post is to give you a foundation to bui
 
 Let's start.
 
-## Initial concepts
+<strong>Initial concepts</strong>
 
-### Callstack
+<strong style="font-style: italic">Callstack</strong>
 
 Represents the JavaScript execution stack, the mechanism by which the JavaScript engine keeps track of function calls in a program.
 
@@ -54,15 +54,15 @@ When the program runs, the following steps will occur:
 5. `f1` will finish and be removed from the stack. Stack size: 1
 6. `f2` will finish and be removed from the stack. Stack size: 0
 
-### Microtask
+<strong style="font-style: italic">Microtask</strong>
 
-A function executed after the function that created it exits, and only if the JavaScript execution stack is empty. Some examples of microtasks are the Promises' callback functions: `.then`, `.catch`, and `.finally`. 
+A function executed after the function that created it exits, and only if the JavaScript execution stack is empty. Some examples of microtasks are the Promises' callback functions: `.then`, `.catch`, and `.finally`.
 
-### Macrotask
+<strong style="font-style: italic">Macrotask</strong>
 
-A function that executes after the JavaScript execution stack and microtask have both been cleared. Macrotask represents some discrete and independent work. Some examples of macro tasks are the callback functions of the asynchronous timer: `setTimeout`, `setInterval`, and `setInterval`. 
+A function that executes after the JavaScript execution stack and microtask have both been cleared. Macrotask represents some discrete and independent work. Some examples of macro tasks are the callback functions of the asynchronous timer: `setTimeout`, `setInterval`, and `setInterval`.
 
-## The loop
+<strong>The loop</strong>
 
 The Event Loop is responsible for orchestrating the execution of synchronous and asynchronous code in Node.js. It runs continuously while the Javascript code is executing.
 
@@ -127,16 +127,16 @@ console.log("4");
 
 // -----------------------------
 
-// Okay, now let's run the Microtask Queue: 
+// Okay, now let's run the Microtask Queue:
 // Output: 1 4 3
 
-// Finally let's run the Macrotasks Queue: 
+// Finally let's run the Macrotasks Queue:
 // Output: 1 4 3 2
 
 // Callstack, Microtask Queue, and Macrotasks Queue are empty.
 // Then, THE END.
 
-## Next steps
+<strong>Next steps</strong>
 
 Well, now you understand in a simplified way how Event Loop works. It is no longer a seven-headed monster, perhaps a three-headed one. From now on it's up to you to build your knowledge above this base.
 
@@ -146,16 +146,16 @@ And finally, explain it to other people: record a video, write a blog post, call
 
 I hope this post was helpful to you! See you next time :)
 
-## Useful links
+<strong>Useful links</strong>
 
-### Videos
+<strong style="font-style: italic">Videos</strong>
 
 - 🇧🇷 <a href="https://www.youtube.com/watch?v=BPAvOv0qYtw" target="_blank">Aula Essencial de Javascript que Você Perdeu</a>
 - 🇧🇷 <a href="https://www.youtube.com/watch?v=NQFQQonyAxI" target="_blank">Async, Promises, Callbacks, Event Loop - JS</a>
 - 🇺🇸 <a href="https://www.youtube.com/watch?v=8aGhZQkoFbQ" target="_blank">What the heck is the event loop anyway?</a>
 - 🇺🇸 <a href="https://www.youtube.com/watch?v=cCOL7MC4Pl0" target="_blank">Inside the Loop</a>
 
-### Posts
+<strong style="font-style: italic">Posts</strong>
 
 - <a href="https://blog.logrocket.com/complete-guide-node-js-event-loop/" target="_blank">A complete guide to the Node.js event loop</a>
 - <a href="https://www.builder.io/blog/visual-guide-to-nodejs-event-loop" target="_blank">A Complete Visual Guide to Understanding the Node.js Event Loop</a></div>
