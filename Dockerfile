@@ -6,5 +6,6 @@ COPY ./index.html .
 COPY my-book-recommendations.html .
 COPY css ./css
 COPY rss ./rss
+COPY posts ./posts
 
 CMD ["/busybox-httpd", "-f", "-v", "-p", "3000", "-c", "httpd.conf"]
