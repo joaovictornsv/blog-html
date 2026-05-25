@@ -26,6 +26,26 @@ Devlog titles should be **specific and detailed**, not generic. Avoid one-word t
 Good: "Top-Level Clarity First: Why I'm Pre-Planning Before Planning"
 Avoid: "Pre-Planning"
 
+### Title Alternatives (required)
+
+**Always** include title alternatives when you present the draft (before or right after creating the HTML file). Do not wait for the user to ask.
+
+- Offer **5–8 options**, plus your recommended default (the one used in the post unless the user picks another).
+- Group alternatives by angle when helpful (e.g. workflow shift, outcome, technique, tie-in to a linked post).
+- Follow the title guidelines above: specific and detailed, not one-word generic titles.
+- Keep the slug stable (`devlog/[slug].html`); only change `<title>`, `<h1>`, and the `devlog.html` list label if the user picks a different title.
+
+Example format in your reply:
+
+**Recommended:** [title used in the post]
+
+**Other options:**
+- [alternative 1]
+- [alternative 2]
+- …
+
+If the user chooses a different title, update the post and `devlog.html` accordingly.
+
 ## 2. HTML Structure
 
 Wrap the final content in this structure:
