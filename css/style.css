@@ -3,7 +3,7 @@
   --color-text: #000;
   --spacing: 1rem;
   --font-family: serif;
-  --font-size: 20px;
+  --font-size: 16px;
 }
 
 * {
@@ -95,9 +95,13 @@ h1 {
 #post-body ul,
 #post-body ol,
 #post-body pre,
-#post-body blockquote,
-#post-body .post-date {
+#post-body blockquote {
   margin-bottom: var(--spacing);
+}
+
+#post-body .post-date {
+  display: block;
+  margin-bottom: calc(var(--spacing) * 1.75);
 }
 
 #post-body h2,
@@ -115,6 +119,28 @@ h1 {
 
 #post-body p {
   margin-bottom: var(--spacing);
+}
+
+#post-body ul,
+#post-body ol {
+  padding-left: 1.75em;
+  margin-left: 0;
+}
+
+#post-body li {
+  padding-left: 0.35em;
+  margin-bottom: 0.65em;
+}
+
+#post-body li:last-child {
+  margin-bottom: 0;
+}
+
+#post-body hr {
+  border: none;
+  border-top: 1px solid currentColor;
+  opacity: 0.35;
+  margin: calc(var(--spacing) * 1.5) 0;
 }
 
 pre {
