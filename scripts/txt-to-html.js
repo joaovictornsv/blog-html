@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { extractPostDescription, escapeHtmlAttr } = require('./seo-utils');
+const { extractPostDescription, escapeHtmlAttr, BLOG_BASE } = require('./seo-utils');
 
 const POSTS_DIR = path.join(__dirname, 'txt');
 const OUTPUT_DIR = path.join(__dirname, 'html');
@@ -30,6 +30,7 @@ function generatePostHtml(post) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${post.title}</title>
   <meta name="description" content="${escapeHtmlAttr(description)}">
+  <link rel="canonical" href="${BLOG_BASE}/posts/${post.slug}.html">
   <link rel="stylesheet" href="../style.css">
 </head>
 <body>

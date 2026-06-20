@@ -65,11 +65,8 @@ function getDescriptionForFile(filePath, html) {
 
 function getCanonicalUrl(filePath) {
   const rel = path.relative(path.join(__dirname, '..'), filePath).replace(/\\/g, '/');
-  const base = rel.startsWith('devlog/') && !rel.includes('devlog.html') && rel !== 'devlog.html'
-    ? DEVLOG_BASE
-  : rel === 'devlog.html' || rel.startsWith('devlog/')
-    ? DEVLOG_BASE
-    : BLOG_BASE;
+  const isDevlog = rel === 'devlog.html' || rel.startsWith('devlog/') || rel === 'e404-devlog.html';
+  const base = isDevlog ? DEVLOG_BASE : BLOG_BASE;
 
   if (rel === 'index.html') return `${BLOG_BASE}/`;
   if (rel === 'devlog.html') return `${DEVLOG_BASE}/`;

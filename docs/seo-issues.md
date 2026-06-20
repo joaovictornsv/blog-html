@@ -26,7 +26,7 @@ Beyond `<head>` metadata, post markup is largely non-semantic: body copy lives i
 
 ---
 
-### 2. Missing canonical URL
+### 2. Missing canonical URL ✅ Fixed (2026-06-20)
 
 **Finding:** No `<link rel="canonical">` tag found (`null` in the audit).
 
