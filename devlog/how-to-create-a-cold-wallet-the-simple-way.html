@@ -22,13 +22,13 @@
 
 <p>Few weeks ago I created a cold wallet to protect my satoshis. So I decided to document the process. It's important to note that this guide is for people who understand the basics of Bitcoin. Therefore, I won't be overly detailed. I'm assuming you know the concepts and best practices mentioned below.</p>
 
-<strong>Why a cold wallet? Why not a hot wallet?</strong>
+<h2>Why a cold wallet? Why not a hot wallet?</h2>
 
 <p>First, it's for study purposes. I wanted to learn how to create one and understand the concepts involved. Second, security. If the wallet balance starts to increase, at least it's following best self-custody practices.</p>
 
 <p>Good, let's start. First, you need to set up a secure offline environment. Your seed should be generated in an environment that will never connect to the internet again.</p>
 
-<strong>Create the offline setup</strong>
+<h2>Create the offline setup</h2>
 
 <p>For this, you will need a bootable USB drive with Tails. Tails is an amnesic operating system (OS) focused on security. It boots from a USB drive and all data is cleaned on shutdown.</p>
 
@@ -36,7 +36,7 @@
 
 <p>The wallet's seed will be generated on this first boot. Whenever you boot Tails, the startup will always be like a fresh setup, since the storage is cleaned on shutdown. So just start the system without any special configuration like "Persistent Storage". With Tails started, you will need to turn on the network (wired or Wi-Fi). This is the only moment you will do it. Connect to the network, access <a href="https://github.com/iancoleman/bip39/releases" target="_blank">https://github.com/iancoleman/bip39/releases</a>, and download the "bip39-standalone.html" file. Then turn off the network.</p>
 
-<strong>Generate seed</strong>
+<h2>Generate seed</h2>
 
 <p>Open the HTML file, and you will see the "Mnemonic Code Converter" page. This is where you'll generate your wallet's private seed. Follow these steps:</p>
 
@@ -51,7 +51,7 @@
 
 <p>With your seed, passphrase, and address piece saved safely, shut down the system.</p>
 
-<strong>Access your wallet</strong>
+<h2>Access your wallet</h2>
 
 <p>Boot Tails again. Don't turn on the network. You will never do it again.</p>
 
@@ -72,7 +72,7 @@
 
 <p>If you entered all the information correctly, the first address in the receiving addresses list will match the characters you noted earlier. Now reboot Tails and follow the steps again to double-check that you saved all the data correctly.</p>
 
-<strong>Send BTC to your wallet</strong>
+<h2>Send BTC to your wallet</h2>
 
 <p>To do this, you need to copy one of the receiving addresses from your wallet. Here you have two options: generate a QR code (a feature of Electrum) or set up a Watch-Only wallet. I recommend setting up a Watch-Only wallet with BlueWallet. BlueWallet always provides an unused address for each transaction, which is a good practice.</p>
 
@@ -80,7 +80,7 @@
 
 <p>Once your Watch-Only wallet is created, click the "Receive" button and copy the address. Use it to transfer your BTCs. For testing and security purposes, transfer a small amount first. You can check the transaction status on BlueWallet. Once the transaction is confirmed, let's move to the final and most important step.</p>
 
-<strong>The Final Test! Very Important! Don't Skip</strong>
+<h2>The Final Test! Very Important! Don't Skip</h2>
 
 <p>This is the full wallet restoration step.</p>
 
@@ -94,11 +94,11 @@
 
 <p>If everything is correct, you'll be able to see your balance on the BlueWallet app.</p>
 
-<strong>Final Advice</strong>
+<h2>Final Advice</h2>
 
 <p>For legal and tax purposes, don't mix BTC from different sources in the same wallet, such as from different exchanges, P2P transactions, etc.</p>
 
-<strong>Conclusion</strong>
+<h2>Conclusion</h2>
 
 <p>Hope this guide has been useful to you! If you have any questions, feel free to contact me.</p>
 </div>

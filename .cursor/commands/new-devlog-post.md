@@ -68,7 +68,7 @@ Wrap the final content in this structure:
       <h1 id="post-title">[Post Title]</h1>
       <div id="post-body">[Date - e.g., "April 27, 2026"]
 
-[Post content here with links integrated naturally in the text using <a href="[url]" target="_blank">[text]</a>]</div>
+[Post content here with semantic markup: wrap paragraphs in `<p>`, section titles in `<h2>`/`<h3>`, lists in `<ul>`/`<ol>`, and links integrated naturally using <a href="[url]" target="_blank" rel="noopener noreferrer">[text]</a>]</div>
     </article>
   </main>
 </body>

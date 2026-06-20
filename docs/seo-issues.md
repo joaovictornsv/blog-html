@@ -89,7 +89,7 @@ Beyond `<head>` metadata, post markup is largely non-semantic: body copy lives i
 
 ---
 
-### 7. Section headings use `<strong>` instead of heading elements
+### 7. Section headings use `<strong>` instead of heading elements ✅ Fixed (2026-06-20)
 
 **Finding:** Posts that need sub-headings use `<strong>Section title</strong>` inside `#post-body` (workflow in `.cursor/commands/new-post.md` explicitly maps `###` lines to `<strong>`). No post uses `<h2>`–`<h6>` for in-article sections; the only heading tags site-wide are page-level `<h1>` on posts and `<h2>` on index/list pages.
 

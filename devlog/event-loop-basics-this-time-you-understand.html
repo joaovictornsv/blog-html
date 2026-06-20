@@ -22,7 +22,7 @@
 
 <p>The idea of this text is to provide a simple explanation of the Event Loop. At the end of this text, it will be easy to teach your kid or even your grandmother about Event Loop.</p>
 
-<strong>Introduction</strong>
+<h2>Introduction</h2>
 
 <p>I believe that the process of understanding a new subject should begin with abstractions and simplifications. And, from there, more explanations, new concepts, and specific details should be added to your knowledge. My suggestion for you: don't try to absolve the entire context at once, put the puzzle together piece by piece.</p>
 
@@ -30,9 +30,9 @@
 
 <p>Let's start.</p>
 
-<strong>Initial concepts</strong>
+<h2>Initial concepts</h2>
 
-<strong style="font-style: italic">Callstack</strong>
+<h3>Callstack</h3>
 
 <p>Represents the JavaScript execution stack, the mechanism by which the JavaScript engine keeps track of function calls in a program.</p>
 
@@ -59,15 +59,15 @@
   <li>`f2` will finish and be removed from the stack. Stack size: 0</li>
 </ol>
 
-<strong style="font-style: italic">Microtask</strong>
+<h3>Microtask</h3>
 
 <p>A function executed after the function that created it exits, and only if the JavaScript execution stack is empty. Some examples of microtasks are the Promises' callback functions: `.then`, `.catch`, and `.finally`.</p>
 
-<strong style="font-style: italic">Macrotask</strong>
+<h3>Macrotask</h3>
 
 <p>A function that executes after the JavaScript execution stack and microtask have both been cleared. Macrotask represents some discrete and independent work. Some examples of macro tasks are the callback functions of the asynchronous timer: `setTimeout`, `setInterval`, and `setInterval`.</p>
 
-<strong>The loop</strong>
+<h2>The loop</h2>
 
 <p>The Event Loop is responsible for orchestrating the execution of synchronous and asynchronous code in Node.js. It runs continuously while the Javascript code is executing.</p>
 
@@ -143,7 +143,7 @@ console.log("4");</p>
 <p>// Callstack, Microtask Queue, and Macrotasks Queue are empty.
 // Then, THE END.</p>
 
-<strong>Next steps</strong>
+<h2>Next steps</h2>
 
 <p>Well, now you understand in a simplified way how Event Loop works. It is no longer a seven-headed monster, perhaps a three-headed one. From now on it's up to you to build your knowledge above this base.</p>
 
@@ -153,9 +153,9 @@ console.log("4");</p>
 
 <p>I hope this post was helpful to you! See you next time :)</p>
 
-<strong>Useful links</strong>
+<h2>Useful links</h2>
 
-<strong style="font-style: italic">Videos</strong>
+<h3>Videos</h3>
 
 <ul>
   <li>🇧🇷 <a href="https://www.youtube.com/watch?v=BPAvOv0qYtw" target="_blank">Aula Essencial de Javascript que Você Perdeu</a></li>
@@ -164,7 +164,7 @@ console.log("4");</p>
   <li>🇺🇸 <a href="https://www.youtube.com/watch?v=cCOL7MC4Pl0" target="_blank">Inside the Loop</a></li>
 </ul>
 
-<strong style="font-style: italic">Posts</strong>
+<h3>Posts</h3>
 
 <ul>
   <li><a href="https://blog.logrocket.com/complete-guide-node-js-event-loop/" target="_blank">A complete guide to the Node.js event loop</a></li>

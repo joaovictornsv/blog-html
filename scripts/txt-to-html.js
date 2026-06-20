@@ -23,7 +23,7 @@ function parsePost(text, filename) {
 function generatePostHtml(post) {
   const draftHtml = `<div id="post-body">${post.content}</div>`;
   const description = extractPostDescription(draftHtml) || post.title;
-  const bodyHtml = formatPostBody(post.content);
+  const bodyHtml = formatPostBody(post.content, { convertHeadings: true });
 
   return `<!DOCTYPE html>
 <html lang="en">
