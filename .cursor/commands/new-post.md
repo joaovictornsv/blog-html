@@ -23,6 +23,8 @@ The `<li>` format should be:
 
 4. Convert the first line of the .txt file to an `<h1 id="post-title">` element in the HTML.
 
-5. Convert `### Section title` lines in the .txt file to `<strong>Section title</strong>` in the HTML (section headings inside `#post-body`).
+5. Convert `### Section title` lines in the .txt file to `<h2>Section title</h2>` in the HTML (section headings inside `#post-body`). Use `<h3>` for subsections when appropriate.
+
+6. Wrap each paragraph in `<p>...</p>`. Convert `- item` lines to `<ul><li>item</li></ul>`. The build script (`scripts/post-body.js`) can automate this when using `txt-to-html.js`.
 
 Where `<slug>` is the filename without `.txt` extension, and `<title>` is the first line of the .txt file.

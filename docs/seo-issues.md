@@ -77,7 +77,7 @@ Beyond `<head>` metadata, post markup is largely non-semantic: body copy lives i
 
 ---
 
-### 6. Post body lacks semantic paragraph markup
+### 6. Post body lacks semantic paragraph markup ✅ Fixed (2026-06-20)
 
 **Finding:** Every post (blog and devlog) wraps all body copy in a single `<div id="post-body">`. Paragraph breaks rely on raw newlines plus `white-space: pre-wrap` in `css/style.css`, not on `<p>` elements. The stylesheet even defines `#post-body p { margin-bottom: ... }`, but no post HTML uses `<p>` tags inside the body.
 

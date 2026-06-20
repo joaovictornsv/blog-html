@@ -73,9 +73,30 @@ h1 {
 }
 
 #post-body {
-  white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
+}
+
+#post-body p,
+#post-body ul,
+#post-body ol,
+#post-body pre,
+#post-body blockquote,
+#post-body .post-date {
+  margin-bottom: var(--spacing);
+}
+
+#post-body h2,
+#post-body h3 {
+  font-size: var(--font-size);
+  font-weight: bold;
+  margin-top: calc(var(--spacing) * 1.5);
+  margin-bottom: var(--spacing);
+}
+
+#post-body h3 {
+  font-style: italic;
+  font-weight: normal;
 }
 
 #post-body p {

@@ -10,12 +10,17 @@ function extractPostData(htmlContent, filename) {
   let content = '';
   if (bodyMatch) {
     const bodyContent = bodyMatch[1];
-    const firstLineMatch = bodyContent.match(/^([^<\n]+)/);
-    if (firstLineMatch) {
-      const dateStr = firstLineMatch[1].trim();
-      dateObj = new Date(dateStr);
-      if (isNaN(dateObj)) {
-        dateObj = null;
+
+    const timeMatch = bodyContent.match(/<time[^>]*datetime="([^"]+)"[^>]*>/);
+    if (timeMatch) {
+      dateObj = new Date(timeMatch[1]);
+      if (isNaN(dateObj)) dateObj = null;
+    } else {
+      const firstLineMatch = bodyContent.match(/^([^<\n]+)/);
+      if (firstLineMatch) {
+        const dateStr = firstLineMatch[1].trim();
+        dateObj = new Date(dateStr);
+        if (isNaN(dateObj)) dateObj = null;
       }
     }
 

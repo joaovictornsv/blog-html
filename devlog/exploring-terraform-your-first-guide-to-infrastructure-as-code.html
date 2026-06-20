@@ -15,110 +15,112 @@
 
     <article id="post-content">
       <h1 id="post-title">Exploring Terraform: Your First Guide to Infrastructure as Code</h1>
-      <div id="post-body">February 10, 2023
+      <div id="post-body">
+<time class="post-date" datetime="2023-02-10">February 10, 2023</time>
 
-<em>This post was migrated from my main blog. <a href="https://blog.joaovictornsv.dev" target="_blank">blog.joaovictornsv.dev</a></em>
+<p><em>This post was migrated from my main blog. <a href="https://blog.joaovictornsv.dev" target="_blank">blog.joaovictornsv.dev</a></em></p>
 
-Today, I want to show you the power of Terraform in action with a simple integration that you can follow while as you read the steps below.
-But first, we need to understand what Terraform is.
+<p>Today, I want to show you the power of Terraform in action with a simple integration that you can follow while as you read the steps below.
+But first, we need to understand what Terraform is.</p>
 
 <strong>What is Terraform?</strong>
 
-In short, Terraform is a tool for managing resources across different providers (AWS, GCP, Azure, GitHub, Kubernetes, etc.), all in an automated way through lines of code! If you want to dive deeper into these capabilities, I highly recommend checking out the <a href="https://www.terraform.io/" target="_blank">Terraform website</a>.
+<p>In short, Terraform is a tool for managing resources across different providers (AWS, GCP, Azure, GitHub, Kubernetes, etc.), all in an automated way through lines of code! If you want to dive deeper into these capabilities, I highly recommend checking out the <a href="https://www.terraform.io/" target="_blank">Terraform website</a>.</p>
 
 <strong>Prerequisites</strong>
 
-To proceed with the next steps, you need to have the Terraform installed in you machine. Installing it is simple, check the <a href="https://developer.hashicorp.com/terraform/install?product_intent=terraform" target="_blank">docs</a> for more details. Additionally, Docker must be installed for this integration.
+<p>To proceed with the next steps, you need to have the Terraform installed in you machine. Installing it is simple, check the <a href="https://developer.hashicorp.com/terraform/install?product_intent=terraform" target="_blank">docs</a> for more details. Additionally, Docker must be installed for this integration.</p>
 
 <strong>Hands on</strong>
 
-Let's start by pulling a Docker image and running a container using only Terraform! Keep in mind that this post won't cover all the details. As mentioned in the title, this is just a simple introduction to the tool.
+<p>Let's start by pulling a Docker image and running a container using only Terraform! Keep in mind that this post won't cover all the details. As mentioned in the title, this is just a simple introduction to the tool.</p>
 
 <strong style="font-style: italic">1. Setting the Providers</strong>
 
-> I'm using the example described <a href="https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs" target="_blank">here</a> in the Terraform documentation.
+<blockquote><p>I'm using the example described <a href="https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs" target="_blank">here</a> in the Terraform documentation.</p></blockquote>
 
-First, create a `main.tf` file and paste the following code:
+<p>First, create a `main.tf` file and paste the following code:</p>
 
-terraform {
+<pre><code>terraform {
     required_providers {
         docker = {
             source  = "kreuzwerker/docker"
             version = "3.0.1"
         }
     }
-}
+}</code></pre>
 
-provider "docker" {
+<pre><code>provider "docker" {
     host = "unix:///var/run/docker.sock"
-}
+}</code></pre>
 
-This is how we tell Terraform that Docker will be our resource provider.
+<p>This is how we tell Terraform that Docker will be our resource provider.</p>
 
 <strong style="font-style: italic">2. Defining Our Resources: Image and Container</strong>
 
-Now, in the same file, let's pull a Docker image. For this example, I will use the <a href="https://hub.docker.com/_/nginx/" target="_blank">nginx</a> image:
+<p>Now, in the same file, let's pull a Docker image. For this example, I will use the <a href="https://hub.docker.com/_/nginx/" target="_blank">nginx</a> image:</p>
 
-resource "docker_image" "nginx" {
+<pre><code>resource "docker_image" "nginx" {
     name = "nginx:1.23.3-alpine"
-}
+}</code></pre>
 
-The `resource` block has two key elements:
+<p>The `resource` block has two key elements:
 1. **Resource Type**: Specifies the type of resource to create. In this case, it's a Docker image.
-2. **Resource Identifier**: A unique name to differentiate resources of the same type. This identifier is also crucial for referencing the resource later.
+2. **Resource Identifier**: A unique name to differentiate resources of the same type. This identifier is also crucial for referencing the resource later.</p>
 
-Let's use this identifier to create our container:
+<p>Let's use this identifier to create our container:</p>
 
-resource "docker_container" "nginx" {
+<p>resource "docker_container" "nginx" {
     image = docker_image.nginx.image_id
-    name  = "nginx_alpine"
+    name  = "nginx_alpine"</p>
 
-    ports {
+<pre><code>ports {
         internal = 80
         external = 8080
     }
-}
+}</code></pre>
 
-Here, we are creating a container based on the previously defined image, while setting the container name and its ports.
+<p>Here, we are creating a container based on the previously defined image, while setting the container name and its ports.</p>
 
-If you'd like to explore all available settings for these resources, consider reviewing their documentation:
+<p>If you'd like to explore all available settings for these resources, consider reviewing their documentation:
 - Documentation for docker_image: https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs/resources/image
-- Documentation for docker_container: https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs/resources/container
+- Documentation for docker_container: https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs/resources/container</p>
 
 <strong style="font-style: italic">3. Creating the Resources</strong>
 
-To ensure that our resource configurations are valid, run the following command:
+<p>To ensure that our resource configurations are valid, run the following command:</p>
 
- terraform validate
+<p>terraform validate</p>
 
-Next, execute:
+<p>Next, execute:</p>
 
-terraform plan
+<p>terraform plan</p>
 
-This command generates a report showing the changes Terraform will make. At the end of the output, you'll see a summary of what will be created, modified, or destroyed:
+<p>This command generates a report showing the changes Terraform will make. At the end of the output, you'll see a summary of what will be created, modified, or destroyed:</p>
 
-Plan: 2 to add, 0 to change, 0 to destroy.
+<p>Plan: 2 to add, 0 to change, 0 to destroy.</p>
 
-To apply the changes, use:
+<p>To apply the changes, use:</p>
 
-terraform apply
+<p>terraform apply</p>
 
-Terraform will ask for confirmation. Just type yes to proceed (you can skip this step by using the -auto-approve flag). Once the changes are applied, wait for Terraform to complete the process. If successful, you should see this message in your terminal:
+<p>Terraform will ask for confirmation. Just type yes to proceed (you can skip this step by using the -auto-approve flag). Once the changes are applied, wait for Terraform to complete the process. If successful, you should see this message in your terminal:</p>
 
-Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+<p>Apply complete! Resources: 2 added, 0 changed, 0 destroyed.</p>
 
-Finally, verify that the resources were created by running these Docker commands:
+<p>Finally, verify that the resources were created by running these Docker commands:</p>
 
-docker image ls
-docker container ls
+<p>docker image ls
+docker container ls</p>
 
 <strong>Bonus</strong>
 
-In this post, I have only covered the basics of integrating Terraform with Docker to keep it concise and interesting. If you're interested in exploring more advanced topics, such as separating resources into different files, defining variables, or understanding the `terraform.tfstate` file, check out the <a href="https://www.youtube.com/watch?v=UZN221NJ2-M" target="_blank">video</a> I recorded (in Portuguese). It goes beyond the steps described here and dives into these additional details.
+<p>In this post, I have only covered the basics of integrating Terraform with Docker to keep it concise and interesting. If you're interested in exploring more advanced topics, such as separating resources into different files, defining variables, or understanding the `terraform.tfstate` file, check out the <a href="https://www.youtube.com/watch?v=UZN221NJ2-M" target="_blank">video</a> I recorded (in Portuguese). It goes beyond the steps described here and dives into these additional details.</p>
 
 <strong>Conclusion</strong>
 
-This is the power of Terraform! I hope you're feeling motivated to dive even deeper into it.</div>
+<p>This is the power of Terraform! I hope you're feeling motivated to dive even deeper into it.</p>
+</div>
     </article>
   </main>
 </body>

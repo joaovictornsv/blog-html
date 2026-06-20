@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { extractPostDescription, escapeHtmlAttr, BLOG_BASE } = require('./seo-utils');
+const { formatPostBody } = require('./post-body');
 
 const POSTS_DIR = path.join(__dirname, 'txt');
 const OUTPUT_DIR = path.join(__dirname, 'html');
@@ -22,6 +23,7 @@ function parsePost(text, filename) {
 function generatePostHtml(post) {
   const draftHtml = `<div id="post-body">${post.content}</div>`;
   const description = extractPostDescription(draftHtml) || post.title;
+  const bodyHtml = formatPostBody(post.content);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -39,7 +41,7 @@ function generatePostHtml(post) {
     
     <article id="post-content">
       <h1 id="post-title">${post.title}</h1>
-      <div id="post-body">${post.content}</div>
+      <div id="post-body">${bodyHtml}</div>
     </article>
   </main>
 </body>
