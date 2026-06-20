@@ -16,7 +16,7 @@ Then open:
 
 ## Converting Text Posts to HTML
 
-The `scripts/txt-to-html.js` script converts plain text files into structured HTML pages.
+The `scripts/txt-to-html.js` script turns a plain-text draft into a **draft** HTML file with semantic body markup. The final post still needs a full SEO `<head>` — see `.cursor/commands/new-post.md` for the full publish workflow.
 
 ### Usage
 
@@ -31,22 +31,21 @@ node scripts/txt-to-html.js my-new-post.txt
 ```
 
 This will:
-1. Read `scripts/txt/my-new-post.txt`
-2. Parse the first line as the post title
-3. Use remaining lines as the post content
-4. Generate `html/my-new-post.html` with a structured HTML page
-5. Output a snippet to add to `index.html`
+1. Read `txt/my-new-post.txt` (first line = title, rest = body)
+2. Run body content through `post-body.js` (`<p>`, `<h2>`, lists, etc.)
+3. Write a draft to `html/my-new-post.html`
+4. Print next steps: copy markup into `posts/my-new-post.html`, update `index.html`, run `update-index-listings.js`
 
 ## RSS
 
 Generate the main blog RSS feed:
 
 ```sh
-node generate-rss.js
+node scripts/generate-rss.js
 ```
 
 Generate the devlog RSS feed:
 
 ```sh
-node generate-devlog-rss.js
+node scripts/generate-devlog-rss.js
 ```

@@ -3,24 +3,23 @@ const path = require('path');
 const { extractPostDescription, escapeHtmlAttr, BLOG_BASE } = require('./seo-utils');
 const { formatPostBody } = require('./post-body');
 
-const POSTS_DIR = path.join(__dirname, 'txt');
-const OUTPUT_DIR = path.join(__dirname, 'html');
+const ROOT = path.join(__dirname, '..');
+const TXT_DIR = path.join(ROOT, 'txt');
+const DRAFT_DIR = path.join(ROOT, 'html');
 
-// Parse a .txt file into post data
 function parsePost(text, filename) {
   const lines = text.split('\n');
   const title = lines[0] || 'Untitled';
   const content = lines.slice(1).join('\n').trim();
-  
+
   return {
     title,
     content,
-    slug: filename.replace('.txt', '')
+    slug: filename.replace('.txt', ''),
   };
 }
 
-// Generate HTML for a post
-function generatePostHtml(post) {
+function generateDraftHtml(post) {
   const draftHtml = `<div id="post-body">${post.content}</div>`;
   const description = extractPostDescription(draftHtml) || post.title;
   const bodyHtml = formatPostBody(post.content, { convertHeadings: true });
@@ -33,12 +32,12 @@ function generatePostHtml(post) {
   <title>${post.title}</title>
   <meta name="description" content="${escapeHtmlAttr(description)}">
   <link rel="canonical" href="${BLOG_BASE}/posts/${post.slug}.html">
-  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
   <main>
     <a href="../index.html" class="back">&lt; back</a>
-    
+
     <article id="post-content">
       <h1 id="post-title">${post.title}</h1>
       <div id="post-body">${bodyHtml}</div>
@@ -49,45 +48,41 @@ function generatePostHtml(post) {
 `;
 }
 
-// Main build function for a single file
 function buildSingle(filename) {
   if (!filename) {
-    console.error('Usage: node build-single.js <filename.txt>');
-    console.error('Example: node build-single.js my-new-post.txt');
+    console.error('Usage: node scripts/txt-to-html.js <filename.txt>');
+    console.error('Example: node scripts/txt-to-html.js my-new-post.txt');
     process.exit(1);
   }
 
-  // Ensure filename ends with .txt
   if (!filename.endsWith('.txt')) {
-    filename = filename + '.txt';
+    filename = `${filename}.txt`;
   }
 
-  const filePath = path.join(POSTS_DIR, filename);
+  const filePath = path.join(TXT_DIR, filename);
 
-  // Check if file exists
   if (!fs.existsSync(filePath)) {
     console.error(`Error: File not found: ${filePath}`);
     process.exit(1);
   }
 
-  // Create output directory if it doesn't exist
-  if (!fs.existsSync(OUTPUT_DIR)) {
-    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+  if (!fs.existsSync(DRAFT_DIR)) {
+    fs.mkdirSync(DRAFT_DIR, { recursive: true });
   }
 
-  // Read and parse the post
   const text = fs.readFileSync(filePath, 'utf-8');
   const post = parsePost(text, filename);
-
-  // Generate and write HTML
-  const html = generatePostHtml(post);
-  const outputPath = path.join(OUTPUT_DIR, `${post.slug}.html`);
+  const html = generateDraftHtml(post);
+  const outputPath = path.join(DRAFT_DIR, `${post.slug}.html`);
   fs.writeFileSync(outputPath, html);
 
-  console.log(`✓ Generated: html/${post.slug}.html`);
+  console.log(`✓ Draft: html/${post.slug}.html`);
   console.log(`  Title: ${post.title}`);
-  console.log(`\nAdd this to index.html:`);
-  console.log(`  <li><a href="html/${post.slug}.html">${post.title}</a></li>`);
+  console.log('\nNext steps:');
+  console.log(`  1. Copy body markup from html/${post.slug}.html`);
+  console.log(`  2. Create posts/${post.slug}.html using an existing post as the <head> template`);
+  console.log(`  3. Add <li><a href="posts/${post.slug}.html">${post.title}</a></li> to index.html`);
+  console.log('  4. Run: node scripts/update-index-listings.js');
 }
 
 const filename = process.argv[2];
