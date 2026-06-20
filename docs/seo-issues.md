@@ -143,7 +143,7 @@ Consider adding Twitter Card tags (`twitter:card`, `twitter:title`, etc.) as wel
 
 ---
 
-### 11. Publish dates are not machine-readable
+### 11. Publish dates are not machine-readable ✅ Fixed (2026-06-20)
 
 **Finding:** Dates appear as the first line of plain text inside `#post-body` (e.g. `April 3, 2026`). There are no `<time datetime="2026-04-03">` elements anywhere in the repo.
 
@@ -153,7 +153,7 @@ Consider adding Twitter Card tags (`twitter:card`, `twitter:title`, etc.) as wel
 
 ---
 
-### 12. In-post lists are plain text, not HTML lists
+### 12. In-post lists are plain text, not HTML lists ✅ Fixed (2026-06-20)
 
 **Finding:** Bullet lists inside posts use lines starting with `- ` (e.g. in `posts/organize-your-finances-like-a-company.html`, `posts/how-not-to-make-mistakes-twice.html`) rather than `<ul><li>` markup.
 
@@ -173,7 +173,9 @@ Consider adding Twitter Card tags (`twitter:card`, `twitter:title`, etc.) as wel
 
 ---
 
-### 14. Two subdomains split crawl signals
+### 14. Two subdomains split crawl signals ✅ Partially fixed (2026-06-20)
+
+**Status:** Per-site sitemaps, canonical URLs, and OG defaults are now generated separately for blog and devlog. Cross-linking via `sameAs` is in JSON-LD. Merging onto one domain remains optional and would be a larger change.
 
 **Finding:** Blog and devlog deploy as separate Docker images to separate hosts (`blog.joaovictornsv.dev` vs `devlog.joaovictornsv.dev`). They cross-link but share no unified sitemap, canonical strategy, or `WebSite` graph.
 
@@ -193,7 +195,7 @@ Consider adding Twitter Card tags (`twitter:card`, `twitter:title`, etc.) as wel
 
 ---
 
-### 16. 404 pages are indexable
+### 16. 404 pages are indexable ✅ Fixed (2026-06-20)
 
 **Finding:** `e404.html` and `e404-devlog.html` have no `<meta name="robots" content="noindex">`.
 
