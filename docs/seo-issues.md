@@ -185,7 +185,9 @@ Consider adding Twitter Card tags (`twitter:card`, `twitter:title`, etc.) as wel
 
 ---
 
-### 15. No internal cross-linking between posts
+### 15. No internal cross-linking between posts ⚠️ Requires human action
+
+**Status:** Editorial task. Add contextual links to related posts when writing or editing content. The broken cross-link from item 5 is fixed; broader internal linking is ongoing content work.
 
 **Finding:** Blog posts almost never link to other posts on the same site (one broken cross-link exists; see item 5). Devlog entries mostly link outward to GitHub/docs.
 
@@ -207,7 +209,7 @@ Consider adding Twitter Card tags (`twitter:card`, `twitter:title`, etc.) as wel
 
 ## Low priority / performance
 
-### 17. CSS not minified
+### 17. CSS not minified ✅ Fixed (2026-06-20)
 
 **Finding:** `https://blog.joaovictornsv.dev/css/style.css` does not appear to be minified.
 
