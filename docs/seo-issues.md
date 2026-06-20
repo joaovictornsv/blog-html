@@ -101,7 +101,9 @@ Beyond `<head>` metadata, post markup is largely non-semantic: body copy lives i
 
 ## Medium priority
 
-### 8. Missing Open Graph meta tags
+### 8. Missing Open Graph meta tags ✅ Fixed (2026-06-20)
+
+**Note:** `og:image` tags point to `/og-image.png` on each subdomain. **Human action required:** create and deploy `og-image.png` (recommended 1200×630) to both sites.
 
 **Finding:** Some Open Graph tags are missing.
 

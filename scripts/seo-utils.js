@@ -91,7 +91,14 @@ function upsertOgTag(head, property, content) {
   const tag = `<meta property="${property}" content="${escapeHtmlAttr(content)}">`;
   const re = new RegExp(`<meta\\s+property="${property}"[^>]*>`, 'i');
   if (re.test(head)) return head.replace(re, tag);
-  return head;
+  return head.replace(/<meta name="description"[^>]*>/, (m) => `${m}\n  ${tag}`);
+}
+
+function upsertTwitterTag(head, name, content) {
+  const tag = `<meta name="${name}" content="${escapeHtmlAttr(content)}">`;
+  const re = new RegExp(`<meta\\s+name="${name}"[^>]*>`, 'i');
+  if (re.test(head)) return head.replace(re, tag);
+  return head.replace(/<meta property="og:type"[^>]*>/, (m) => `${m}\n  ${tag}`);
 }
 
 function upsertJsonLd(head, id, jsonLd) {
@@ -114,5 +121,6 @@ module.exports = {
   upsertMetaTag,
   upsertLinkTag,
   upsertOgTag,
+  upsertTwitterTag,
   upsertJsonLd,
 };
