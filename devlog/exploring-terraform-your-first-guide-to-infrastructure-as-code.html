@@ -49,18 +49,18 @@
       <div id="post-body">
 <time class="post-date" datetime="2023-02-10">February 10, 2023</time>
 
-<p><em>This post was migrated from my main blog. <a href="https://blog.joaovictornsv.dev" target="_blank">blog.joaovictornsv.dev</a></em></p>
+<p><em>This post was migrated from my main blog. <a href="https://blog.joaovictornsv.dev" target="_blank" rel="noopener noreferrer">blog.joaovictornsv.dev</a></em></p>
 
 <p>Today, I want to show you the power of Terraform in action with a simple integration that you can follow while as you read the steps below.
 But first, we need to understand what Terraform is.</p>
 
 <h2>What is Terraform?</h2>
 
-<p>In short, Terraform is a tool for managing resources across different providers (AWS, GCP, Azure, GitHub, Kubernetes, etc.), all in an automated way through lines of code! If you want to dive deeper into these capabilities, I highly recommend checking out the <a href="https://www.terraform.io/" target="_blank">Terraform website</a>.</p>
+<p>In short, Terraform is a tool for managing resources across different providers (AWS, GCP, Azure, GitHub, Kubernetes, etc.), all in an automated way through lines of code! If you want to dive deeper into these capabilities, I highly recommend checking out the <a href="https://www.terraform.io/" target="_blank" rel="noopener noreferrer">Terraform website</a>.</p>
 
 <h2>Prerequisites</h2>
 
-<p>To proceed with the next steps, you need to have the Terraform installed in you machine. Installing it is simple, check the <a href="https://developer.hashicorp.com/terraform/install?product_intent=terraform" target="_blank">docs</a> for more details. Additionally, Docker must be installed for this integration.</p>
+<p>To proceed with the next steps, you need to have the Terraform installed in you machine. Installing it is simple, check the <a href="https://developer.hashicorp.com/terraform/install?product_intent=terraform" target="_blank" rel="noopener noreferrer">docs</a> for more details. Additionally, Docker must be installed for this integration.</p>
 
 <h2>Hands on</h2>
 
@@ -68,7 +68,7 @@ But first, we need to understand what Terraform is.</p>
 
 <h3>1. Setting the Providers</h3>
 
-<blockquote><p>I'm using the example described <a href="https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs" target="_blank">here</a> in the Terraform documentation.</p></blockquote>
+<blockquote><p>I'm using the example described <a href="https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs" target="_blank" rel="noopener noreferrer">here</a> in the Terraform documentation.</p></blockquote>
 
 <p>First, create a `main.tf` file and paste the following code:</p>
 
@@ -89,7 +89,7 @@ But first, we need to understand what Terraform is.</p>
 
 <h3>2. Defining Our Resources: Image and Container</h3>
 
-<p>Now, in the same file, let's pull a Docker image. For this example, I will use the <a href="https://hub.docker.com/_/nginx/" target="_blank">nginx</a> image:</p>
+<p>Now, in the same file, let's pull a Docker image. For this example, I will use the <a href="https://hub.docker.com/_/nginx/" target="_blank" rel="noopener noreferrer">nginx</a> image:</p>
 
 <pre><code>resource "docker_image" "nginx" {
     name = "nginx:1.23.3-alpine"
@@ -146,7 +146,7 @@ docker container ls</p>
 
 <h2>Bonus</h2>
 
-<p>In this post, I have only covered the basics of integrating Terraform with Docker to keep it concise and interesting. If you're interested in exploring more advanced topics, such as separating resources into different files, defining variables, or understanding the `terraform.tfstate` file, check out the <a href="https://www.youtube.com/watch?v=UZN221NJ2-M" target="_blank">video</a> I recorded (in Portuguese). It goes beyond the steps described here and dives into these additional details.</p>
+<p>In this post, I have only covered the basics of integrating Terraform with Docker to keep it concise and interesting. If you're interested in exploring more advanced topics, such as separating resources into different files, defining variables, or understanding the `terraform.tfstate` file, check out the <a href="https://www.youtube.com/watch?v=UZN221NJ2-M" target="_blank" rel="noopener noreferrer">video</a> I recorded (in Portuguese). It goes beyond the steps described here and dives into these additional details.</p>
 
 <h2>Conclusion</h2>
 

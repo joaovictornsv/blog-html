@@ -78,7 +78,7 @@ Wrap the final content in this structure:
 **Key points:**
 - Include both stylesheets: `../css/style.css` AND `../css/devlog.css`
 - Date at top of post body
-- All links use `target="_blank"`
+- All links use `target="_blank"` with `rel="noopener noreferrer"`
 - Integrate links naturally within the text, not as a separate "Links:" section at the bottom
 - Save to `devlog/[slug].html`
 

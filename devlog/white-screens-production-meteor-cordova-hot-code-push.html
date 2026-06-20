@@ -51,15 +51,15 @@
 
 <p>Recently I had to make an urgent fix on a Meteor mobile app built with Cordova. Production users were getting hit hard. The Meteor version and some Cordova plugins had been updated on the server, but the bundle on the app stores had not. Users started seeing white screens out of nowhere.</p>
 
-<p>To find the issue, I downloaded the production APK from Google Play Console and opened it on an emulator. Right away I saw this message: "Skipping downloading new version because the Cordova platform version or plugin versions have changed and are potentially incompatible." A known issue. The <a href="https://guide.meteor.com/hot-code-push" target="_blank">Meteor hot code push docs</a> describe what was going on.</p>
+<p>To find the issue, I downloaded the production APK from Google Play Console and opened it on an emulator. Right away I saw this message: "Skipping downloading new version because the Cordova platform version or plugin versions have changed and are potentially incompatible." A known issue. The <a href="https://guide.meteor.com/hot-code-push" target="_blank" rel="noopener noreferrer">Meteor hot code push docs</a> describe what was going on.</p>
 
-<p>The fix lives under <a href="https://guide.meteor.com/cordova#controlling-compatibility-version" target="_blank">controlling compatibility version</a>. In short, I needed the build hashes from the bundles that were still working in the wild, so the server would serve the right bundle version to each client. The APK is basically a zip file. I opened it, searched for <code>.json</code> files, and found <code>program.json</code>, which holds the hashes I needed.</p>
+<p>The fix lives under <a href="https://guide.meteor.com/cordova#controlling-compatibility-version" target="_blank" rel="noopener noreferrer">controlling compatibility version</a>. In short, I needed the build hashes from the bundles that were still working in the wild, so the server would serve the right bundle version to each client. The APK is basically a zip file. I opened it, searched for <code>.json</code> files, and found <code>program.json</code>, which holds the hashes I needed.</p>
 
-<p>On the server I set <code>METEOR_CORDOVA_COMPAT_VERSION_IOS</code> and <code>METEOR_CORDOVA_COMPAT_VERSION_ANDROID</code> to those values (<a href="https://github.com/renanccastro" target="_blank">Renan</a> helped with that part), rebuilt, and it worked. <a href="https://quave.one/" target="_blank">Quave One</a> made the ops side easy: check logs, set env vars, rebuild the app, all without a long detour.</p>
+<p>On the server I set <code>METEOR_CORDOVA_COMPAT_VERSION_IOS</code> and <code>METEOR_CORDOVA_COMPAT_VERSION_ANDROID</code> to those values (<a href="https://github.com/renanccastro" target="_blank" rel="noopener noreferrer">Renan</a> helped with that part), rebuilt, and it worked. <a href="https://quave.one/" target="_blank" rel="noopener noreferrer">Quave One</a> made the ops side easy: check logs, set env vars, rebuild the app, all without a long detour.</p>
 
 <p>This is a bridge, not the end state. The plan is to ship a new bundle to the stores and then remove those env vars from the server once everyone can move forward on the same Cordova stack.</p>
 
-<p>I saved the step-by-step notes in <a href="https://github.com/joaovictornsv/my-docs/blob/main/cordova_hot_code_push.md" target="_blank">Cordova Hot Code Push &amp; Compat Versions</a> on GitHub.</p>
+<p>I saved the step-by-step notes in <a href="https://github.com/joaovictornsv/my-docs/blob/main/cordova_hot_code_push.md" target="_blank" rel="noopener noreferrer">Cordova Hot Code Push &amp; Compat Versions</a> on GitHub.</p>
 </div>
     </article>
   </main>

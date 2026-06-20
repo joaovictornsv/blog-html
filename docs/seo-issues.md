@@ -231,7 +231,7 @@ Consider adding Twitter Card tags (`twitter:card`, `twitter:title`, etc.) as wel
 
 ---
 
-### 19. External links open in new tab without `rel="noopener noreferrer"`
+### 19. External links open in new tab without `rel="noopener noreferrer"` ✅ Fixed (2026-06-20)
 
 **Finding:** Devlog workflow requires `target="_blank"` on links; no post uses `rel="noopener noreferrer"` (20+ `target="_blank"` occurrences across devlog posts).
 

@@ -49,7 +49,7 @@
       <div id="post-body">
 <time class="post-date" datetime="2026-02-21">February 21, 2026</time>
 
-<p><em>This post was migrated from my main blog. <a href="https://blog.joaovictornsv.dev" target="_blank">blog.joaovictornsv.dev</a></em></p>
+<p><em>This post was migrated from my main blog. <a href="https://blog.joaovictornsv.dev" target="_blank" rel="noopener noreferrer">blog.joaovictornsv.dev</a></em></p>
 
 <p>Few weeks ago I created a cold wallet to protect my satoshis. So I decided to document the process. It's important to note that this guide is for people who understand the basics of Bitcoin. Therefore, I won't be overly detailed. I'm assuming you know the concepts and best practices mentioned below.</p>
 
@@ -63,9 +63,9 @@
 
 <p>For this, you will need a bootable USB drive with Tails. Tails is an amnesic operating system (OS) focused on security. It boots from a USB drive and all data is cleaned on shutdown.</p>
 
-<p><a href="https://tails.net/" target="_blank">Install Tails</a> on a USB drive with at least 16GB of storage. After that, configure your BIOS to boot from your USB drive instead of the internal SSD or HD.</p>
+<p><a href="https://tails.net/" target="_blank" rel="noopener noreferrer">Install Tails</a> on a USB drive with at least 16GB of storage. After that, configure your BIOS to boot from your USB drive instead of the internal SSD or HD.</p>
 
-<p>The wallet's seed will be generated on this first boot. Whenever you boot Tails, the startup will always be like a fresh setup, since the storage is cleaned on shutdown. So just start the system without any special configuration like "Persistent Storage". With Tails started, you will need to turn on the network (wired or Wi-Fi). This is the only moment you will do it. Connect to the network, access <a href="https://github.com/iancoleman/bip39/releases" target="_blank">https://github.com/iancoleman/bip39/releases</a>, and download the "bip39-standalone.html" file. Then turn off the network.</p>
+<p>The wallet's seed will be generated on this first boot. Whenever you boot Tails, the startup will always be like a fresh setup, since the storage is cleaned on shutdown. So just start the system without any special configuration like "Persistent Storage". With Tails started, you will need to turn on the network (wired or Wi-Fi). This is the only moment you will do it. Connect to the network, access <a href="https://github.com/iancoleman/bip39/releases" target="_blank" rel="noopener noreferrer">https://github.com/iancoleman/bip39/releases</a>, and download the "bip39-standalone.html" file. Then turn off the network.</p>
 
 <h2>Generate seed</h2>
 
@@ -107,7 +107,7 @@
 
 <p>To do this, you need to copy one of the receiving addresses from your wallet. Here you have two options: generate a QR code (a feature of Electrum) or set up a Watch-Only wallet. I recommend setting up a Watch-Only wallet with BlueWallet. BlueWallet always provides an unused address for each transaction, which is a good practice.</p>
 
-<p>To set up your Watch-Only wallet, <a href="https://bluewallet.io/" target="_blank">install BlueWallet</a> on your smartphone and import your wallet by scanning the zpub key with the generated QR code. This key is available in the "Info" option under the "Wallet" menu.</p>
+<p>To set up your Watch-Only wallet, <a href="https://bluewallet.io/" target="_blank" rel="noopener noreferrer">install BlueWallet</a> on your smartphone and import your wallet by scanning the zpub key with the generated QR code. This key is available in the "Info" option under the "Wallet" menu.</p>
 
 <p>Once your Watch-Only wallet is created, click the "Receive" button and copy the address. Use it to transfer your BTCs. For testing and security purposes, transfer a small amount first. You can check the transaction status on BlueWallet. Once the transaction is confirmed, let's move to the final and most important step.</p>
 

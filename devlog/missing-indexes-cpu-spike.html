@@ -49,7 +49,7 @@
       <div id="post-body">
 <time class="post-date" datetime="2026-05-04">May 4, 2026</time>
 
-<p>I did not think the MongoDB troubleshooting notes from <a href="https://devlog.joaovictornsv.dev/devlog/mongodb-troubleshooting.html" target="_blank">the last post</a> would pay off this fast. Today I was looking at another CPU peak. This time the root cause showed up almost immediately. I used the same workflow: find the heavy queries, see what they were doing, and notice they were missing indexes. So I added them.</p>
+<p>I did not think the MongoDB troubleshooting notes from <a href="https://devlog.joaovictornsv.dev/devlog/mongodb-troubleshooting.html" target="_blank" rel="noopener noreferrer">the last post</a> would pay off this fast. Today I was looking at another CPU peak. This time the root cause showed up almost immediately. I used the same workflow: find the heavy queries, see what they were doing, and notice they were missing indexes. So I added them.</p>
 
 <p>At some point a batch of queries became the bottleneck. They filter millions of documents on one field across two different collections, which meant a lot of COLSCANs. I created the indexes in the background so other work on the database could keep moving and the build itself would not spike CPU even harder. If you have not run into this yet, building indexes synchronously (not in background) can hammer CPU while it runs.</p>
 
