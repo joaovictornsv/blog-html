@@ -6,7 +6,7 @@ description: Review a blog or devlog post for SEO, markup gaps, and content form
 
 Review the post I point to (file path, or the post we are working on). Fix clear issues in the HTML; report anything that needs my input.
 
-Reference: `docs/seo-issues.md` for site-wide context. Focus on **post-level** checks below.
+Focus on **post-level** checks below.
 
 ## SEO & `<head>`
 
