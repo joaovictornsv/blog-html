@@ -37,7 +37,7 @@ function updateIndexFile(indexPath, listClass) {
   const listMatch = html.match(new RegExp(`(<ul class="${listClass}">)([\\s\\S]*?)(</ul>)`));
   if (!listMatch) throw new Error(`List not found in ${indexPath}`);
 
-  const items = [...listMatch[2].matchAll(/<li>\s*<a href="([^"]+)">([^<]*)<\/a>\s*<\/li>/g)];
+  const items = [...listMatch[2].matchAll(/<li>[\s\S]*?<a href="([^"]+)">([^<]*)<\/a>[\s\S]*?<\/li>/g)];
   const newItems = items.map(([, href, label]) => {
     const postPath = path.join(path.dirname(indexPath), href);
     const postHtml = fs.existsSync(postPath) ? fs.readFileSync(postPath, 'utf-8') : '';

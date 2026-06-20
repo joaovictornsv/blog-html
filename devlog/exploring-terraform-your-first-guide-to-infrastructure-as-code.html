@@ -6,14 +6,14 @@
   <title>Exploring Terraform: Your First Guide to Infrastructure as Code</title>
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://devlog.joaovictornsv.dev/devlog/exploring-terraform-your-first-guide-to-infrastructure-as-code.html">
-  <meta name="description" content="This post was migrated from my main blog. blog.joaovictornsv.dev">
+  <meta name="description" content="Pull a Docker image and run a container using only Terraform.">
   <meta name="twitter:card" content="summary">
   <meta property="og:image" content="https://devlog.joaovictornsv.dev/og-image.png">
   <meta property="og:type" content="article">
-  <meta name="twitter:description" content="This post was migrated from my main blog. blog.joaovictornsv.dev">
+  <meta name="twitter:description" content="Pull a Docker image and run a container using only Terraform.">
   <meta name="twitter:title" content="Exploring Terraform: Your First Guide to Infrastructure as Code">
   <meta property="og:url" content="https://devlog.joaovictornsv.dev/devlog/exploring-terraform-your-first-guide-to-infrastructure-as-code.html">
-  <meta property="og:description" content="This post was migrated from my main blog. blog.joaovictornsv.dev">
+  <meta property="og:description" content="Pull a Docker image and run a container using only Terraform.">
   <meta property="og:title" content="Exploring Terraform: Your First Guide to Infrastructure as Code">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/devlog.css">
@@ -24,7 +24,7 @@
   "@type": "BlogPosting",
   "headline": "Exploring Terraform: Your First Guide to Infrastructure as Code",
   "url": "https://devlog.joaovictornsv.dev/devlog/exploring-terraform-your-first-guide-to-infrastructure-as-code.html",
-  "description": "This post was migrated from my main blog. blog.joaovictornsv.dev",
+  "description": "Pull a Docker image and run a container using only Terraform.",
   "author": {
     "@type": "Person",
     "name": "João Victor",
@@ -70,7 +70,7 @@ But first, we need to understand what Terraform is.</p>
 
 <blockquote><p>I'm using the example described <a href="https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs" target="_blank" rel="noopener noreferrer">here</a> in the Terraform documentation.</p></blockquote>
 
-<p>First, create a `main.tf` file and paste the following code:</p>
+<p>First, create a <span class="code-text">main.tf</span> file and paste the following code:</p>
 
 <pre><code>terraform {
     required_providers {
@@ -95,17 +95,20 @@ But first, we need to understand what Terraform is.</p>
     name = "nginx:1.23.3-alpine"
 }</code></pre>
 
-<p>The `resource` block has two key elements:
-1. **Resource Type**: Specifies the type of resource to create. In this case, it's a Docker image.
-2. **Resource Identifier**: A unique name to differentiate resources of the same type. This identifier is also crucial for referencing the resource later.</p>
+<p>The <span class="code-text">resource</span> block has two key elements:</p>
+
+<ol>
+  <li><strong>Resource Type</strong>: Specifies the type of resource to create. In this case, it's a Docker image.</li>
+  <li><strong>Resource Identifier</strong>: A unique name to differentiate resources of the same type. This identifier is also crucial for referencing the resource later.</li>
+</ol>
 
 <p>Let's use this identifier to create our container:</p>
 
-<p>resource "docker_container" "nginx" {
+<pre><code>resource "docker_container" "nginx" {
     image = docker_image.nginx.image_id
-    name  = "nginx_alpine"</p>
+    name  = "nginx_alpine"
 
-<pre><code>ports {
+    ports {
         internal = 80
         external = 8080
     }
@@ -124,32 +127,32 @@ But first, we need to understand what Terraform is.</p>
 
 <p>To ensure that our resource configurations are valid, run the following command:</p>
 
-<p>terraform validate</p>
+<pre><code>terraform validate</code></pre>
 
 <p>Next, execute:</p>
 
-<p>terraform plan</p>
+<pre><code>terraform plan</code></pre>
 
 <p>This command generates a report showing the changes Terraform will make. At the end of the output, you'll see a summary of what will be created, modified, or destroyed:</p>
 
-<p>Plan: 2 to add, 0 to change, 0 to destroy.</p>
+<pre><code>Plan: 2 to add, 0 to change, 0 to destroy.</code></pre>
 
 <p>To apply the changes, use:</p>
 
-<p>terraform apply</p>
+<pre><code>terraform apply</code></pre>
 
-<p>Terraform will ask for confirmation. Just type yes to proceed (you can skip this step by using the -auto-approve flag). Once the changes are applied, wait for Terraform to complete the process. If successful, you should see this message in your terminal:</p>
+<p>Terraform will ask for confirmation. Just type <span class="code-text">yes</span> to proceed (you can skip this step by using the <span class="code-text">-auto-approve</span> flag). Once the changes are applied, wait for Terraform to complete the process. If successful, you should see this message in your terminal:</p>
 
-<p>Apply complete! Resources: 2 added, 0 changed, 0 destroyed.</p>
+<pre><code>Apply complete! Resources: 2 added, 0 changed, 0 destroyed.</code></pre>
 
 <p>Finally, verify that the resources were created by running these Docker commands:</p>
 
-<p>docker image ls
-docker container ls</p>
+<pre><code>docker image ls
+docker container ls</code></pre>
 
 <h2>Bonus</h2>
 
-<p>In this post, I have only covered the basics of integrating Terraform with Docker to keep it concise and interesting. If you're interested in exploring more advanced topics, such as separating resources into different files, defining variables, or understanding the `terraform.tfstate` file, check out the <a href="https://www.youtube.com/watch?v=UZN221NJ2-M" target="_blank" rel="noopener noreferrer">video</a> I recorded (in Portuguese). It goes beyond the steps described here and dives into these additional details.</p>
+<p>In this post, I have only covered the basics of integrating Terraform with Docker to keep it concise and interesting. If you're interested in exploring more advanced topics, such as separating resources into different files, defining variables, or understanding the <span class="code-text">terraform.tfstate</span> file, check out the <a href="https://www.youtube.com/watch?v=UZN221NJ2-M" target="_blank" rel="noopener noreferrer">video</a> I recorded (in Portuguese). It goes beyond the steps described here and dives into these additional details.</p>
 
 <h2>Conclusion</h2>
 

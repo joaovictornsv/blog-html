@@ -6,14 +6,14 @@
   <title>Bulk Operations Can Break Meteor Reactivity</title>
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://devlog.joaovictornsv.dev/devlog/bulk-operations-meteor.html">
-  <meta name="description" content="Today I hit a reactivity issue where a button stayed disabled on the client side when it shouldn't have been. Tracking it down led me to discover how bulk…">
+  <meta name="description" content="Bulk database inserts can slip past Meteor reactivity and freeze the UI.">
   <meta name="twitter:card" content="summary">
   <meta property="og:image" content="https://devlog.joaovictornsv.dev/og-image.png">
   <meta property="og:type" content="article">
-  <meta name="twitter:description" content="Today I hit a reactivity issue where a button stayed disabled on the client side when it shouldn't have been. Tracking it down led me to discover how bulk…">
+  <meta name="twitter:description" content="Bulk database inserts can slip past Meteor reactivity and freeze the UI.">
   <meta name="twitter:title" content="Bulk Operations Can Break Meteor Reactivity">
   <meta property="og:url" content="https://devlog.joaovictornsv.dev/devlog/bulk-operations-meteor.html">
-  <meta property="og:description" content="Today I hit a reactivity issue where a button stayed disabled on the client side when it shouldn't have been. Tracking it down led me to discover how bulk…">
+  <meta property="og:description" content="Bulk database inserts can slip past Meteor reactivity and freeze the UI.">
   <meta property="og:title" content="Bulk Operations Can Break Meteor Reactivity">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/devlog.css">
@@ -24,7 +24,7 @@
   "@type": "BlogPosting",
   "headline": "Bulk Operations Can Break Meteor Reactivity",
   "url": "https://devlog.joaovictornsv.dev/devlog/bulk-operations-meteor.html",
-  "description": "Today I hit a reactivity issue where a button stayed disabled on the client side when it shouldn't have been. Tracking it down led me to discover how bulk…",
+  "description": "Bulk database inserts can slip past Meteor reactivity and freeze the UI.",
   "author": {
     "@type": "Person",
     "name": "João Victor",
@@ -51,7 +51,7 @@
 
 <p>Today I hit a reactivity issue where a button stayed disabled on the client side when it shouldn't have been. Tracking it down led me to discover how bulk database operations can break Meteor's publication system.</p>
 
-<p>The root cause came down to how Meteor handles optimistic updates versus server-side inserts. When you use Meteor's method stubs, the client gets an immediate visual feedback (optimistic insert), and documents appear in minimongo. But if the server then performs bulk inserts that bypass the normal subscribe/publish system and hit the database directly through the raw driver, those operations can slip past Meteor's reactivity detection. The oplog, which Meteor relies on to broadcast changes to subscribers, either doesn't catch these raw operations or catches them with a delay.</p>
+<p>The root cause came down to how Meteor handles optimistic updates versus server-side inserts. When you use Meteor's method stubs, the client gets an immediate visual feedback (optimistic insert), and documents appear in <span class="code-text">minimongo</span>. But if the server then performs bulk inserts that bypass the normal subscribe/publish system and hit the database directly through the raw driver, those operations can slip past Meteor's reactivity detection. The <span class="code-text">oplog</span>, which Meteor relies on to broadcast changes to subscribers, either doesn't catch these raw operations or catches them with a delay.</p>
 
 <p>So what happens is this: the client displays the optimistic insert (the button stays disabled waiting for related data), but the server's bulk inserts never reach the publication, so the subscriber never receives the data. The UI gets stuck. Refreshing the page fixes it because then the subscription runs fresh and everything is already in the database, so it gets published normally.</p>
 

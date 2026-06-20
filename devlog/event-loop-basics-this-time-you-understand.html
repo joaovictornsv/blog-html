@@ -6,14 +6,14 @@
   <title>Event Loop Basics: This Time You Understand</title>
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://devlog.joaovictornsv.dev/devlog/event-loop-basics-this-time-you-understand.html">
-  <meta name="description" content="This post was migrated from my main blog. blog.joaovictornsv.dev">
+  <meta name="description" content="A simple explanation of the Event Loop you can teach your grandmother.">
   <meta name="twitter:card" content="summary">
   <meta property="og:image" content="https://devlog.joaovictornsv.dev/og-image.png">
   <meta property="og:type" content="article">
-  <meta name="twitter:description" content="This post was migrated from my main blog. blog.joaovictornsv.dev">
+  <meta name="twitter:description" content="A simple explanation of the Event Loop you can teach your grandmother.">
   <meta name="twitter:title" content="Event Loop Basics: This Time You Understand">
   <meta property="og:url" content="https://devlog.joaovictornsv.dev/devlog/event-loop-basics-this-time-you-understand.html">
-  <meta property="og:description" content="This post was migrated from my main blog. blog.joaovictornsv.dev">
+  <meta property="og:description" content="A simple explanation of the Event Loop you can teach your grandmother.">
   <meta property="og:title" content="Event Loop Basics: This Time You Understand">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/devlog.css">
@@ -24,7 +24,7 @@
   "@type": "BlogPosting",
   "headline": "Event Loop Basics: This Time You Understand",
   "url": "https://devlog.joaovictornsv.dev/devlog/event-loop-basics-this-time-you-understand.html",
-  "description": "This post was migrated from my main blog. blog.joaovictornsv.dev",
+  "description": "A simple explanation of the Event Loop you can teach your grandmother.",
   "author": {
     "@type": "Person",
     "name": "João Victor",
@@ -71,32 +71,32 @@
 
 <pre><code>function f1() {
 	console.log('Hi by f1!');
-}</code></pre>
+}
 
-<pre><code>function f2() {
+function f2() {
 	f1();
-}</code></pre>
+}
 
-<p>f2();</p>
+f2();</code></pre>
 
 <p>When the program runs, the following steps will occur:</p>
 
 <ol>
-  <li>`f2` function call will be added to the stack. Stack size: 1</li>
-  <li>`f1` function call will be added to the stack. Stack size: 2</li>
-  <li>`console.log` function call will be added to the stack. Stack size: 3</li>
-  <li>`console.log` will execute and be removed from the stack. Stack size: 2</li>
-  <li>`f1` will finish and be removed from the stack. Stack size: 1</li>
-  <li>`f2` will finish and be removed from the stack. Stack size: 0</li>
+  <li><span class="code-text">f2</span> function call will be added to the stack. Stack size: 1</li>
+  <li><span class="code-text">f1</span> function call will be added to the stack. Stack size: 2</li>
+  <li><span class="code-text">console.log</span> function call will be added to the stack. Stack size: 3</li>
+  <li><span class="code-text">console.log</span> will execute and be removed from the stack. Stack size: 2</li>
+  <li><span class="code-text">f1</span> will finish and be removed from the stack. Stack size: 1</li>
+  <li><span class="code-text">f2</span> will finish and be removed from the stack. Stack size: 0</li>
 </ol>
 
 <h3>Microtask</h3>
 
-<p>A function executed after the function that created it exits, and only if the JavaScript execution stack is empty. Some examples of microtasks are the Promises' callback functions: `.then`, `.catch`, and `.finally`.</p>
+<p>A function executed after the function that created it exits, and only if the JavaScript execution stack is empty. Some examples of microtasks are the Promises' callback functions: <span class="code-text">.then</span>, <span class="code-text">.catch</span>, and <span class="code-text">.finally</span>.</p>
 
 <h3>Macrotask</h3>
 
-<p>A function that executes after the JavaScript execution stack and microtask have both been cleared. Macrotask represents some discrete and independent work. Some examples of macro tasks are the callback functions of the asynchronous timer: `setTimeout`, `setInterval`, and `setInterval`.</p>
+<p>A function that executes after the JavaScript execution stack and microtask have both been cleared. Macrotask represents some discrete and independent work. Some examples of macro tasks are the callback functions of the asynchronous timer: <span class="code-text">setTimeout</span>, <span class="code-text">setInterval</span>, and <span class="code-text">setInterval</span>.</p>
 
 <h2>The loop</h2>
 
@@ -116,63 +116,63 @@
 
 <p>Let's understand that process using this code example:</p>
 
-<p>console.log("1");</p>
+<pre><code>console.log("1");
 
-<p>setTimeout(() =&gt; {
+setTimeout(() =&gt; {
 	console.log("2");
-}, 0);</p>
+}, 0);
 
-<p>Promise.resolve().then(() =&gt; {
+Promise.resolve().then(() =&gt; {
 	console.log("3");
-});</p>
+});
 
-<p>console.log("4");</p>
+console.log("4");</code></pre>
 
 <p>Before continuing, try to figure out the code output based only on your knowledge and on what was said above.</p>
 
 <p>Let's move on. The output will be:</p>
 
-<p>1
+<pre><code>1
 4
 3
-2</p>
+2</code></pre>
 
 <p>Okay, why? Let's understand.</p>
 
 <p>Now let's read the code again, but with the initial concepts and the three phases of Event Loop in mind.</p>
 
-<p>// A synchronous code, execute it.
+<pre><code>// A synchronous code, execute it.
 // Output: 1
-console.log("1");</p>
+console.log("1");
 
-<p>// Oh, a setTimeout function, this is a macrotask.
+// Oh, a setTimeout function, this is a macrotask.
 // Let's send the callback to the Macrotasks Queue.
 // Output: 1
 setTimeout(() =&gt; {
 	console.log("2");
-}, 0);</p>
+}, 0);
 
-<p>// Hmm, a Promise, a microtask.
+// Hmm, a Promise, a microtask.
 // Let's send the .then callback to the Microtask Queue.
 // Output: 1
 Promise.resolve().then(() =&gt; {
 	console.log("3");
-});</p>
+});
 
-<p>// Other synchronous code, run it.
+// Other synchronous code, run it.
 // Output: 1 4
-console.log("4");</p>
+console.log("4");
 
-<p>// -----------------------------</p>
+// -----------------------------
 
-<p>// Okay, now let's run the Microtask Queue:
-// Output: 1 4 3</p>
+// Okay, now let's run the Microtask Queue:
+// Output: 1 4 3
 
-<p>// Finally let's run the Macrotasks Queue:
-// Output: 1 4 3 2</p>
+// Finally let's run the Macrotasks Queue:
+// Output: 1 4 3 2
 
-<p>// Callstack, Microtask Queue, and Macrotasks Queue are empty.
-// Then, THE END.</p>
+// Callstack, Microtask Queue, and Macrotasks Queue are empty.
+// Then, THE END.</code></pre>
 
 <h2>Next steps</h2>
 

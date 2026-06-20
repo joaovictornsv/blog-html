@@ -6,14 +6,14 @@
   <title>White Screens in Production: Fixing Meteor Cordova Hot Code Push</title>
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://devlog.joaovictornsv.dev/devlog/white-screens-production-meteor-cordova-hot-code-push.html">
-  <meta name="description" content="Recently I had to make an urgent fix on a Meteor mobile app built with Cordova. Production users were getting hit hard. The Meteor version and some…">
+  <meta name="description" content="Production users hit white screens after a Meteor Cordova hot code push mismatch.">
   <meta name="twitter:card" content="summary">
   <meta property="og:image" content="https://devlog.joaovictornsv.dev/og-image.png">
   <meta property="og:type" content="article">
-  <meta name="twitter:description" content="Recently I had to make an urgent fix on a Meteor mobile app built with Cordova. Production users were getting hit hard. The Meteor version and some…">
+  <meta name="twitter:description" content="Production users hit white screens after a Meteor Cordova hot code push mismatch.">
   <meta name="twitter:title" content="White Screens in Production: Fixing Meteor Cordova Hot Code Push">
   <meta property="og:url" content="https://devlog.joaovictornsv.dev/devlog/white-screens-production-meteor-cordova-hot-code-push.html">
-  <meta property="og:description" content="Recently I had to make an urgent fix on a Meteor mobile app built with Cordova. Production users were getting hit hard. The Meteor version and some…">
+  <meta property="og:description" content="Production users hit white screens after a Meteor Cordova hot code push mismatch.">
   <meta property="og:title" content="White Screens in Production: Fixing Meteor Cordova Hot Code Push">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/devlog.css">
@@ -24,7 +24,7 @@
   "@type": "BlogPosting",
   "headline": "White Screens in Production: Fixing Meteor Cordova Hot Code Push",
   "url": "https://devlog.joaovictornsv.dev/devlog/white-screens-production-meteor-cordova-hot-code-push.html",
-  "description": "Recently I had to make an urgent fix on a Meteor mobile app built with Cordova. Production users were getting hit hard. The Meteor version and some…",
+  "description": "Production users hit white screens after a Meteor Cordova hot code push mismatch.",
   "author": {
     "@type": "Person",
     "name": "João Victor",
@@ -53,9 +53,9 @@
 
 <p>To find the issue, I downloaded the production APK from Google Play Console and opened it on an emulator. Right away I saw this message: "Skipping downloading new version because the Cordova platform version or plugin versions have changed and are potentially incompatible." A known issue. The <a href="https://guide.meteor.com/hot-code-push" target="_blank" rel="noopener noreferrer">Meteor hot code push docs</a> describe what was going on.</p>
 
-<p>The fix lives under <a href="https://guide.meteor.com/cordova#controlling-compatibility-version" target="_blank" rel="noopener noreferrer">controlling compatibility version</a>. In short, I needed the build hashes from the bundles that were still working in the wild, so the server would serve the right bundle version to each client. The APK is basically a zip file. I opened it, searched for <code>.json</code> files, and found <code>program.json</code>, which holds the hashes I needed.</p>
+<p>The fix lives under <a href="https://guide.meteor.com/cordova#controlling-compatibility-version" target="_blank" rel="noopener noreferrer">controlling compatibility version</a>. In short, I needed the build hashes from the bundles that were still working in the wild, so the server would serve the right bundle version to each client. The APK is basically a zip file. I opened it, searched for <span class="code-text">.json</span> files, and found <span class="code-text">program.json</span>, which holds the hashes I needed.</p>
 
-<p>On the server I set <code>METEOR_CORDOVA_COMPAT_VERSION_IOS</code> and <code>METEOR_CORDOVA_COMPAT_VERSION_ANDROID</code> to those values (<a href="https://github.com/renanccastro" target="_blank" rel="noopener noreferrer">Renan</a> helped with that part), rebuilt, and it worked. <a href="https://quave.one/" target="_blank" rel="noopener noreferrer">Quave One</a> made the ops side easy: check logs, set env vars, rebuild the app, all without a long detour.</p>
+<p>On the server I set <span class="code-text">METEOR_CORDOVA_COMPAT_VERSION_IOS</span> and <span class="code-text">METEOR_CORDOVA_COMPAT_VERSION_ANDROID</span> to those values (<a href="https://github.com/renanccastro" target="_blank" rel="noopener noreferrer">Renan</a> helped with that part), rebuilt, and it worked. <a href="https://quave.one/" target="_blank" rel="noopener noreferrer">Quave One</a> made the ops side easy: check logs, set env vars, rebuild the app, all without a long detour.</p>
 
 <p>This is a bridge, not the end state. The plan is to ship a new bundle to the stores and then remove those env vars from the server once everyone can move forward on the same Cordova stack.</p>
 

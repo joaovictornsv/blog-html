@@ -6,14 +6,14 @@
   <title>Millions of Documents, COLSCANs on Two Collections, Background Indexes</title>
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://devlog.joaovictornsv.dev/devlog/missing-indexes-cpu-spike.html">
-  <meta name="description" content="I did not think the MongoDB troubleshooting notes from the last post would pay off this fast. Today I was looking at another CPU peak. This time the root…">
+  <meta name="description" content="Millions of documents, COLSCANs on two collections, fixed with background indexes.">
   <meta name="twitter:card" content="summary">
   <meta property="og:image" content="https://devlog.joaovictornsv.dev/og-image.png">
   <meta property="og:type" content="article">
-  <meta name="twitter:description" content="I did not think the MongoDB troubleshooting notes from the last post would pay off this fast. Today I was looking at another CPU peak. This time the root…">
+  <meta name="twitter:description" content="Millions of documents, COLSCANs on two collections, fixed with background indexes.">
   <meta name="twitter:title" content="Millions of Documents, COLSCANs on Two Collections, Background Indexes">
   <meta property="og:url" content="https://devlog.joaovictornsv.dev/devlog/missing-indexes-cpu-spike.html">
-  <meta property="og:description" content="I did not think the MongoDB troubleshooting notes from the last post would pay off this fast. Today I was looking at another CPU peak. This time the root…">
+  <meta property="og:description" content="Millions of documents, COLSCANs on two collections, fixed with background indexes.">
   <meta property="og:title" content="Millions of Documents, COLSCANs on Two Collections, Background Indexes">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/devlog.css">
@@ -24,7 +24,7 @@
   "@type": "BlogPosting",
   "headline": "Millions of Documents, COLSCANs on Two Collections, Background Indexes",
   "url": "https://devlog.joaovictornsv.dev/devlog/missing-indexes-cpu-spike.html",
-  "description": "I did not think the MongoDB troubleshooting notes from the last post would pay off this fast. Today I was looking at another CPU peak. This time the root…",
+  "description": "Millions of documents, COLSCANs on two collections, fixed with background indexes.",
   "author": {
     "@type": "Person",
     "name": "João Victor",
@@ -51,7 +51,7 @@
 
 <p>I did not think the MongoDB troubleshooting notes from <a href="https://devlog.joaovictornsv.dev/devlog/mongodb-troubleshooting.html" target="_blank" rel="noopener noreferrer">the last post</a> would pay off this fast. Today I was looking at another CPU peak. This time the root cause showed up almost immediately. I used the same workflow: find the heavy queries, see what they were doing, and notice they were missing indexes. So I added them.</p>
 
-<p>At some point a batch of queries became the bottleneck. They filter millions of documents on one field across two different collections, which meant a lot of COLSCANs. I created the indexes in the background so other work on the database could keep moving and the build itself would not spike CPU even harder. If you have not run into this yet, building indexes synchronously (not in background) can hammer CPU while it runs.</p>
+<p>At some point a batch of queries became the bottleneck. They filter millions of documents on one field across two different collections, which meant a lot of <span class="code-text">COLSCAN</span>s. I created the indexes in the background so other work on the database could keep moving and the build itself would not spike CPU even harder. If you have not run into this yet, building indexes synchronously (not in background) can hammer CPU while it runs.</p>
 
 <p>The builds took a few minutes. After they finished, the expensive queries stopped piling up because they could use the indexes. What was left was letting the queries that were already in flight finish. Once they drained, CPU dropped sharply, response times went back to normal, and watching the charts ramp down was oddly satisfying.</p>
 
