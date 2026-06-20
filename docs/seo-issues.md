@@ -241,7 +241,9 @@ Consider adding Twitter Card tags (`twitter:card`, `twitter:title`, etc.) as wel
 
 ---
 
-### 20. `.html` extensions in public URLs
+### 20. `.html` extensions in public URLs — No action (optional)
+
+**Note:** Canonical URLs are consistent with `.html` paths. Extensionless URLs would require server/CDN configuration and are optional.
 
 **Finding:** All permalinks include `.html` (e.g. `/posts/my-degoogle-journey.html`).
 
@@ -251,7 +253,7 @@ Consider adding Twitter Card tags (`twitter:card`, `twitter:title`, etc.) as wel
 
 ---
 
-### 21. Generic homepage titles
+### 21. Generic homepage titles ✅ Fixed (2026-06-20)
 
 **Finding:** Root pages use short titles (`JV's blog`, `JV's devlog`) with no tagline or author context.
 
