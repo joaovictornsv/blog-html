@@ -219,7 +219,9 @@ Consider adding Twitter Card tags (`twitter:card`, `twitter:title`, etc.) as wel
 
 ---
 
-### 18. No favicon
+### 18. No favicon ⚠️ Requires human action
+
+**Status:** Create a favicon asset (e.g. `favicon.ico` or PNG) and add `<link rel="icon">` to shared head markup on both sites. Deploy the file to each Docker image root.
 
 **Finding:** No `favicon.ico`, `link rel="icon"`, or `apple-touch-icon` in any HTML page. Live request to `https://blog.joaovictornsv.dev/favicon.ico` returns 404.
 
