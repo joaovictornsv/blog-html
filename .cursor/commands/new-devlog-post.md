@@ -35,62 +35,54 @@ Avoid: "Pre-Planning"
 - Follow the title guidelines above: specific and detailed, not one-word generic titles.
 - Keep the slug stable (`devlog/[slug].html`); only change `<title>`, `<h1>`, and the `devlog.html` list label if the user picks a different title.
 
-Example format in your reply:
-
-**Recommended:** [title used in the post]
-
-**Other options:**
-- [alternative 1]
-- [alternative 2]
-- …
-
-If the user chooses a different title, update the post and `devlog.html` accordingly.
-
 ## 2. HTML Structure
 
-Wrap the final content in this structure:
+Copy the `<head>` from an existing devlog post (e.g. `devlog/event-loop-basics-this-time-you-understand.html`) and update all values for the new post. Every post needs:
+
+- `meta description`, `canonical`, `robots`, Open Graph, Twitter Card tags
+- JSON-LD `BlogPosting` with matching `headline`, `description`, `url`, `datePublished`
+- Both stylesheets: `../css/style.css` and `../css/devlog.css`
+- Canonical base: `https://devlog.joaovictornsv.dev/devlog/[slug].html`
+
+**Meta description:** Write a **complete short phrase** (roughly one sentence). Prefer the opening hook of the post. **Never** end with `…` or auto-truncate. Use the **same text** in `meta description`, `og:description`, `twitter:description`, JSON-LD, and the index excerpt.
+
+Body structure inside `#post-body`:
 
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>[Post Title]</title>
-  <link rel="stylesheet" href="../css/style.css">
-  <link rel="stylesheet" href="../css/devlog.css">
-</head>
-<body>
-  <main>
-    <a href="../index.html" class="back">&lt; back</a>
-    
-    <article id="post-content">
-      <h1 id="post-title">[Post Title]</h1>
-      <div id="post-body">[Date - e.g., "April 27, 2026"]
+<time class="post-date" datetime="2026-06-20">June 20, 2026</time>
 
-[Post content here with semantic markup: wrap paragraphs in `<p>`, section titles in `<h2>`/`<h3>`, lists in `<ul>`/`<ol>`, and links integrated naturally using <a href="[url]" target="_blank" rel="noopener noreferrer">[text]</a>]</div>
-    </article>
-  </main>
-</body>
-</html>
+<p>First paragraph…</p>
+
+<h2>Section title</h2>
+<p>…</p>
+
+<ul>
+  <li>List item</li>
+</ul>
 ```
 
-**Key points:**
-- Include both stylesheets: `../css/style.css` AND `../css/devlog.css`
-- Date at top of post body
-- All links use `target="_blank"` with `rel="noopener noreferrer"`
-- Integrate links naturally within the text, not as a separate "Links:" section at the bottom
-- Save to `devlog/[slug].html`
+**Markup rules (required):**
+- One `<time class="post-date" datetime="YYYY-MM-DD">` at the top — not plain text dates
+- Paragraphs in `<p>`, sections in `<h2>` / `<h3>` — never `<strong>` for headings
+- Lists in `<ul>` / `<ol>` / `<li>` — never `- item` lines inside a `<p>`
+- Section breaks: `<hr>` — not `---` on its own line
+- External links: `<a href="…" target="_blank" rel="noopener noreferrer">`
+- Internal post links: relative paths in the same folder (e.g. `other-post.html`, not `/html/…`)
+
+**Code formatting:**
+- Multi-line snippets, terminal output, JSON/HCL blocks → `<pre><code>…</code></pre>`
+- Inline commands, file names, env vars, function names → `<span class="code-text">…</span>`
+- Do not leave code-like text as bare prose when it should be highlighted
+
+Save to `devlog/[slug].html`.
 
 ## 3. Publish
 
-- [ ] HTML structure correct
-- [ ] All links have `target="_blank"`
-- [ ] Date at top of post body
-- [ ] Create file: `devlog/[slug].html`
-- [ ] Add to `devlog.html` list (top of `<ul class="list">`):
-  ```html
-  <li><a href="devlog/[slug].html">[Title]</a></li>
-  ```
+- [ ] Full SEO `<head>` (description, canonical, OG, Twitter, JSON-LD) — all descriptions match
+- [ ] Semantic body markup (`time`, `p`, `h2`/`h3`, `ul`/`ol`, `pre`/`code`, `code-text`)
+- [ ] No hyphen-in-paragraph lists, no `---` dividers, no truncated descriptions
+- [ ] Add entry at top of `devlog.html` list (bare `<li><a>…</a></li>` is fine)
+- [ ] Run `node scripts/update-index-listings.js` to rebuild list entries with date + excerpt
+- [ ] Optionally run `node scripts/check-links.js` on the new post
 
 Done!
