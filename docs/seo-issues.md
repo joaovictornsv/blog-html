@@ -163,7 +163,7 @@ Consider adding Twitter Card tags (`twitter:card`, `twitter:title`, etc.) as wel
 
 ---
 
-### 13. Homepage listings lack dates and excerpts
+### 13. Homepage listings lack dates and excerpts ✅ Fixed (2026-06-20)
 
 **Finding:** `index.html` and `devlog.html` list posts as bare `<a>` links with no `<time>`, description, or `article` wrapper per entry.
 

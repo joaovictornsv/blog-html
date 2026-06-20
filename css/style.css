@@ -56,6 +56,20 @@ h2 {
   margin-bottom: var(--spacing);
 }
 
+.post-listing time {
+  display: block;
+  font-size: 0.85em;
+  opacity: 0.75;
+  margin-top: 0.25rem;
+}
+
+.post-excerpt {
+  font-size: 0.9em;
+  opacity: 0.85;
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
 .back {
   display: inline-block;
   margin-bottom: calc(var(--spacing) * 2);
