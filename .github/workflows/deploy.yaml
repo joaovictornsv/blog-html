@@ -30,6 +30,9 @@ jobs:
       - name: Generate sitemap
         run: node scripts/generate-sitemap.js
 
+      - name: Minify CSS for production
+        run: node scripts/minify-css.js
+
       - name: Deploy with Quave Cloud CLI
         uses: zcloud-ws/zcloud-deploy-action@main
         with:

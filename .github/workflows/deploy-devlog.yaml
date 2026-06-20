@@ -29,6 +29,9 @@ jobs:
       - name: Generate devlog sitemap
         run: node scripts/generate-devlog-sitemap.js
 
+      - name: Minify CSS for production
+        run: node scripts/minify-css.js
+
       - name: Use devlog Dockerfile
         run: cp Dockerfile.devlog Dockerfile
 
