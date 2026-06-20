@@ -133,7 +133,7 @@ Consider adding Twitter Card tags (`twitter:card`, `twitter:title`, etc.) as wel
 
 ---
 
-### 10. No explicit index directive
+### 10. No explicit index directive ✅ Fixed (2026-06-20)
 
 **Finding:** The page does not contain an explicit `index` meta tag or header.
 
