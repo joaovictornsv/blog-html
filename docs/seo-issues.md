@@ -53,7 +53,9 @@ Beyond `<head>` metadata, post markup is largely non-semantic: body copy lives i
 
 ---
 
-### 4. WWW canonicalization
+### 4. WWW canonicalization ⚠️ Requires human action
+
+**Status:** Cannot be fixed in this repo. Configure a 301 redirect at Quave Cloud or Cloudflare so `www.blog.joaovictornsv.dev` and `www.devlog.joaovictornsv.dev` redirect to the non-www hosts (or vice versa — pick one canonical host).
 
 **Finding:** The `www` and non-`www` versions of the URL are not redirected to a single canonical host.
 
@@ -63,7 +65,7 @@ Beyond `<head>` metadata, post markup is largely non-semantic: body copy lives i
 
 ---
 
-### 5. Broken links
+### 5. Broken links ✅ Fixed (2026-06-20)
 
 **Finding:** The page has one or more broken links.
 
