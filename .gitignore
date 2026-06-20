@@ -2,5 +2,7 @@
 .vscode/
 feed.xml
 devlog-feed.xml
+sitemap.xml
+robots.txt
 TECH-WRITER.md
 txt/*

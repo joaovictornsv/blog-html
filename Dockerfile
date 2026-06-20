@@ -4,6 +4,8 @@ COPY httpd.conf .
 COPY e404.html .
 COPY ./index.html .
 COPY my-book-recommendations.html .
+COPY sitemap.xml .
+COPY robots.txt .
 COPY css ./css
 COPY rss ./rss
 COPY posts ./posts

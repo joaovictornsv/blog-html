@@ -40,7 +40,7 @@ Beyond `<head>` metadata, post markup is largely non-semantic: body copy lives i
 
 ---
 
-### 3. No sitemap
+### 3. No sitemap ✅ Fixed (2026-06-20)
 
 **Finding:** No XML sitemap was detected.
 

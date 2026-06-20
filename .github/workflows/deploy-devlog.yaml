@@ -9,6 +9,9 @@ on:
       - 'css/**'
       - 'devlog/**'
       - 'scripts/generate-devlog-rss.js'
+      - 'scripts/generate-devlog-sitemap.js'
+      - 'scripts/sitemap.js'
+      - 'scripts/seo-utils.js'
       - 'scripts/rss.js'
       - 'Dockerfile.devlog'
       - '.dockerignore'
@@ -22,6 +25,9 @@ jobs:
 
       - name: Generate devlog RSS feed
         run: node scripts/generate-devlog-rss.js
+
+      - name: Generate devlog sitemap
+        run: node scripts/generate-devlog-sitemap.js
 
       - name: Use devlog Dockerfile
         run: cp Dockerfile.devlog Dockerfile

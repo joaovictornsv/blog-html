@@ -10,6 +10,9 @@ on:
       - 'posts/**'
       - 'my-book-recommendations.html'
       - 'scripts/generate-rss.js'
+      - 'scripts/generate-sitemap.js'
+      - 'scripts/sitemap.js'
+      - 'scripts/seo-utils.js'
       - 'scripts/rss.js'
       - 'Dockerfile'
       - '.dockerignore'
@@ -23,6 +26,9 @@ jobs:
 
       - name: Generate RSS feed
         run: node scripts/generate-rss.js
+
+      - name: Generate sitemap
+        run: node scripts/generate-sitemap.js
 
       - name: Deploy with Quave Cloud CLI
         uses: zcloud-ws/zcloud-deploy-action@main
