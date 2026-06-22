@@ -75,9 +75,9 @@ function generateRssXml(posts, config) {
 }
 
 function generateRss(config) {
-  const { sourceDir, outputFile } = config;
+  const { sourceDir, outputFile, excludeFiles = ['index.html'] } = config;
   const files = fs.existsSync(sourceDir)
-    ? fs.readdirSync(sourceDir).filter(f => f.endsWith('.html'))
+    ? fs.readdirSync(sourceDir).filter(f => f.endsWith('.html') && !excludeFiles.includes(f))
     : [];
 
   const posts = files.map(filename => {

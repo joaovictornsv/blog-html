@@ -6,10 +6,12 @@ on:
       - 'index.html'
       - 'e404.html'
       - 'httpd.conf'
-      - 'css/style.css'
+      - 'css/**'
       - 'posts/**'
+      - 'devlog/**'
       - 'my-book-recommendations.html'
       - 'scripts/generate-rss.js'
+      - 'scripts/generate-devlog-rss.js'
       - 'scripts/generate-sitemap.js'
       - 'scripts/sitemap.js'
       - 'scripts/seo-utils.js'
@@ -24,8 +26,10 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Generate RSS feed
-        run: node scripts/generate-rss.js
+      - name: Generate RSS feeds
+        run: |
+          node scripts/generate-rss.js
+          node scripts/generate-devlog-rss.js
 
       - name: Generate sitemap
         run: node scripts/generate-sitemap.js

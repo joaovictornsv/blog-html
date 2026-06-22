@@ -1,7 +1,7 @@
 const path = require('path');
 
 const BLOG_BASE = 'https://blog.joaovictornsv.dev';
-const DEVLOG_BASE = 'https://devlog.joaovictornsv.dev';
+const DEVLOG_BASE = `${BLOG_BASE}/devlog`;
 
 const DATE_LINE_RE = /^(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}$/;
 
@@ -44,12 +44,10 @@ function extractPostDescription(html) {
 
 function getCanonicalUrl(filePath) {
   const rel = path.relative(path.join(__dirname, '..'), filePath).replace(/\\/g, '/');
-  const isDevlog = rel === 'devlog.html' || rel.startsWith('devlog/') || rel === 'e404-devlog.html';
-  const base = isDevlog ? DEVLOG_BASE : BLOG_BASE;
 
   if (rel === 'index.html') return `${BLOG_BASE}/`;
-  if (rel === 'devlog.html') return `${DEVLOG_BASE}/`;
-  return `${base}/${rel}`;
+  if (rel === 'devlog/index.html') return `${DEVLOG_BASE}/`;
+  return `${BLOG_BASE}/${rel}`;
 }
 
 module.exports = {
