@@ -10,7 +10,7 @@ function minifyCss(css) {
     .trim();
 }
 
-const files = ['css/style.css', 'css/devlog.css'];
+const files = ['css/style.css'];
 
 for (const file of files) {
   const fullPath = path.join(__dirname, '..', file);

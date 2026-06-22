@@ -41,7 +41,7 @@ Copy the `<head>` from an existing devlog post (e.g. `devlog/event-loop-basics-t
 
 - `meta description`, `canonical`, `robots`, Open Graph, Twitter Card tags
 - JSON-LD `BlogPosting` with matching `headline`, `description`, `url`, `datePublished`
-- Both stylesheets: `../css/style.css` and `../css/devlog.css`
+- Stylesheet: `../css/style.css`
 - Canonical base: `https://blog.joaovictornsv.dev/devlog/[slug].html`
 
 **Meta description:** Write a **complete short phrase** (roughly one sentence). Prefer the opening hook of the post. **Never** end with `…` or auto-truncate. Use the **same text** in `meta description`, `og:description`, `twitter:description`, JSON-LD, and the index excerpt.
