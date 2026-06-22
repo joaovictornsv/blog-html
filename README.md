@@ -1,6 +1,6 @@
 # blog-html
 
-Static files for the main blog and devlog apps.
+Static files for the main blog and devlog, deployed as a single site.
 
 ## Local Preview
 
@@ -12,7 +12,7 @@ python3 -m http.server 8000
 
 Then open:
 - **Main blog**: http://localhost:8000/
-- **Devlog**: http://localhost:8000/devlog.html
+- **Devlog**: http://localhost:8000/devlog/
 
 ## Converting Text Posts to HTML
 

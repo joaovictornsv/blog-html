@@ -55,4 +55,4 @@ function updateIndexFile(indexPath, listClass) {
 }
 
 updateIndexFile(path.join(ROOT, 'index.html'), 'list');
-updateIndexFile(path.join(ROOT, 'devlog.html'), 'list');
+updateIndexFile(path.join(ROOT, 'devlog/index.html'), 'list');

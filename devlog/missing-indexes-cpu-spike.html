@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Millions of Documents, COLSCANs on Two Collections, Background Indexes</title>
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://devlog.joaovictornsv.dev/devlog/missing-indexes-cpu-spike.html">
+  <link rel="canonical" href="https://blog.joaovictornsv.dev/devlog/missing-indexes-cpu-spike.html">
   <meta name="description" content="Millions of documents, COLSCANs on two collections, fixed with background indexes.">
   <meta name="twitter:card" content="summary">
   <meta property="og:image" content="https://blog.joaovictornsv.dev/og-image.png">
   <meta property="og:type" content="article">
   <meta name="twitter:description" content="Millions of documents, COLSCANs on two collections, fixed with background indexes.">
   <meta name="twitter:title" content="Millions of Documents, COLSCANs on Two Collections, Background Indexes">
-  <meta property="og:url" content="https://devlog.joaovictornsv.dev/devlog/missing-indexes-cpu-spike.html">
+  <meta property="og:url" content="https://blog.joaovictornsv.dev/devlog/missing-indexes-cpu-spike.html">
   <meta property="og:description" content="Millions of documents, COLSCANs on two collections, fixed with background indexes.">
   <meta property="og:title" content="Millions of Documents, COLSCANs on Two Collections, Background Indexes">
   <link rel="stylesheet" href="../css/style.css">
@@ -23,14 +23,14 @@
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "Millions of Documents, COLSCANs on Two Collections, Background Indexes",
-  "url": "https://devlog.joaovictornsv.dev/devlog/missing-indexes-cpu-spike.html",
+  "url": "https://blog.joaovictornsv.dev/devlog/missing-indexes-cpu-spike.html",
   "description": "Millions of documents, COLSCANs on two collections, fixed with background indexes.",
   "author": {
     "@type": "Person",
     "name": "João Victor",
     "url": "https://joaovictornsv.dev"
   },
-  "mainEntityOfPage": "https://devlog.joaovictornsv.dev/devlog/missing-indexes-cpu-spike.html",
+  "mainEntityOfPage": "https://blog.joaovictornsv.dev/devlog/missing-indexes-cpu-spike.html",
   "publisher": {
     "@type": "Person",
     "name": "João Victor"
@@ -42,14 +42,14 @@
 </head>
 <body>
   <main>
-    <a href="../index.html" class="back">&lt; back</a>
+    <a href="index.html" class="back">&lt; back</a>
 
     <article id="post-content">
       <h1 id="post-title">Millions of Documents, COLSCANs on Two Collections, Background Indexes</h1>
       <div id="post-body">
 <time class="post-date" datetime="2026-05-04">May 4, 2026</time>
 
-<p>I did not think the MongoDB troubleshooting notes from <a href="https://devlog.joaovictornsv.dev/devlog/mongodb-troubleshooting.html" target="_blank" rel="noopener noreferrer">the last post</a> would pay off this fast. Today I was looking at another CPU peak. This time the root cause showed up almost immediately. I used the same workflow: find the heavy queries, see what they were doing, and notice they were missing indexes. So I added them.</p>
+<p>I did not think the MongoDB troubleshooting notes from <a href="https://blog.joaovictornsv.dev/devlog/mongodb-troubleshooting.html" target="_blank" rel="noopener noreferrer">the last post</a> would pay off this fast. Today I was looking at another CPU peak. This time the root cause showed up almost immediately. I used the same workflow: find the heavy queries, see what they were doing, and notice they were missing indexes. So I added them.</p>
 
 <p>At some point a batch of queries became the bottleneck. They filter millions of documents on one field across two different collections, which meant a lot of <span class="code-text">COLSCAN</span>s. I created the indexes in the background so other work on the database could keep moving and the build itself would not spike CPU even harder. If you have not run into this yet, building indexes synchronously (not in background) can hammer CPU while it runs.</p>
 

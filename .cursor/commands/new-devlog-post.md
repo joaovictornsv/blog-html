@@ -33,7 +33,7 @@ Avoid: "Pre-Planning"
 - Offer **5–8 options**, plus your recommended default (the one used in the post unless the user picks another).
 - Group alternatives by angle when helpful (e.g. workflow shift, outcome, technique, tie-in to a linked post).
 - Follow the title guidelines above: specific and detailed, not one-word generic titles.
-- Keep the slug stable (`devlog/[slug].html`); only change `<title>`, `<h1>`, and the `devlog.html` list label if the user picks a different title.
+- Keep the slug stable (`devlog/[slug].html`); only change `<title>`, `<h1>`, and the `devlog/index.html` list label if the user picks a different title.
 
 ## 2. HTML Structure
 
@@ -42,7 +42,7 @@ Copy the `<head>` from an existing devlog post (e.g. `devlog/event-loop-basics-t
 - `meta description`, `canonical`, `robots`, Open Graph, Twitter Card tags
 - JSON-LD `BlogPosting` with matching `headline`, `description`, `url`, `datePublished`
 - Both stylesheets: `../css/style.css` and `../css/devlog.css`
-- Canonical base: `https://devlog.joaovictornsv.dev/devlog/[slug].html`
+- Canonical base: `https://blog.joaovictornsv.dev/devlog/[slug].html`
 
 **Meta description:** Write a **complete short phrase** (roughly one sentence). Prefer the opening hook of the post. **Never** end with `…` or auto-truncate. Use the **same text** in `meta description`, `og:description`, `twitter:description`, JSON-LD, and the index excerpt.
 
@@ -81,7 +81,7 @@ Save to `devlog/[slug].html`.
 - [ ] Full SEO `<head>` (description, canonical, OG, Twitter, JSON-LD) — all descriptions match
 - [ ] Semantic body markup (`time`, `p`, `h2`/`h3`, `ul`/`ol`, `pre`/`code`, `code-text`)
 - [ ] No hyphen-in-paragraph lists, no `---` dividers, no truncated descriptions
-- [ ] Add entry at top of `devlog.html` list (bare `<li><a>…</a></li>` is fine)
+- [ ] Add entry at top of `devlog/index.html` list (bare `<li><a>…</a></li>` is fine)
 - [ ] Run `node scripts/update-index-listings.js` to rebuild list entries with date + excerpt
 - [ ] Optionally run `node scripts/check-links.js` on the new post
 

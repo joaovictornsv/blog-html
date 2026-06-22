@@ -15,7 +15,7 @@ Focus on **post-level** checks below.
 - [ ] `link rel="canonical"` points to the correct subdomain URL (`blog` → `posts/`, `devlog` → `devlog/`)
 - [ ] `meta robots` is `index, follow` on public posts
 - [ ] Open Graph + Twitter tags present; JSON-LD `BlogPosting` has `headline`, `description`, `url`, `datePublished`
-- [ ] Index listing excerpt (`index.html` or `devlog.html`) matches the post description — run `node scripts/update-index-listings.js` if stale
+- [ ] Index listing excerpt (`index.html` or `devlog/index.html`) matches the post description — run `node scripts/update-index-listings.js` if stale
 
 ## Body markup
 

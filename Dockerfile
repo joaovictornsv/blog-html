@@ -9,5 +9,6 @@ COPY robots.txt .
 COPY css ./css
 COPY rss ./rss
 COPY posts ./posts
+COPY devlog ./devlog
 
 CMD ["/busybox-httpd", "-f", "-v", "-p", "3000", "-c", "httpd.conf"]
