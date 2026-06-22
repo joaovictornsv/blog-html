@@ -52,6 +52,22 @@ h2 {
   margin-bottom: 0;
 }
 
+@media (max-width: 600px) {
+  .links {
+    display: block;
+    margin-left: calc(var(--spacing) * 1.2);
+    list-style: disc;
+  }
+
+  .links li {
+    margin-bottom: 0.35rem;
+  }
+
+  .links .link-sep {
+    display: none;
+  }
+}
+
 .list li {
   margin-bottom: var(--spacing);
 }
