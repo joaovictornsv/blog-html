@@ -2,6 +2,7 @@ FROM lipanski/docker-static-website:latest
 
 COPY httpd.conf .
 COPY favicon.ico .
+COPY og-image.png .
 COPY e404.html .
 COPY ./index.html .
 COPY my-book-recommendations.html .
