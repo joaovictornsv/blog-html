@@ -133,7 +133,6 @@ h1.title .github-avatar img {
   display: block;
   width: 20px;
   height: 20px;
-  border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.15);
   transition: border-color 0.15s ease;
 }
