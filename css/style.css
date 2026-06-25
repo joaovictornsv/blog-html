@@ -102,6 +102,46 @@ h1 {
   word-wrap: break-word;
 }
 
+h1.title {
+  margin-bottom: var(--spacing);
+}
+
+h1.title .title-content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
+
+h1.title .github-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+h1.title .github-avatar:hover,
+h1.title .github-avatar:focus,
+h1.title .github-avatar:visited {
+  text-decoration: none;
+  color: inherit;
+}
+
+h1.title .github-avatar img {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  transition: border-color 0.15s ease;
+}
+
+h1.title .github-avatar:hover img {
+  border-color: rgba(0, 0, 0, 0.35);
+}
+
 #post-body {
   word-wrap: break-word;
   overflow-wrap: break-word;
