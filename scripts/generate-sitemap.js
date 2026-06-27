@@ -7,7 +7,10 @@ const SITE_URL = process.env.SITE_URL || 'https://blog.joaovictornsv.dev';
 
 const pages = [
   getCanonicalUrl(path.join(ROOT, 'index.html')),
-  getCanonicalUrl(path.join(ROOT, 'my-book-recommendations.html')),
+  getCanonicalUrl(path.join(ROOT, 'links/index.html')),
+  ...collectHtmlFiles(path.join(ROOT, 'links'))
+    .filter((file) => !file.endsWith(`${path.sep}index.html`))
+    .map((file) => getCanonicalUrl(file)),
   getCanonicalUrl(path.join(ROOT, 'devlog/index.html')),
   ...collectHtmlFiles(path.join(ROOT, 'posts')).map((file) => getCanonicalUrl(file)),
   ...collectHtmlFiles(path.join(ROOT, 'devlog'))

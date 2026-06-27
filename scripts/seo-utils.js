@@ -46,6 +46,7 @@ function getCanonicalUrl(filePath) {
   const rel = path.relative(path.join(__dirname, '..'), filePath).replace(/\\/g, '/');
 
   if (rel === 'index.html') return `${BLOG_BASE}/`;
+  if (rel === 'links/index.html') return `${BLOG_BASE}/links/`;
   if (rel === 'devlog/index.html') return `${DEVLOG_BASE}/`;
   return `${BLOG_BASE}/${rel}`;
 }

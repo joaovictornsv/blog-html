@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <title>Wise Drop — JV's blog</title>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://blog.joaovictornsv.dev/links/wise-drop.html">
+  <meta name="description" content="Wise Drop — João Victor's daily newsletter with two insightful phrases and blog updates.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://blog.joaovictornsv.dev/og-image.png">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="JV's blog">
+  <meta name="twitter:description" content="Wise Drop — João Victor's daily newsletter with two insightful phrases and blog updates.">
+  <meta name="twitter:title" content="Wise Drop — JV's blog">
+  <meta property="og:url" content="https://blog.joaovictornsv.dev/links/wise-drop.html">
+  <meta property="og:description" content="Wise Drop — João Victor's daily newsletter with two insightful phrases and blog updates.">
+  <meta property="og:title" content="Wise Drop — JV's blog">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+<body>
+  <main>
+    <a href="index.html" class="back">&lt; back</a>
+
+    <h1>Wise Drop</h1>
+    <p class="about">My daily newsletter. Each edition has two short phrases I found worth keeping — one Christian, one general — pulled from books, videos, posts, or other newsletters. When I publish something new here, I include that too.</p>
+    <p class="about">Right now this is a personal project I share with a few friends. If you'd like to be on the list, send me an email at <a href="mailto:hi@joaovictornsv.dev">hi@joaovictornsv.dev</a>.</p>
+
+    <h2>Example edition:</h2>
+    <div class="wise-drop-example">
+      <iframe src="wise-drop-example.html" title="Wise Drop example edition"></iframe>
+    </div>
+  </main>
+  <script>
+    const iframe = document.querySelector('.wise-drop-example iframe');
+
+    function resizeWiseDropIframe() {
+      const doc = iframe.contentDocument;
+      if (!doc?.body) return;
+      iframe.style.height = `${Math.ceil(doc.body.scrollHeight)}px`;
+    }
+
+    iframe.addEventListener('load', resizeWiseDropIframe);
+    window.addEventListener('resize', resizeWiseDropIframe);
+  </script>
+</body>
+</html>

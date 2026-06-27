@@ -86,6 +86,38 @@ h2 {
   margin-bottom: 0;
 }
 
+.link-directory {
+  list-style: none;
+  margin-left: 0;
+}
+
+.link-directory li {
+  margin-bottom: var(--spacing);
+}
+
+.link-description {
+  font-size: 0.9em;
+  opacity: 0.85;
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
+.wise-drop-example {
+  margin-top: var(--spacing);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fafafd;
+}
+
+.wise-drop-example iframe {
+  display: block;
+  width: 100%;
+  height: 0;
+  border: 0;
+  background: #fafafd;
+}
+
 .back {
   display: inline-block;
   margin-bottom: calc(var(--spacing) * 2);
