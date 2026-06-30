@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <title>Give the Tool, Not Only the Prompt</title>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://blog.joaovictornsv.dev/devlog/create-the-tool-not-only-the-prompt.html">
+  <meta name="description" content="Simple tools like a CLI or a bash script often give AI agents more leverage than a clever prompt alone.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://blog.joaovictornsv.dev/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JV's devlog">
+  <meta name="twitter:description" content="Simple tools like a CLI or a bash script often give AI agents more leverage than a clever prompt alone.">
+  <meta name="twitter:title" content="Give the Tool, Not Only the Prompt">
+  <meta property="og:url" content="https://blog.joaovictornsv.dev/devlog/create-the-tool-not-only-the-prompt.html">
+  <meta property="og:description" content="Simple tools like a CLI or a bash script often give AI agents more leverage than a clever prompt alone.">
+  <meta property="og:title" content="Give the Tool, Not Only the Prompt">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <script type="application/ld+json" id="json-ld">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Give the Tool, Not Only the Prompt",
+  "url": "https://blog.joaovictornsv.dev/devlog/create-the-tool-not-only-the-prompt.html",
+  "description": "Simple tools like a CLI or a bash script often give AI agents more leverage than a clever prompt alone.",
+  "author": {
+    "@type": "Person",
+    "name": "João Victor",
+    "url": "https://joaovictornsv.dev"
+  },
+  "mainEntityOfPage": "https://blog.joaovictornsv.dev/devlog/create-the-tool-not-only-the-prompt.html",
+  "publisher": {
+    "@type": "Person",
+    "name": "João Victor"
+  },
+  "datePublished": "2026-06-30"
+}
+</script>
+
+</head>
+<body>
+  <main>
+    <a href="index.html" class="back">&lt; back</a>
+
+    <article id="post-content">
+      <h1 id="post-title">Give the Tool, Not Only the Prompt</h1>
+      <div id="post-body">
+<time class="post-date" datetime="2026-06-30">June 30, 2026</time>
+
+<p>For some months I managed my readings in a spreadsheet: books I own, books I already read, books I want to buy, buy priority, and so on. Every time I got a recommendation or finished a book, I had to open the sheet and update a specific row manually. I started thinking about handling those updates with natural language, using AI. Simple prompts like "list me all the books I have in the finances category" or "add these 6 books to the buy priority list."</p>
+
+<p>Then I remembered a good blog post called <a href="https://medium.com/@NMitchem/ai-agents-dont-need-your-developer-tools-7f6adebb479c" target="_blank" rel="noopener noreferrer">AI agents don't need your developer tools</a>, and one quote caught my attention:</p>
+
+<blockquote>
+  <p><em>So if agents don't need our tools and they don't need our frameworks, what do they actually need?</em></p>
+  <p><em>The honest answer is mostly boring: well-documented APIs with stable contracts, reliable file systems, clean version control semantics, structured I/O, and sandboxing. The kind of infrastructure that has existed in some form for decades.</em></p>
+</blockquote>
+
+<p>Based on that, I decided to create a simple CLI so agents could manage my book lists. I built <a href="https://github.com/joaovictornsv/books-cli" target="_blank" rel="noopener noreferrer">books-cli</a>.</p>
+
+<h2>The power of a CLI</h2>
+
+<p>AI agents are very good at running bash commands, so a CLI is cheaper and easier to use. Along with the CLI, I wrote simple docs that teach the AI how to use it: how to edit a book, update fields, list, paginate, filter, and search by term. For storage I use a plain SQLite file, so I can back it up easily on my machine.</p>
+
+<p>I've been testing this for some days and it works very well. I get a better picture of my books with simple prompts like "list me all the books that I want to sell" (because that's a field in the database) or "based on the book I'm currently reading, list books from my buy priority list with the same theme."</p>
+
+<p>The same idea applies elsewhere. I wanted a fast overview of GitHub items assigned to me across repositories. I didn't build a complex app or a long prompt to merge the data. I wrote a simple bash script that uses GitHub CLI to fetch the items.</p>
+
+<p>Agents are fast and smart, that's obvious, but they need the right tools and the right instructions.</p>
+
+<p>Before you automate your next task, think about it. Sometimes a prompt is not good enough. You need to provide a tool. Teach your agents how to lint files, run tests, fetch items from GitHub, and so on. Maybe a bash script or a small CLI with concise docs is enough to improve your work.</p>
+
+<hr>
+
+<p>P.S. This entire post was written using the Cursor feature to record voice, so basically what you read, I was dictating to the AI. If you are not a native English speaker, it's a very good option to train your speaking.</p>
+</div>
+    </article>
+  </main>
+</body>
+</html>
