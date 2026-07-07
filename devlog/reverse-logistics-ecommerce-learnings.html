@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <title>Nine Lessons from Building a White-Label Reverse Logistics Platform</title>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://blog.joaovictornsv.dev/devlog/reverse-logistics-ecommerce-learnings.html">
+  <meta name="description" content="Nine lessons from building a customizable e-commerce reverse logistics platform at scale.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://blog.joaovictornsv.dev/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JV's devlog">
+  <meta name="twitter:description" content="Nine lessons from building a customizable e-commerce reverse logistics platform at scale.">
+  <meta name="twitter:title" content="Nine Lessons from Building a White-Label Reverse Logistics Platform">
+  <meta property="og:url" content="https://blog.joaovictornsv.dev/devlog/reverse-logistics-ecommerce-learnings.html">
+  <meta property="og:description" content="Nine lessons from building a customizable e-commerce reverse logistics platform at scale.">
+  <meta property="og:title" content="Nine Lessons from Building a White-Label Reverse Logistics Platform">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <script type="application/ld+json" id="json-ld">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Nine Lessons from Building a White-Label Reverse Logistics Platform",
+  "url": "https://blog.joaovictornsv.dev/devlog/reverse-logistics-ecommerce-learnings.html",
+  "description": "Nine lessons from building a customizable e-commerce reverse logistics platform at scale.",
+  "author": {
+    "@type": "Person",
+    "name": "João Victor",
+    "url": "https://joaovictornsv.dev"
+  },
+  "mainEntityOfPage": "https://blog.joaovictornsv.dev/devlog/reverse-logistics-ecommerce-learnings.html",
+  "publisher": {
+    "@type": "Person",
+    "name": "João Victor"
+  },
+  "datePublished": "2026-07-07"
+}
+</script>
+
+</head>
+<body>
+  <main>
+    <a href="index.html" class="back">&lt; back</a>
+
+    <article id="post-content">
+      <h1 id="post-title">Nine Lessons from Building a White-Label Reverse Logistics Platform</h1>
+      <div id="post-body">
+<time class="post-date" datetime="2026-07-07">July 7, 2026</time>
+
+<p>I spent time leading work on a large white-label reverse logistics platform. Each client had their own rules, flows, customizations, and styles. After that project, I wrote down what stuck with me. These are the lessons I keep coming back to.</p>
+
+<h2>Be prepared for a lot of changes</h2>
+
+<p>This is intrinsic to the product. Because it was white-label, every new feature or adjustment had to preserve that extreme customizability. The code that enables customization also needs to be good enough to allow more extensions. If a new client asks for a new piece of the flow or the UI, the code should already be prepared to support it.</p>
+
+<h2>Consider the extreme scenarios</h2>
+
+<p>Whenever you build a feature, think about the massive-scale scenario. API requests and webhook calls can reach thousands in a few minutes. Hundreds of clients can access the same page and list the same data. The same flow can be triggered thousands of times along the day, and it should be performant enough to not create bottlenecks.</p>
+
+<p>To handle this properly, you need more than good code. You also need a good data model and proper database strategies, like creating good indexes or preferring a secondary replica to read data instead of the primary one. These extreme scenarios are also helpful to decide the importance and the order of actions.</p>
+
+<h2>Differentiate immediate behaviors from enqueued ones</h2>
+
+<p>Know how to define and differentiate behaviors that should be triggered immediately from behaviors that could be enqueued or run in a background job.</p>
+
+<p>Email sendings and other types of notifications can be enqueued. They don't need to be a sync, blocking operation in the flow. Other operations, like updating a secondary collection or recalculating a specific number, can also be moved to an async job instead of blocking the main flow.</p>
+
+<p>But other actions should be marked as a crucial part of the flow. For example, you need to await a status change. If a status doesn't change correctly, the flow should be aborted because it will create issues downstream.</p>
+
+<p>It's also important to understand what the sync and blocking operations do versus what the async and enqueued operations do. If they are not properly implemented, you can get race condition issues. If a sync operation depends on an async operation, or vice versa, maybe you need to readjust your code.</p>
+
+<p>And if a flow has many crucial parts, it can be slow. The user should have good feedback on the UI so they know why it's taking longer than expected.</p>
+
+<h2>Consider the reversibility of actions</h2>
+
+<p>Sometimes a status can be changed to a previous one, or an action can be undone. Your code and your platform should be prepared to undo actions and make atomic, reversible actions without side effects. This prevents inconsistency in the database and avoids allocating your team's time to manual fixes.</p>
+
+<h2>Use logs as audit traces</h2>
+
+<p>Each log should have enough context so the dev who will read it (or the agent that will read it) has enough data to understand what happened at that time. With enough context, you can also filter logs properly, e.g. just the logs for a specific user ID.</p>
+
+<p>A good log should be good enough for both a human and an AI to understand the complete timeline of events.</p>
+
+<h2>Each logic should have a single source of truth</h2>
+
+<p>That's wider knowledge spread in the developer world, but it's important to mention it here. A large system like this one has a lot of logic and decisions being made in every part of the code. Each crucial part should have its own single source of truth: a dedicated file or function where that decision lives, and it should be properly tested.</p>
+
+<p>Also, if the same flow is spread across many parts, that flow is also considered a specific decision or logic and should be centralized and tested.</p>
+
+<p>The ideal is that each decision should not have side effects. A single piece of the core product should not be responsible for breaking the other parts. They should be isolated. As mentioned above, we should always consider the option to reverse actions. With that in mind, we can create code that isolates each decision separately and ensures that different pieces won't affect each other.</p>
+
+<h2>The customer is not always right</h2>
+
+<p>Sometimes customers send feedback or ask for new features, fixes, or tweaks in the flow that make sense at first glance. But if you think it through, the same problem can be solved in a different way than what was requested, or the request can be discarded entirely if it strays from the product goal.</p>
+
+<p>A customer can ask for a feature that works in way X. However, if you dig deeper, you may understand that based on the feature request, the customer's pain can be solved even better by implementing a different feature in way Y. The client is not always 100% correct in the request. It can be discarded, or the solution can be completely different and still solve the issue.</p>
+
+<h2>Work closer to the product owner and product manager</h2>
+
+<p>As a leader, you need to understand the product better. You need to understand the flows, why each feature was implemented, and which pains each feature solves. If you understand the product goal and what customers expect from your product, you can make better decisions.</p>
+
+<p>With a full overview of the system and the product, you can analyze a client's pain more accurately and discuss customer requests with stronger arguments alongside your team and POs. You can choose the path that benefits everyone: the devs, the board, and the customer. It's not always an easy decision, but it's better to take a hard right decision than an easy wrong one.</p>
+
+<h2>Leadership: don't be the bottleneck</h2>
+
+<p>You as a leader should not be the bottleneck of the team. Using AI, devs could open many PRs in a day, and you should be smart enough to also use AI to speed up your reviews.</p>
+
+<p>Implementation should be fast so you can spend more time on the details and discussion about a task with your team, to avoid blocking the dev in the middle of the sprint.</p>
+
+<p>Also, you don't need to be a perfectionist. Perfect code doesn't exist. You should take care of the project patterns and good practices and make sure that the code is being tested correctly. This can be automated with AI and with the proper workflow tools.</p>
+
+<h2>Conclusion</h2>
+
+<p>I hope any of these lessons can be helpful to you in your dev career.</p>
+
+<p>See you next time!</p>
+</div>
+    </article>
+  </main>
+</body>
+</html>
