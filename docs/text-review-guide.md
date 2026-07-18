@@ -2,7 +2,7 @@
 
 Instructions for AI-assisted review of my writing. Use this document when I ask for a **review report** (analysis and suggestions), not when I ask for direct revision in the file.
 
-**Related workflow:** `.cursor/commands/revise-text.md` is for inline editing. This guide is for a **complete report** I read and apply at my own pace.
+**Related workflow:** `.cursor/commands/review-draft-report.md` uses this guide for a full report. `.cursor/commands/revise-draft-inline.md` is for inline editing in the file.
 
 ---
 
@@ -84,7 +84,7 @@ Do **not** list “top actions” here. Prioritized next steps belong only in §
 
 **Goals:** Correct important errors; show the best rephrases; teach me something for next time.
 
-I handle grammar and clarity fixes separately (e.g. `revise-text`). This section is for learning and reference in the report, not for my revision checklist.
+I handle grammar and clarity fixes separately (e.g. `revise-draft-inline`). This section is for learning and reference in the report, not for my revision checklist.
 
 Include:
 
@@ -212,7 +212,7 @@ List **3–5 specific strengths** with short quotes or references. Genuine prais
 
 **Exclude**
 
-- Grammar, spelling, and routine clarity fixes (I use `revise-text` or similar for those).  
+- Grammar, spelling, and routine clarity fixes (I use `revise-draft-inline` or similar for those).  
 - Vague items like “fix grammar in ¶3” or “improve clarity.”
 
 **Format (example)**
@@ -248,7 +248,7 @@ Tag suggestions when helpful:
 1. Read the **executive summary** for orientation.  
 2. Read the body sections (grammar through strengths).  
 3. Use **§5.9 revision checklist** as the prioritized action list (P1 → P3).  
-4. Run **`revise-text`** (or similar) for grammar and clarity fixes separately.  
+4. Run **`revise-draft-inline`** (or similar) for grammar and clarity fixes separately.  
 5. Apply substantive changes that resonate; ignore the rest. Keep lines that feel like **my signature**.
 
 ---
@@ -263,7 +263,7 @@ Tag suggestions when helpful:
 | **Audience** | General public; mixed backgrounds |
 | **Provocation level** | Medium—challenge ideas, respect people |
 | **Scores** | Never use numeric ratings (1–10 or similar) |
-| **Grammar/clarity in checklist** | No—handled via `revise-text`; checklist is substance only |
+| **Grammar/clarity in checklist** | No—handled via `revise-draft-inline`; checklist is substance only |
 | **Prioritized actions** | Only in §5.9 (not in executive summary) |
 
 Optional per session: audience nuance, constraints (“don’t touch the opening”), provocation level if this piece is an exception.

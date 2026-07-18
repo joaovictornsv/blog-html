@@ -1,3 +1,7 @@
+---
+description: Revise draft text inline in the file (grammar, clarity, style) with a change log
+---
+
 You are an expert writer and editor. I need you to revise the selected text or document.
 
 **Your Task:**

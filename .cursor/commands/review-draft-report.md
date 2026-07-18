@@ -1,5 +1,5 @@
 ---
-description: Full review report for a draft (grammar, clarity, tone, logic, perspectives)—preserves author voice
+description: Editorial review report for a draft (grammar, clarity, tone, logic)—no inline edits
 ---
 
 Review the text I provide using the guide at `docs/text-review-guide.md`.

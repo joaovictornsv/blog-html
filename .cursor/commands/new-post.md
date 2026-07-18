@@ -18,54 +18,12 @@ The script outputs a draft under `html/`. **Do not publish that file as-is.** Us
 
 `<slug>` = filename without `.txt`. `<title>` = first line of the `.txt` file.
 
-## 2. Body markup
+## 2. Apply standards
 
-Inside `#post-body`, apply semantic HTML:
+Follow `docs/post-html-checklist.md` for `<head>`, body markup, and index listing.
 
-- First content line if it's a date → `<time class="post-date" datetime="YYYY-MM-DD">Month D, YYYY</time>`
-- `### Section title` → `<h2>` (use `<h3>` for subsections)
-- Each paragraph → `<p>…</p>`
-- `- item` blocks → `<ul><li>…</li></ul>` (never keep `- ` lines inside `<p>`)
-- `1. item` blocks → `<ol><li>…</li></ol>`
-- `---` on its own line → `<hr>`
-- Markdown links `[text](url)` → `<a href="url">text</a>`
-- Multi-line code → `<pre><code>…</code></pre>`
+## 3. Final checks
 
-`scripts/post-body.js` handles most of this when content is passed through `formatPostBody` — verify the output manually.
-
-## 3. SEO `<head>`
-
-Copy structure from any current `posts/*.html` file. Required on every post:
-
-- `meta name="description"` — **complete short phrase**, no `…` truncation; prefer the post opening
-- `link rel="canonical"` → `https://blog.joaovictornsv.dev/posts/<slug>.html`
-- `meta robots`, Open Graph, Twitter Card tags
-- JSON-LD `BlogPosting` with `headline`, `description`, `url`, `datePublished` (from `<time datetime>`)
-
-**Same description text** everywhere: meta, OG, Twitter, JSON-LD, and index excerpt.
-
-## 4. Index listing
-
-Add a bare entry at the **top** of `<ul class="list">` in `index.html`:
-
-```html
-<li><a href="posts/<slug>.html"><title></a></li>
-```
-
-Then run:
-
-```
-node scripts/update-index-listings.js
-```
-
-This rebuilds each list item with `<article>`, `<time>`, and `<p class="post-excerpt">` from the post file.
-
-## 5. Final checks
-
-- [ ] Date is `<time datetime="…">`, not plain text
-- [ ] Lists are real `<ul>`/`<ol>`, not hyphens in paragraphs
-- [ ] Internal links use relative paths within `posts/` (e.g. `other-post.html`)
-- [ ] External links: `target="_blank" rel="noopener noreferrer"` when opening a new tab
-- [ ] Optionally: `node scripts/check-links.js`
+Work through every item in `docs/post-html-checklist.md`. Fix issues directly; flag anything that needs my input.
 
 Done!
