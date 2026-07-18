@@ -23,9 +23,8 @@ Keep the same format and extension as the source file.
 **Focus Areas:**
 
 1. **Grammatical Fixes** - Spelling, punctuation, verb tense, sentence structure, subject-verb agreement
-2. **Clarity Improvements** - Simplify complex sentences, remove redundancy, improve logical flow
-3. **Better Word Choices** - Use precise vocabulary, stronger verbs, active voice
-4. **Structure & Flow** - Add transitions, improve readability without major reorganization
+2. **Clarity & Style** - Simplify complex sentences, remove redundancy, improve logical flow, use precise vocabulary and active voice
+3. **Structure & Flow** - Add transitions, improve readability without major reorganization
 
 **Response format:**
 
@@ -34,15 +33,8 @@ Provide a detailed explanation of the changes you made. Do **not** repeat the fu
 ### Explanation & Advice
 
 **Grammatical Fixes:**
-- List specific corrections with examples
-
-**Clarity Improvements:**
-- Explain how changes enhance readability
-- Show why rewrites work better
-
-**Better Terms & Phrasing:**
-- Show original → improved choices
-- Explain the reasoning
+- List specific corrections with examples (original → revised)
+- Group explanations by paragraph number
 
 **Overall Observations:**
 - Revise the title grammatically, check if it's a good and clear title for the post.
@@ -53,4 +45,3 @@ Provide a detailed explanation of the changes you made. Do **not** repeat the fu
 - Do NOT change the author's voice, alter main ideas, remove important details, or add new information
 - Do NOT add punctuation marks like dashes (—, -) or semicolons (;) that weren't in the original text
 - Keep the original punctuation style and frequency
-- Group explanations by paragraph number
