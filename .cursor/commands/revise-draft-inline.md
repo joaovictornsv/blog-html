@@ -1,5 +1,5 @@
 ---
-description: Revise draft text inline in the file (grammar, clarity, style) with a change log
+description: Revise draft text to a new -revised file (grammar, clarity, style) with a change log
 ---
 
 You are an expert writer and editor. I need you to revise the selected text or document.
@@ -11,6 +11,15 @@ Improve the writing by enhancing clarity, grammar, and style while preserving:
 - ✓ The intended tone and voice
 - ✓ The main arguments and conclusions
 
+**Output file:**
+Write the revised text to a **new file** with a `-revised` suffix. Do **not** edit the original in place.
+
+Examples:
+- `txt/we-are-batteries.txt` → `txt/we-are-batteries-revised.txt`
+- `posts/draft.md` → `posts/draft-revised.md`
+
+Keep the same format and extension as the source file.
+
 **Focus Areas:**
 
 1. **Grammatical Fixes** - Spelling, punctuation, verb tense, sentence structure, subject-verb agreement
@@ -18,9 +27,9 @@ Improve the writing by enhancing clarity, grammar, and style while preserving:
 3. **Better Word Choices** - Use precise vocabulary, stronger verbs, active voice
 4. **Structure & Flow** - Add transitions, improve readability without major reorganization
 
-**Output Format:**
+**Response format:**
 
-Please fix the text (directly in the file) and provide a detailed explanation of the changes you made. Don't needed to include the final text in the response, just the explanation.
+Provide a detailed explanation of the changes you made. Do **not** repeat the full revised text in the response, only the explanation.
 
 ### Explanation & Advice
 
@@ -37,7 +46,6 @@ Please fix the text (directly in the file) and provide a detailed explanation of
 
 **Overall Observations:**
 - Revise the title grammatically, check if it's a good and clear title for the post.
-- Highlight strengths in the original writing
 - Constructive suggestions for future improvements
 - Give a score out of 10 for the writing quality, emotional impact, and coherence. Justify the score, provide specific examples and improvements suggestions if needed.
 

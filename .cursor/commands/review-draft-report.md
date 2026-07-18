@@ -1,17 +1,19 @@
 ---
-description: Editorial review report for a draft (grammar, clarity, tone, logic)—no inline edits
+description: Substantive review report for a draft (logic, clarity, structure)—no grammar, no inline edits
 ---
 
 Review the text I provide using the guide at `docs/text-review-guide.md`.
 
 **Deliver:** The complete report (all sections in §5 of the guide). Do **not** rewrite the entire piece in your reply unless I explicitly ask.
 
+**Scope:** Logic and substance only. Do **not** cover grammar, spelling, typos, or routine phrasing fixes. Those belong in `revise-draft-inline`.
+
 **Format highlights (see guide for detail):**
-- Executive summary: one paragraph + assumptions only (no top actions).
-- Grammar rephrases: 3 columns (Original | Suggested | Why); no paragraph-only column.
-- Clarity table: 3 columns; quote embedded in Issue column.
-- Tone: one table only, no extra bullets below.
-- Checklist (§5.9): P1–P3 priorities, detailed self-contained items; **no** grammar/clarity tasks.
+- Executive summary: one paragraph + assumptions only.
+- Unclear phrasing: 2 columns (Original | Why). Ambiguity and confusion only, not grammar.
+- Clarity table: 2 columns (Issue with quote | Suggested fix).
+- Emotional impact: weak points and opportunities only, not praise.
+- No tone table, no strengths section, no revision checklist.
 
 **Remember:**
 - I write to inspire, advise, teach, and provoke—accessible to any reader.

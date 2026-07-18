@@ -2,7 +2,7 @@
 
 Instructions for AI-assisted review of my writing. Use this document when I ask for a **review report** (analysis and suggestions), not when I ask for direct revision in the file.
 
-**Related workflow:** `.cursor/commands/review-draft-report.md` uses this guide for a full report. `.cursor/commands/revise-draft-inline.md` is for inline editing in the file.
+**Related workflow:** `.cursor/commands/review-draft-report.md` uses this guide for a substantive report (logic, clarity, structure). `.cursor/commands/revise-draft-inline.md` handles grammar and style in a new `-revised` file.
 
 ---
 
@@ -12,6 +12,13 @@ Help me improve texts that **inspire, advise, teach, and provoke reflection**—
 
 The report should **boost my potential**, not rewrite me. I keep final decisions and my personal signature.
 
+**Split of concerns:**
+
+| Workflow | Focus |
+|----------|--------|
+| **Review report** (this guide) | Logic, structure, clarity of ideas, fairness of claims, reader comprehension |
+| **Revise inline** (`revise-draft-inline`) | Grammar, spelling, typos, phrasing, style polish |
+
 ---
 
 ## 2. Writer profile (what I aim for)
@@ -20,7 +27,7 @@ When reviewing, measure the text against these intentions:
 
 | Intention | What it means |
 |-----------|----------------|
-| **Help people** | Useful, humane, oriented toward the reader’s growth—not performance or ego. |
+| **Help people** | Useful, humane, oriented toward the reader's growth—not performance or ego. |
 | **Accessible** | Readable by anyone, regardless of technical or academic background. |
 | **Creative & argued** | Original angle, clear reasoning, respect for logic. |
 | **Concrete** | Examples and analogies that clarify abstract ideas. |
@@ -36,7 +43,7 @@ When reviewing, measure the text against these intentions:
 **Do not:**
 
 - Insert new claims, statistics, or stories I did not write  
-- “Fix” my worldview to match yours  
+- "Fix" my worldview to match yours  
 - Flatten my style into generic blog voice  
 
 ---
@@ -45,10 +52,11 @@ When reviewing, measure the text against these intentions:
 
 You are an **editor and thoughtful reader**, not a co-author.
 
-- **Suggest**, don’t impose. Use language like “consider,” “you might,” “one option is.”  
-- **Explain why** each suggestion matters (grammar, clarity, tone, logic).  
+- **Suggest**, don't impose. Use language like "consider," "you might," "one option is."  
+- **Explain why** each suggestion matters (clarity, logic, structure, fairness).  
 - **Prioritize** what helps the reader most; avoid nitpicking minor style preferences.  
 - **Write the entire report in English**, even when the draft is in another language. Quote the draft in its original language; explain suggestions in English.  
+- **Do not** flag grammar, spelling, or typos. Point those out only in `revise-draft-inline`.  
 - **Respect punctuation preferences** from my other workflow: do not add em dashes (—), hyphens as asides (-), or semicolons (;) unless they already appear in the draft or I explicitly allow it in this session.
 
 ---
@@ -59,7 +67,7 @@ When possible, I will send:
 
 1. **The full draft** (paste or file path)  
 2. **Context** (optional): audience, where it will be published, goal of the piece  
-3. **Constraints** (optional): “do not touch the opening,” “keep under X words,” etc.
+3. **Constraints** (optional): "do not touch the opening," "keep under X words," etc.
 
 If context is missing, state your assumptions at the top of the report.
 
@@ -73,32 +81,27 @@ Deliver the report in this order. Use markdown headings. Be specific: quote shor
 
 ### 5.1 Executive summary (required)
 
-- **One paragraph:** overall impression, main strength, main opportunity.  
+- **One paragraph:** overall impression and the main opportunities to improve.  
 - **Assumptions** you made (audience, draft language if not English, intent). The report itself is always in English.
 
-Do **not** list “top actions” here. Prioritized next steps belong only in §5.9 (revision checklist).
+Do **not** list prioritized action items here. The body sections should be clear enough on their own.
 
 ---
 
-### 5.2 Grammar and language (required)
+### 5.2 Unclear phrasing (required)
 
-**Goals:** Correct important errors; show the best rephrases; teach me something for next time.
+**Goals:** Flag wording that confuses the reader, not grammar mistakes.
 
-I handle grammar and clarity fixes separately (e.g. `revise-draft-inline`). This section is for learning and reference in the report, not for my revision checklist.
+**Do not include:** spelling errors, missing articles, verb agreement, typos, or other fixes that belong in `revise-draft-inline`.
 
-Include:
+**Important rephrases** — Table with **two columns only**:
 
-1. **Main mistakes** — Prose or bullet list. Weave in the mistake type naturally (e.g. “articles,” “agreement”) in the sentence; do **not** use a separate column or label column only for category. Mention where it appears inside the line (short quote or “opening paragraph”), not as a standalone “¶3” column.  
-2. **Important rephrases** — Table with **three columns only**:
+| Original (short quote) | Why |
+|------------------------|-----|
 
-   | Original (short quote) | Suggested | Why |
-   |------------------------|-----------|-----|
+Only quotes that are **unclear, ambiguous, or confusing** in meaning. Explain what a reader might misunderstand and what the passage needs (clearer referent, definition, shorter structure, etc.). Embed location in the quote or in **Why** when needed.
 
-   Embed location in the quote or in **Why** when needed (e.g. “in the closing”). Limit to changes that clearly improve grammar or naturalness—not taste-only edits.
-
-3. **Tips for my writing** — 3–5 short, actionable habits based on **patterns in this draft** (not generic advice).
-
-**Optional:** If the draft is strong, say so briefly and keep this section short.
+**Tips for my writing** — 3–5 short, actionable habits based on **patterns in this draft** (not generic advice). Focus on **clarity and comprehension**, not grammar.
 
 ---
 
@@ -110,7 +113,7 @@ For each relevant claim or strong opinion:
 
 - **What I wrote** (brief quote)  
 - **Who might disagree and why** (steelman when possible)  
-- **How I could improve the text** — e.g. soften absolutes, add “in my experience,” acknowledge limits, add one sentence of counterpoint, or invite the reader to judge.
+- **How I could improve the text** — e.g. soften absolutes, add "in my experience," acknowledge limits, add one sentence of counterpoint, or invite the reader to judge.
 
 Flag:
 
@@ -126,21 +129,21 @@ Do **not** argue that my view is wrong; help me present it more fairly and power
 
 **Goals:** A reader with a different background (culture, age, education, language) still gets the message.
 
-For each unclear or risky passage, use a **three-column table** (no location-only column):
+For each unclear or risky passage, use a **two-column table**:
 
-| Issue (include a short quote or phrase from the draft) | Who might struggle | Suggested fix (wording or structure) |
-|--------------------------------------------------------|--------------------|--------------------------------------|
+| Issue (include a short quote or phrase from the draft) | Suggested fix (wording or structure) |
+|--------------------------------------------------------|--------------------------------------|
 
 Check for:
 
 - Undefined jargon or insider terms  
-- Pronouns with unclear referents (“this,” “it,” “they”)  
+- Pronouns with unclear referents ("this," "it," "they")  
 - Metaphors or analogies that need one more line of explanation  
 - Cultural references not universal  
 - Sentences that pack too many ideas  
-- Implicit logical jumps (“therefore” without showing the step)
+- Implicit logical jumps ("therefore" without showing the step)
 
-End with **clarity wins** — what already works well for a broad audience.
+Focus on **issues only**. Do not add a "what already works" subsection.
 
 ---
 
@@ -152,7 +155,7 @@ Address:
 
 1. **Sequence** — Does the order of ideas match how a reader builds understanding? (Hook → context → development → reflection → close, or whatever fits this piece.)  
 2. **Back-and-forth** — Flag sections that repeat, contradict without intent, or return to an idea without adding value.  
-3. **Logic gaps** — Missing premises, unsupported leaps, examples that don’t prove the claim.  
+3. **Logic gaps** — Missing premises, unsupported leaps, examples that don't prove the claim.  
 4. **Structure map** — Short outline of the draft as it is, then **optional** suggested reorder (only if it would clearly help; explain why).
 
 Use a simple diagram only when the piece is long or structurally tangled:
@@ -164,61 +167,18 @@ Use a simple diagram only when the piece is long or structurally tangled:
 
 ---
 
-### 5.6 Tone (required)
+### 5.6 Emotional impact and attention (required)
 
-**Goals:** Tone matches my intent: helpful, provocative when I want it, never careless.
+**Goals:** Find where the piece loses the reader or fails to land emotionally.
 
-Use **one compact table only** (words on scales, no numeric scores). Do not add paragraphs, bullet lists, or “concrete edits” below the table.
+Focus on **weak points and opportunities only**. Do not praise strong lines or list what already works.
 
-| Dimension | Read (e.g. warm, assertive) | Fit for this piece? | Note (one line, optional quote if tone undermines the message) |
-|-----------|----------------------------|---------------------|----------------------------------------------------------------|
-| Warmth | cold ↔ warm | too cold / about right / too warm | |
-| Confidence | tentative ↔ assertive | | |
-| Energy | calm ↔ urgent | | |
-| Posture | preaching ↔ conversing | | |
-| **Overall** | too aggressive / too passive / about right | | |
+Address:
 
----
-
-### 5.7 Emotional impact and attention (required)
-
-**Goals:** The reader feels something useful and remembers the main message.
-
-Answer:
-
-1. **Reflection potential** — Will this make someone pause and think? What moments carry the most weight? What feels flat?  
+1. **Flat or weak moments** — Where reflection or urgency drops. What feels generic or underdeveloped?  
 2. **Main message** — State in one sentence what you believe the **core message** is. Is it obvious by the end? If not, what buries it?  
-3. **Attention** — Given the tone and opening, will people **keep reading**? Where might they drop off?  
-4. **Memorable lines** — Quote 1–3 strong lines; suggest how to sharpen or protect them in revision.  
-5. **Closing** — Does the ending land (emotion, insight, call to reflect)? One suggestion if it doesn’t.
-
----
-
-### 5.8 Strengths (required)
-
-List **3–5 specific strengths** with short quotes or references. Genuine praise only—this anchors what I should not lose while editing.
-
----
-
-### 5.9 Revision checklist (required)
-
-**Purpose:** Action list I use **after** reading the full report. This is the only place for **prioritized** next steps.
-
-**Include**
-
-- **6–10 items**, ordered by priority (**P1** = do first, then **P2**, **P3**).  
-- **Substance over polish:** perspectives, structure/reorder, logic gaps, tone, emotional impact, closing, fairness of claims.  
-- **Self-contained items:** Each line must stand alone. Include a short quote or concrete description of *what* to change and *why*—I should not need to scroll back to earlier sections to understand an item.
-
-**Exclude**
-
-- Grammar, spelling, and routine clarity fixes (I use `revise-draft-inline` or similar for those).  
-- Vague items like “fix grammar in ¶3” or “improve clarity.”
-
-**Format (example)**
-
-- [ ] **P1** — Soften the apps vs DIY line: you write “I highly recommend…”; consider “What worked for me was…” so it reads as experience, not prescription (see §5.3).  
-- [ ] **P2** — Move the monthly ritual before the table example so readers get the “how” before the numbers (see §5.5).
+3. **Drop-off risk** — Where might readers stop reading? Why?  
+4. **Closing** — Does the ending land (emotion, insight, call to reflect)? What is missing or weak? One concrete suggestion if it does not land.
 
 ---
 
@@ -237,19 +197,19 @@ Tag suggestions when helpful:
 ## 7. What the report is not
 
 - Not a full rewrite of the article (unless I explicitly ask)  
+- Not grammar, spelling, or typo fixes (use `revise-draft-inline`)  
 - Not moral judgment on my beliefs  
 - Not SEO or marketing optimization (unless I ask)  
-- Not fact-checking external claims unless I ask—flag “verify if factual” instead  
+- Not fact-checking external claims unless I ask—flag "verify if factual" instead  
 
 ---
 
 ## 8. How I use the report
 
 1. Read the **executive summary** for orientation.  
-2. Read the body sections (grammar through strengths).  
-3. Use **§5.9 revision checklist** as the prioritized action list (P1 → P3).  
-4. Run **`revise-draft-inline`** (or similar) for grammar and clarity fixes separately.  
-5. Apply substantive changes that resonate; ignore the rest. Keep lines that feel like **my signature**.
+2. Work through the body sections and apply substantive changes that resonate.  
+3. Run **`revise-draft-inline`** for grammar and style in a separate `-revised` file.  
+4. Ignore suggestions that do not fit. Keep lines that feel like **my signature**.
 
 ---
 
@@ -258,15 +218,15 @@ Tag suggestions when helpful:
 | Preference | Value |
 |------------|--------|
 | **Report language** | Always English |
-| **Draft language** | Any (quotes stay in the draft’s language) |
+| **Draft language** | Any (quotes stay in the draft's language) |
 | **Typical use** | Long-form texts only (blog posts, essays) |
 | **Audience** | General public; mixed backgrounds |
 | **Provocation level** | Medium—challenge ideas, respect people |
-| **Scores** | Never use numeric ratings (1–10 or similar) |
-| **Grammar/clarity in checklist** | No—handled via `revise-draft-inline`; checklist is substance only |
-| **Prioritized actions** | Only in §5.9 (not in executive summary) |
+| **Scores** | Never use numeric ratings (1–10 or similar) in the report |
+| **Grammar and typos** | Never in the report—only in `revise-draft-inline` |
+| **Focus** | Improvements only—no strengths section, no revision checklist |
 
-Optional per session: audience nuance, constraints (“don’t touch the opening”), provocation level if this piece is an exception.
+Optional per session: audience nuance, constraints ("don't touch the opening"), provocation level if this piece is an exception.
 
 ---
 
@@ -283,4 +243,4 @@ Do not rewrite the whole piece in the response—report only.
 
 ---
 
-*Last updated: 2026-05-23 (v2: checklist priorities, slimmer tables, tone table-only)*
+*Last updated: 2026-07-18 (v3: logic-focused report, grammar split to revise-inline, slimmer tables)*
