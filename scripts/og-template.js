@@ -6,6 +6,22 @@ const FONT_FAMILY = 'Noto Serif';
 const PADDING_X = 80;
 const BRAND_TOP = 56;
 const CONTENT_WIDTH = OG_WIDTH - PADDING_X * 2;
+const BG_GRADIENT = 'linear-gradient(145deg, #faf6ee 0%, #f3ebdc 45%, #ebe1cf 100%)';
+const TITLE_GRADIENT = 'linear-gradient(180deg, #141414 0%, #2f2a24 55%, #4a4035 100%)';
+
+function titleTextStyle() {
+  return {
+    display: 'flex',
+    flexDirection: 'column',
+    fontSize: 72,
+    lineHeight: 1.35,
+    width: CONTENT_WIDTH,
+    paddingBottom: 18,
+    backgroundImage: TITLE_GRADIENT,
+    backgroundClip: 'text',
+    color: 'transparent',
+  };
+}
 
 function truncateText(text, maxLines, maxCharsPerLine) {
   const maxChars = maxLines * maxCharsPerLine;
@@ -26,11 +42,8 @@ function buildOgTemplate({ brand, title, description = null }) {
       type: 'div',
       props: {
         style: {
-          fontSize: 72,
-          lineHeight: 1.12,
+          ...titleTextStyle(),
           marginBottom: displayDescription ? 24 : 0,
-          width: CONTENT_WIDTH,
-          opacity: 1,
         },
         children: displayTitle,
       },
@@ -42,9 +55,9 @@ function buildOgTemplate({ brand, title, description = null }) {
       type: 'div',
       props: {
         style: {
-          fontSize: 36,
-          lineHeight: 1.35,
-          opacity: 0.55,
+          fontSize: 28,
+          lineHeight: 1.4,
+          opacity: 0.4,
           width: CONTENT_WIDTH,
         },
         children: displayDescription,
@@ -97,6 +110,7 @@ function buildOgTemplate({ brand, title, description = null }) {
         flexDirection: 'column',
         alignItems: 'flex-start',
         backgroundColor: BG_COLOR,
+        backgroundImage: BG_GRADIENT,
         color: TEXT_COLOR,
         fontFamily: FONT_FAMILY,
         padding: `0 ${PADDING_X}px`,
