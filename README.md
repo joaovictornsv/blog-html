@@ -14,6 +14,15 @@ Then open:
 - **Main blog**: http://localhost:8000/
 - **Devlog**: http://localhost:8000/devlog/
 
+To preview OG images locally, generate them first:
+
+```sh
+npm ci
+node scripts/generate-og-images.js
+```
+
+Then open e.g. http://localhost:8000/og/posts/we-are-batteries.png
+
 ## Converting Text Posts to HTML
 
 The `scripts/txt-to-html.js` script turns a plain-text draft into a **draft** HTML file with semantic body markup. The final post still needs a full SEO `<head>` — see `.cursor/commands/new-post.md` for the full publish workflow.
@@ -49,3 +58,14 @@ Generate the devlog RSS feed:
 ```sh
 node scripts/generate-devlog-rss.js
 ```
+
+## OG Images
+
+Generate per-page Open Graph images from each HTML file's `<title>`:
+
+```sh
+npm ci
+node scripts/generate-og-images.js
+```
+
+This writes PNGs under `og/` and updates `og:image` meta tags to match. CI runs the same script on deploy.

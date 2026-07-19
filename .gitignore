@@ -1,5 +1,7 @@
 .idea/
 .vscode/
+node_modules/
+og/
 feed.xml
 devlog-feed.xml
 sitemap.xml

@@ -1,0 +1,11 @@
+{
+  "name": "blog-html",
+  "private": true,
+  "scripts": {
+    "generate:og-images": "node scripts/generate-og-images.js"
+  },
+  "dependencies": {
+    "satori": "^0.12.2",
+    "sharp": "^0.33.5"
+  }
+}
