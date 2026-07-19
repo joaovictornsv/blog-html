@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <title>The Step We Skip When Developing with AI</title>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://blog.joaovictornsv.dev/devlog/the-step-we-skip-when-developing-with-ai.html">
+  <meta name="description" content="Before shipping AI-assisted code, explore alternative paths, review your solution, and stress-test edge cases in a fresh session.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://blog.joaovictornsv.dev/og-image.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JV's devlog">
+  <meta name="twitter:description" content="Before shipping AI-assisted code, explore alternative paths, review your solution, and stress-test edge cases in a fresh session.">
+  <meta name="twitter:title" content="The Step We Skip When Developing with AI">
+  <meta property="og:url" content="https://blog.joaovictornsv.dev/devlog/the-step-we-skip-when-developing-with-ai.html">
+  <meta property="og:description" content="Before shipping AI-assisted code, explore alternative paths, review your solution, and stress-test edge cases in a fresh session.">
+  <meta property="og:title" content="The Step We Skip When Developing with AI">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <script type="application/ld+json" id="json-ld">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "The Step We Skip When Developing with AI",
+  "url": "https://blog.joaovictornsv.dev/devlog/the-step-we-skip-when-developing-with-ai.html",
+  "description": "Before shipping AI-assisted code, explore alternative paths, review your solution, and stress-test edge cases in a fresh session.",
+  "author": {
+    "@type": "Person",
+    "name": "João Victor",
+    "url": "https://joaovictornsv.dev"
+  },
+  "mainEntityOfPage": "https://blog.joaovictornsv.dev/devlog/the-step-we-skip-when-developing-with-ai.html",
+  "publisher": {
+    "@type": "Person",
+    "name": "João Victor"
+  },
+  "datePublished": "2026-07-19"
+}
+</script>
+
+</head>
+<body>
+  <main>
+    <a href="index.html" class="back">&lt; back</a>
+
+    <article id="post-content">
+      <h1 id="post-title">The Step We Skip When Developing with AI</h1>
+      <div id="post-body">
+<time class="post-date" datetime="2026-07-19">July 19, 2026</time>
+
+<p>As developers, we use AI for a lot of things. Most of the time, we already have an expected output in mind, and we use that expectation to review the final result. Fixing a bug? Check if the bug is gone. Implementing a feature? Check if it works without gaps. Define the output, ask AI to do it, review, ship. Natural flow.</p>
+
+<p>But there is a step we forget sometimes: exploring alternative paths. It is not a magical or complex analysis with dozens of variables. It is basically a new conversation session with AI. In that session, you ask how an expert developer would approach the issue. Which paths they would follow, which decisions they would make, which trade-offs they would consider. You get to see how the AI gathers information and plans the solution before writing a single line.</p>
+
+<p>A few things I like to ask in that session:</p>
+
+<ul>
+  <li>How would you implement this as an expert? What paths, decisions, and trade-offs would you consider?</li>
+  <li>Review my solution, but not for code quality or bugs. Can we shorten the path or simplify any logic?</li>
+  <li>What happens at scale or in edge cases? If thousands of users trigger a download at once, is the server ready without struggling the database? If a container dies mid-job, does it recover after deploy or is the job lost?</li>
+</ul>
+
+<p>Those questions are great for understanding how a system behaves, especially when you are working on code you are not familiar with.</p>
+
+<p>Even before the AI era, I always liked reviewing my own solutions to see if I could simplify something or catch edge cases I missed. Now with AI, it is much easier and faster. Same thread as <a href="ai-planning-time.html">We're Wasting the Real Benefits of AI</a> and <a href="ai-test-plans-before-pr.html">Test Plans Before the PR</a>: using AI is not only about implementation speed.</p>
+
+<p>If you are not doing this lately, I invite you to try the exploration step on your next task. See you next time!</p>
+</div>
+    </article>
+  </main>
+</body>
+</html>
