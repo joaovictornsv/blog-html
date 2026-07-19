@@ -12,6 +12,9 @@ const TITLE_FONT_SIZES = [88, 76, 68, 60, 54];
 const DESCRIPTION_FONT_RATIO = 34 / 88;
 const TITLE_MAX_LINES = 3;
 const AVG_CHAR_WIDTH_RATIO = 0.52;
+const CTA_BG = '#2f2a24';
+const CTA_COLOR = BG_COLOR;
+const CTA_FONT_SIZE = 24;
 
 function avgCharWidth(fontSize) {
   return fontSize * AVG_CHAR_WIDTH_RATIO;
@@ -87,7 +90,106 @@ function truncateText(text, maxLines, maxCharsPerLine) {
   return `${safe}…`;
 }
 
-function buildOgTemplate({ brand, title, description = null }) {
+const CTA_ARROW_HEIGHT = 16;
+const CTA_ARROW_WIDTH = 9;
+const CTA_ARROW_VIEWBOX = '222 125 230 391';
+const CTA_ARROW_PATH = 'M439.1 297.4C451.6 309.9 451.6 330.2 439.1 342.7L279.1 502.7C266.6 515.2 246.3 515.2 233.8 502.7C221.3 490.2 221.3 469.9 233.8 457.4L371.2 320L233.9 182.6C221.4 170.1 221.4 149.8 233.9 137.3C246.4 124.8 266.7 124.8 279.2 137.3L439.2 297.3z';
+
+function buildCtaArrow() {
+  return {
+    type: 'svg',
+    props: {
+      viewBox: CTA_ARROW_VIEWBOX,
+      width: CTA_ARROW_WIDTH,
+      height: CTA_ARROW_HEIGHT,
+      style: {
+        display: 'flex',
+        flexShrink: 0,
+      },
+      children: {
+        type: 'path',
+        props: {
+          d: CTA_ARROW_PATH,
+          fill: CTA_COLOR,
+        },
+      },
+    },
+  };
+}
+
+function buildCtaButton() {
+  return {
+    type: 'div',
+    props: {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12,
+        backgroundColor: CTA_BG,
+        color: CTA_COLOR,
+        fontSize: CTA_FONT_SIZE,
+        lineHeight: 1,
+        padding: '12px 24px',
+        borderRadius: 999,
+        whiteSpace: 'nowrap',
+      },
+      children: [
+        {
+          type: 'span',
+          props: {
+            style: {
+              display: 'flex',
+              alignItems: 'center',
+              height: CTA_FONT_SIZE,
+            },
+            children: 'Read more',
+          },
+        },
+        buildCtaArrow(),
+      ],
+    },
+  };
+}
+
+function buildHeaderRow(brand, showCta) {
+  return {
+    type: 'div',
+    props: {
+      style: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: showCta ? 'space-between' : 'flex-start',
+        alignItems: 'center',
+        width: '100%',
+        paddingTop: BRAND_TOP,
+      },
+      children: [
+        brand
+          ? {
+              type: 'div',
+              props: {
+                style: {
+                  fontSize: 30,
+                  lineHeight: 1.2,
+                  opacity: 0.85,
+                },
+                children: brand,
+              },
+            }
+          : {
+              type: 'div',
+              props: {
+                style: { width: 1 },
+                children: '',
+              },
+            },
+        ...(showCta ? [buildCtaButton()] : []),
+      ],
+    },
+  };
+}
+
+function buildOgTemplate({ brand, title, description = null, ctaPlacement = 'header' }) {
   const { titleFontSize, descriptionFontSize } = getTypography(title);
   const displayTitle = truncateText(title, TITLE_MAX_LINES, charsPerLine(titleFontSize));
   const displayDescription = description ? truncateText(description, 2, 52) : null;
@@ -120,6 +222,18 @@ function buildOgTemplate({ brand, title, description = null }) {
     });
   }
 
+  if (ctaPlacement === 'content') {
+    const ctaButton = buildCtaButton();
+    ctaButton.props.style = {
+      ...ctaButton.props.style,
+      marginTop: displayDescription ? 32 : 24,
+    };
+    centeredContent.push(ctaButton);
+  }
+
+  const showHeaderCta = ctaPlacement === 'header';
+  const showHeader = Boolean(brand) || showHeaderCta;
+
   const centeredBlock = {
     type: 'div',
     props: {
@@ -130,30 +244,17 @@ function buildOgTemplate({ brand, title, description = null }) {
         justifyContent: 'center',
         alignItems: 'flex-start',
         width: CONTENT_WIDTH,
-        paddingBottom: brand ? BRAND_TOP : 0,
+        paddingBottom: showHeader ? BRAND_TOP : 0,
       },
       children: centeredContent,
     },
   };
 
-  const children = brand
-    ? [
-        {
-          type: 'div',
-          props: {
-            style: {
-              paddingTop: BRAND_TOP,
-              fontSize: 30,
-              lineHeight: 1.2,
-              opacity: 0.85,
-              width: CONTENT_WIDTH,
-            },
-            children: brand,
-          },
-        },
-        centeredBlock,
-      ]
-    : [centeredBlock];
+  const children = [];
+  if (showHeader) {
+    children.push(buildHeaderRow(brand, showHeaderCta));
+  }
+  children.push(centeredBlock);
 
   return {
     type: 'div',

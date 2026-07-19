@@ -80,6 +80,14 @@ function getBrand(htmlFilePath) {
   return "JV's blog";
 }
 
+function getCtaPlacement(htmlFilePath) {
+  const rel = path.relative(ROOT, htmlFilePath).replace(/\\/g, '/');
+  if (rel === 'index.html' || rel === 'devlog/index.html' || rel.startsWith('links/')) {
+    return 'content';
+  }
+  return 'header';
+}
+
 function getOgImageContent(htmlFilePath, html, title) {
   const brand = getBrand(htmlFilePath);
   const rel = path.relative(ROOT, htmlFilePath).replace(/\\/g, '/');
@@ -105,6 +113,7 @@ function getOgImageContent(htmlFilePath, html, title) {
     brand: content.brand,
     title: sanitizeOgText(content.title),
     description: content.description ? sanitizeOgDescription(content.description) : null,
+    ctaPlacement: getCtaPlacement(htmlFilePath),
   };
 }
 
