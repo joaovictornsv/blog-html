@@ -2,109 +2,90 @@ const OG_WIDTH = 1200;
 const OG_HEIGHT = 630;
 const BG_COLOR = '#f8f4ec';
 const TEXT_COLOR = '#000000';
-const BRAND = "JV's blog";
 const FONT_FAMILY = 'Noto Serif';
+const PADDING_X = 80;
+const BRAND_TOP = 56;
+const CONTENT_WIDTH = OG_WIDTH - PADDING_X * 2;
 
-function truncateTitle(title, maxLines = 3, maxCharsPerLine = 36) {
+function truncateText(text, maxLines, maxCharsPerLine) {
   const maxChars = maxLines * maxCharsPerLine;
-  if (title.length <= maxChars) return title;
+  if (text.length <= maxChars) return text;
 
-  const truncated = title.slice(0, maxChars - 1).trimEnd();
+  const truncated = text.slice(0, maxChars - 1).trimEnd();
   const lastSpace = truncated.lastIndexOf(' ');
   const safe = lastSpace > maxChars * 0.6 ? truncated.slice(0, lastSpace) : truncated;
   return `${safe}…`;
 }
 
-function buildMainContent(title, subtitle) {
-  const displayTitle = truncateTitle(title);
+function buildOgTemplate({ brand, title, description = null }) {
+  const displayTitle = truncateText(title, 3, 26);
+  const displayDescription = description ? truncateText(description, 2, 52) : null;
 
-  if (!subtitle) {
-    return {
-      type: 'div',
-      props: {
-        style: {
-          fontSize: 64,
-          lineHeight: 1.25,
-          textAlign: 'center',
-          maxWidth: '100%',
-        },
-        children: displayTitle,
-      },
-    };
-  }
-
-  const displaySubtitle = truncateTitle(subtitle, 2, 42);
-
-  return {
-    type: 'div',
-    props: {
-      style: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 24,
-        textAlign: 'center',
-        maxWidth: '100%',
-      },
-      children: [
-        {
-          type: 'div',
-          props: {
-            style: {
-              fontSize: 64,
-              lineHeight: 1.25,
-            },
-            children: displayTitle,
-          },
-        },
-        {
-          type: 'div',
-          props: {
-            style: {
-              fontSize: 36,
-              lineHeight: 1.3,
-              opacity: 0.8,
-            },
-            children: displaySubtitle,
-          },
-        },
-      ],
-    },
-  };
-}
-
-function buildOgTemplate({ title, subtitle = null, showFooter = true }) {
-  const children = [
+  const centeredContent = [
     {
       type: 'div',
       props: {
         style: {
-          display: 'flex',
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '100%',
+          fontSize: 72,
+          lineHeight: 1.12,
+          marginBottom: displayDescription ? 24 : 0,
+          width: CONTENT_WIDTH,
+          opacity: 1,
         },
-        children: buildMainContent(title, subtitle),
+        children: displayTitle,
       },
     },
   ];
 
-  if (showFooter) {
-    children.push({
+  if (displayDescription) {
+    centeredContent.push({
       type: 'div',
       props: {
         style: {
-          fontSize: 32,
-          lineHeight: 1.2,
-          textAlign: 'center',
-          opacity: 0.75,
-          marginTop: 24,
+          fontSize: 36,
+          lineHeight: 1.35,
+          opacity: 0.55,
+          width: CONTENT_WIDTH,
         },
-        children: BRAND,
+        children: displayDescription,
       },
     });
   }
+
+  const centeredBlock = {
+    type: 'div',
+    props: {
+      style: {
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        width: CONTENT_WIDTH,
+        paddingBottom: brand ? BRAND_TOP : 0,
+      },
+      children: centeredContent,
+    },
+  };
+
+  const children = brand
+    ? [
+        {
+          type: 'div',
+          props: {
+            style: {
+              paddingTop: BRAND_TOP,
+              fontSize: 30,
+              lineHeight: 1.2,
+              opacity: 0.85,
+              width: CONTENT_WIDTH,
+            },
+            children: brand,
+          },
+        },
+        centeredBlock,
+      ]
+    : [centeredBlock];
 
   return {
     type: 'div',
@@ -114,12 +95,12 @@ function buildOgTemplate({ title, subtitle = null, showFooter = true }) {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: 'flex-start',
         backgroundColor: BG_COLOR,
         color: TEXT_COLOR,
         fontFamily: FONT_FAMILY,
-        padding: '80px 96px',
+        padding: `0 ${PADDING_X}px`,
+        boxSizing: 'border-box',
       },
       children,
     },
@@ -128,6 +109,7 @@ function buildOgTemplate({ title, subtitle = null, showFooter = true }) {
 
 module.exports = {
   BG_COLOR,
+  CONTENT_WIDTH,
   FONT_FAMILY,
   OG_HEIGHT,
   OG_WIDTH,

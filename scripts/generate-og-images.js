@@ -47,7 +47,7 @@ async function main() {
   for (const htmlFile of pages) {
     const html = fs.readFileSync(htmlFile, 'utf8');
     const rawTitle = extractPageTitle(html);
-    const content = getOgImageContent(htmlFile, rawTitle);
+    const content = getOgImageContent(htmlFile, html, rawTitle);
     const outputPath = getOgImagePath(htmlFile);
     const ogImageUrl = getOgImageUrl(htmlFile);
 
@@ -61,7 +61,7 @@ async function main() {
     }
 
     const rel = path.relative(path.join(__dirname, '..'), outputPath).replace(/\\/g, '/');
-    const label = content.subtitle ? `${content.title} / ${content.subtitle}` : content.title;
+    const label = [content.brand, content.title, content.description].filter(Boolean).join(' / ');
     console.log(`✓ ${rel} — ${label}`);
   }
 

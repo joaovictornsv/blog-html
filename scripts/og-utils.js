@@ -6,6 +6,11 @@ const { collectHtmlFiles } = require('./sitemap');
 const ROOT = path.join(__dirname, '..');
 const OG_IMAGE_RE = /<meta property="og:image" content="([^"]*)">/;
 
+const INDEX_OG_DESCRIPTIONS = {
+  'index.html': "Here you'll find my thoughts about life.",
+  'devlog/index.html': 'Notes about software development, technical experiments, and lessons from building things.',
+};
+
 const SKIP_FILES = new Set([
   path.join(ROOT, 'e404.html'),
   path.join(ROOT, 'links', 'wise-drop-example.html'),
@@ -29,37 +34,83 @@ function extractPageTitle(html) {
   return match ? match[1].trim() : 'JV\'s blog';
 }
 
+function extractPageDescription(html) {
+  const match = html.match(/<meta name="description" content="([^"]*)">/);
+  return match ? match[1].trim() : null;
+}
+
+function sanitizeOgText(text) {
+  if (!text) return text;
+
+  const cleaned = text
+    .replace(/Jo[aã]o Victor's/gi, '')
+    .replace(/Jo[aã]o Victor/gi, '')
+    .replace(/\bby\s+(?=[—–-])/gi, '')
+    .replace(/\s+by\s+(?=[,.]|$)/gi, ' ')
+    .replace(/\bby\s+(?=with|and|a\b)/gi, '')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/\s+([,.!?])/g, '$1')
+    .replace(/—\s*—/g, '—')
+    .replace(/^\s*by\s+/i, '')
+    .replace(/\s+by\s*$/i, '')
+    .trim();
+
+  return cleaned || text;
+}
+
+function sanitizeOgDescription(text) {
+  if (!text) return text;
+
+  const cleaned = sanitizeOgText(text)
+    .replace(/\s+[—–-]\s+/g, ', ')
+    .replace(/,\s*,/g, ',')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
+  return cleaned || text;
+}
+
 function getOgDisplayTitle(title) {
   return title.replace(/\s+[—–-]\s+JV's blog$/i, '').trim() || title;
 }
 
-function getIndexOgImageContent(title) {
-  const parts = title.split(/\s+[—–-]\s+/);
-  return {
-    title: parts[0]?.trim() || title,
-    subtitle: parts.slice(1).join(' — ').trim() || null,
-    showFooter: false,
-  };
+function getBrand(htmlFilePath) {
+  const rel = path.relative(ROOT, htmlFilePath).replace(/\\/g, '/');
+  if (rel.startsWith('devlog/')) return "JV's devlog";
+  return "JV's blog";
 }
 
-function getOgImageContent(htmlFilePath, title) {
+function getOgImageContent(htmlFilePath, html, title) {
+  const brand = getBrand(htmlFilePath);
   const rel = path.relative(ROOT, htmlFilePath).replace(/\\/g, '/');
+  const metaDescription = extractPageDescription(html);
 
+  let content;
   if (rel === 'index.html' || rel === 'devlog/index.html') {
-    return getIndexOgImageContent(title);
+    const parts = title.split(/\s+[—–-]\s+/);
+    content = {
+      brand: null,
+      title: parts[0]?.trim() || title,
+      description: INDEX_OG_DESCRIPTIONS[rel] || null,
+    };
+  } else {
+    content = {
+      brand,
+      title: getOgDisplayTitle(title),
+      description: metaDescription,
+    };
   }
 
   return {
-    title: getOgDisplayTitle(title),
-    subtitle: null,
-    showFooter: true,
+    brand: content.brand,
+    title: sanitizeOgText(content.title),
+    description: content.description ? sanitizeOgDescription(content.description) : null,
   };
 }
 
 function collectOgPages() {
   const pages = [
     path.join(ROOT, 'index.html'),
-    path.join(ROOT, 'my-book-recommendations.html'),
     ...collectHtmlFiles(path.join(ROOT, 'posts')),
     ...collectHtmlFiles(path.join(ROOT, 'devlog')),
     ...collectHtmlFiles(path.join(ROOT, 'links')),
@@ -95,10 +146,13 @@ function patchOgImageTag(htmlFilePath, ogImageUrl) {
 module.exports = {
   ROOT,
   collectOgPages,
+  extractPageDescription,
   extractPageTitle,
   getOgDisplayTitle,
   getOgImageContent,
   getOgImagePath,
   getOgImageUrl,
   patchOgImageTag,
+  sanitizeOgDescription,
+  sanitizeOgText,
 };

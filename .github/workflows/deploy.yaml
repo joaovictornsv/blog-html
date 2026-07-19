@@ -10,7 +10,6 @@ on:
       - 'css/**'
       - 'posts/**'
       - 'devlog/**'
-      - 'my-book-recommendations.html'
       - 'links/**'
       - 'scripts/generate-rss.js'
       - 'scripts/generate-devlog-rss.js'
