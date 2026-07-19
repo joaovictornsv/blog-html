@@ -18,6 +18,8 @@ The script outputs a draft under `html/`. **Do not publish that file as-is.** Us
 
 `<slug>` = filename without `.txt`. `<title>` = first line of the `.txt` file.
 
+Set `og:image` to `https://blog.joaovictornsv.dev/og/posts/<slug>.png`. After publishing, run `node scripts/generate-og-images.js` to generate the PNG (CI also runs this on deploy).
+
 ## 2. Apply standards
 
 Follow `docs/post-html-checklist.md` for `<head>`, body markup, and index listing.

@@ -9,6 +9,6 @@ generateRss({
   outputFile: OUTPUT_FILE,
   siteUrl: process.env.SITE_URL || 'https://blog.joaovictornsv.dev',
   channelTitle: "JV's blog",
-  channelDescription: 'Thoughts about technology and life',
+  channelDescription: "Here you'll find my thoughts about life.",
   itemPathPrefix: '/posts/'
 });

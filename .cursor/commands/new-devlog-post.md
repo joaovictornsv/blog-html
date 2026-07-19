@@ -41,6 +41,8 @@ Copy the `<head>` from an existing devlog post (e.g. `devlog/event-loop-basics-t
 
 Follow `docs/post-html-checklist.md` for `<head>`, body markup, code formatting, and index listing. Save to `devlog/[slug].html`.
 
+Set `og:image` to `https://blog.joaovictornsv.dev/og/devlog/<slug>.png`. After publishing, run `node scripts/generate-og-images.js` to generate the PNG (CI also runs this on deploy).
+
 ## 3. Final checks
 
 Work through every item in `docs/post-html-checklist.md`. Fix issues directly; flag anything that needs my input.

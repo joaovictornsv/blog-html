@@ -13,6 +13,10 @@ Canonical markup and SEO standards for blog posts (`posts/`) and devlog entries 
   - Devlog: `https://blog.joaovictornsv.dev/devlog/<slug>.html`
 - [ ] `meta robots` is `index, follow` on public posts
 - [ ] Open Graph + Twitter tags present
+- [ ] `og:image` follows the URL convention:
+  - Blog: `https://blog.joaovictornsv.dev/og/posts/<slug>.png`
+  - Devlog: `https://blog.joaovictornsv.dev/og/devlog/<slug>.png`
+  - Run `node scripts/generate-og-images.js` to generate the PNG (also runs in CI on deploy)
 - [ ] JSON-LD `BlogPosting` has `headline`, `description`, `url`, `datePublished` (from `<time datetime>`)
 - [ ] Devlog posts: stylesheet is `../css/style.css`
 
@@ -57,3 +61,4 @@ After creating or updating a post:
 
 - `node scripts/update-index-listings.js` — sync index excerpts and dates
 - `node scripts/check-links.js` — verify internal links resolve
+- `npm ci && node scripts/generate-og-images.js` — generate per-page OG images and sync `og:image` meta tags

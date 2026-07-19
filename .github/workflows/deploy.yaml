@@ -5,13 +5,11 @@ on:
     paths:
       - 'index.html'
       - 'favicon.ico'
-      - 'og-image.png'
       - 'e404.html'
       - 'httpd.conf'
       - 'css/**'
       - 'posts/**'
       - 'devlog/**'
-      - 'my-book-recommendations.html'
       - 'links/**'
       - 'scripts/generate-rss.js'
       - 'scripts/generate-devlog-rss.js'
@@ -19,6 +17,12 @@ on:
       - 'scripts/sitemap.js'
       - 'scripts/seo-utils.js'
       - 'scripts/rss.js'
+      - 'scripts/generate-og-images.js'
+      - 'scripts/og-utils.js'
+      - 'scripts/og-template.js'
+      - 'scripts/fonts/**'
+      - 'package.json'
+      - 'package-lock.json'
       - 'Dockerfile'
       - '.dockerignore'
       - '.github/workflows/deploy.yaml'
@@ -28,6 +32,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate OG images
+        run: node scripts/generate-og-images.js
 
       - name: Generate RSS feeds
         run: |
