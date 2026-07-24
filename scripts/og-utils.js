@@ -70,6 +70,29 @@ function sanitizeOgDescription(text) {
   return cleaned || text;
 }
 
+function escapeRegExp(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function capitalizeFirst(text) {
+  if (!text) return text;
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+/** Drop a leading title echo so OG image copy does not repeat the headline. */
+function stripLeadingTitleFromDescription(description, title) {
+  if (!description || !title) return description;
+
+  const escapedTitle = escapeRegExp(title.trim());
+  const stripped = description
+    .replace(new RegExp(`^${escapedTitle}\\s*[,:—–-]?\\s*`, 'i'), '')
+    .replace(/^[,.—–-]\s*/, '')
+    .trim();
+
+  if (!stripped || stripped === description) return description;
+  return capitalizeFirst(stripped);
+}
+
 function getOgDisplayTitle(title) {
   return title.replace(/\s+[—–-]\s+JV's blog$/i, '').trim() || title;
 }
@@ -109,10 +132,18 @@ function getOgImageContent(htmlFilePath, html, title) {
     };
   }
 
+  const displayTitle = sanitizeOgText(content.title);
+  const description = content.description
+    ? stripLeadingTitleFromDescription(
+      sanitizeOgDescription(content.description),
+      displayTitle,
+    )
+    : null;
+
   return {
     brand: content.brand,
-    title: sanitizeOgText(content.title),
-    description: content.description ? sanitizeOgDescription(content.description) : null,
+    title: displayTitle,
+    description,
     ctaPlacement: getCtaPlacement(htmlFilePath),
   };
 }
@@ -164,4 +195,5 @@ module.exports = {
   patchOgImageTag,
   sanitizeOgDescription,
   sanitizeOgText,
+  stripLeadingTitleFromDescription,
 };
