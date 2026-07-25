@@ -1,5 +1,6 @@
 const REPORTS_BASE = '/review-reports';
 const STORAGE_PREFIX = 'draft-review:';
+const EXPAND_PREFIX = 'draft-review-expand:';
 const DEFAULT_FILTER = 'open';
 const SAVE_API = '/api/draft/save';
 
@@ -52,6 +53,85 @@ function saveStatus(reportId, status) {
 
 function clearStatus(reportId) {
   localStorage.removeItem(storageKey(reportId));
+}
+
+function sectionExpandKey(reportId) {
+  return `${EXPAND_PREFIX}${reportId}`;
+}
+
+function loadSectionExpandedMap(reportId) {
+  try {
+    const raw = localStorage.getItem(sectionExpandKey(reportId));
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveSectionExpanded(reportId, sectionId, expanded) {
+  const map = loadSectionExpandedMap(reportId);
+  map[sectionId] = expanded;
+  localStorage.setItem(sectionExpandKey(reportId), JSON.stringify(map));
+}
+
+function isSectionExpanded(reportId, sectionId) {
+  const map = loadSectionExpandedMap(reportId);
+  if (Object.prototype.hasOwnProperty.call(map, sectionId)) {
+    return map[sectionId];
+  }
+  return true;
+}
+
+function getSectionCheckableItems(section) {
+  if (!section?.items) return [];
+  if (section.type === 'organization_and_logic' || section.type === 'emotional_impact') {
+    return section.items.filter((item) => item.content);
+  }
+  return section.items;
+}
+
+function getSectionStats(section, statusMap) {
+  const items = getSectionCheckableItems(section);
+  let open = 0;
+
+  for (const item of items) {
+    if (getItemStatus(statusMap, item.id) === 'open') {
+      open += 1;
+    }
+  }
+
+  return { total: items.length, open };
+}
+
+function renderSectionMeta(section, statusMap) {
+  if (!section) return '';
+
+  const stats = getSectionStats(section, statusMap);
+  if (stats.total === 0) return '';
+
+  if (stats.open === 0) {
+    return `<span class="section-meta">${stats.total} addressed</span>`;
+  }
+
+  return `<span class="section-meta">${stats.open} open</span>`;
+}
+
+function renderCollapsibleSection(reportId, sectionId, title, bodyHtml, section, statusMap) {
+  const expanded = isSectionExpanded(reportId, sectionId);
+  const meta = renderSectionMeta(section, statusMap);
+
+  return `
+    <section class="section collapsible-section${expanded ? ' is-expanded' : ''}" data-section-id="${escapeHtml(sectionId)}">
+      <button type="button" class="section-toggle" aria-expanded="${expanded}">
+        <span class="section-chevron" aria-hidden="true"></span>
+        <span class="section-title-text">${escapeHtml(title)}</span>
+        ${meta}
+      </button>
+      <div class="section-body">
+        ${bodyHtml}
+      </div>
+    </section>
+  `;
 }
 
 function getItemStatus(statusMap, itemId) {
@@ -164,13 +244,17 @@ function renderUnclearPhrasingSection(section, reportId, statusMap, filter) {
       ? `<ol class="tips-list">${section.tips.map((tip) => `<li>${escapeHtml(tip)}</li>`).join('')}</ol>`
       : '';
 
-  return `
-    <section class="section">
-      <h2 class="section-title">${escapeHtml(SECTION_LABELS.unclear_phrasing)}</h2>
+  return renderCollapsibleSection(
+    reportId,
+    'unclear_phrasing',
+    SECTION_LABELS.unclear_phrasing,
+    `
       ${itemsHtml || '<p class="section-empty">No unclear phrasing items.</p>'}
       ${tipsHtml ? `<h3 class="item-label" style="margin-top:1rem">Tips for your writing</h3>${tipsHtml}` : ''}
-    </section>
-  `;
+    `,
+    section,
+    statusMap
+  );
 }
 
 function renderOtherPerspectivesSection(section, reportId, statusMap, filter) {
@@ -192,12 +276,14 @@ function renderOtherPerspectivesSection(section, reportId, statusMap, filter) {
     })
     .join('');
 
-  return `
-    <section class="section">
-      <h2 class="section-title">${escapeHtml(SECTION_LABELS.other_perspectives)}</h2>
-      ${itemsHtml || '<p class="section-empty">No perspective items.</p>'}
-    </section>
-  `;
+  return renderCollapsibleSection(
+    reportId,
+    'other_perspectives',
+    SECTION_LABELS.other_perspectives,
+    itemsHtml || '<p class="section-empty">No perspective items.</p>',
+    section,
+    statusMap
+  );
 }
 
 function renderClaritySection(section, reportId, statusMap, filter) {
@@ -218,12 +304,14 @@ function renderClaritySection(section, reportId, statusMap, filter) {
     })
     .join('');
 
-  return `
-    <section class="section">
-      <h2 class="section-title">${escapeHtml(SECTION_LABELS.clarity)}</h2>
-      ${itemsHtml || '<p class="section-empty">No clarity items.</p>'}
-    </section>
-  `;
+  return renderCollapsibleSection(
+    reportId,
+    'clarity',
+    SECTION_LABELS.clarity,
+    itemsHtml || '<p class="section-empty">No clarity items.</p>',
+    section,
+    statusMap
+  );
 }
 
 function renderSubsectionSection(section, reportId, statusMap, filter) {
@@ -247,12 +335,14 @@ function renderSubsectionSection(section, reportId, statusMap, filter) {
     })
     .join('');
 
-  return `
-    <section class="section">
-      <h2 class="section-title">${escapeHtml(label)}</h2>
-      ${itemsHtml || '<p class="section-empty">No items in this section.</p>'}
-    </section>
-  `;
+  return renderCollapsibleSection(
+    reportId,
+    section.type,
+    label,
+    itemsHtml || '<p class="section-empty">No items in this section.</p>',
+    section,
+    statusMap
+  );
 }
 
 function renderSection(section, reportId, statusMap, filter) {
@@ -271,7 +361,7 @@ function renderSection(section, reportId, statusMap, filter) {
   }
 }
 
-function renderExecutiveSummary(summary) {
+function renderExecutiveSummary(summary, reportId) {
   if (!summary) return '';
 
   const assumptions =
@@ -279,15 +369,19 @@ function renderExecutiveSummary(summary) {
       ? `<ul class="assumptions">${summary.assumptions.map((a) => `<li>${escapeHtml(a)}</li>`).join('')}</ul>`
       : '';
 
-  return `
-    <section class="section">
-      <h2 class="section-title">Executive summary</h2>
+  return renderCollapsibleSection(
+    reportId,
+    'executive-summary',
+    'Executive summary',
+    `
       <div class="summary-block">
         <p>${escapeHtml(summary.paragraph || '')}</p>
         ${assumptions}
       </div>
-    </section>
-  `;
+    `,
+    null,
+    {}
+  );
 }
 
 function renderFilterToolbar(activeFilter) {
@@ -564,7 +658,7 @@ function buildReviewContent(id, report, statusMap, filter) {
       </div>
     </div>
     ${renderFilterToolbar(filter)}
-    ${renderExecutiveSummary(report.executiveSummary)}
+    ${renderExecutiveSummary(report.executiveSummary, id)}
     ${sectionsHtml}
   `;
 }
@@ -601,6 +695,20 @@ function bindReviewEvents(id) {
         saveStatus(reportId, status);
         refreshReviewPanel(reportId);
       });
+    });
+  });
+
+  app.querySelectorAll('.section-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const section = btn.closest('.collapsible-section');
+      if (!section) return;
+
+      const sectionId = section.dataset.sectionId;
+      const expanded = !section.classList.contains('is-expanded');
+
+      section.classList.toggle('is-expanded', expanded);
+      btn.setAttribute('aria-expanded', String(expanded));
+      saveSectionExpanded(id, sectionId, expanded);
     });
   });
 }
