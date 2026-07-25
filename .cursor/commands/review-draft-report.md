@@ -32,4 +32,4 @@ Review the text I provide using the guide at `docs/text-review-guide.md`.
 
 **If I only pasted a selection:** Note limitations in `executiveSummary.assumptions` and review what you have.
 
-**After writing:** Tell me the file path, draft slug, and how many checkable items were created. Remind me to open `http://localhost:8000/tools/draft-review/` (with `python3 -m http.server 8000` running) to track progress.
+**After writing:** Tell me the file path, draft slug, and how many checkable items were created. Remind me to run `npm run draft-review` and open http://localhost:8000/tools/draft-review/ to track progress and edit the draft.

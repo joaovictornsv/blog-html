@@ -21,7 +21,13 @@ Substantive draft reviews are written as JSON by the `review-draft-report` comma
 
 Reports live in `review-reports/{slug}.json` (gitignored). One draft slug = one report. Progress (done / discarded) is stored in the browser via `localStorage`.
 
-With the static server running, open http://localhost:8000/tools/draft-review/ to list reports and work through items. Regenerating a report overwrites the JSON file; use **Clear progress** in the UI to reset tracking.
+Start the tracker server (serves the site and supports saving drafts):
+
+```sh
+npm run draft-review
+```
+
+Then open http://localhost:8000/tools/draft-review/ to list reports, work through items, and edit the draft in the side panel. Use **Save** or `Ctrl+S` to write changes back to `txt/`. Regenerating a report overwrites the JSON file; use **Clear progress** in the UI to reset tracking.
 
 To preview OG images locally, generate them first:
 

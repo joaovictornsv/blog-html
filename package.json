@@ -2,7 +2,8 @@
   "name": "blog-html",
   "private": true,
   "scripts": {
-    "generate:og-images": "node scripts/generate-og-images.js"
+    "generate:og-images": "node scripts/generate-og-images.js",
+    "draft-review": "node tools/draft-review/server.js"
   },
   "dependencies": {
     "satori": "^0.12.2",

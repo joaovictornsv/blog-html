@@ -1,6 +1,7 @@
 const REPORTS_BASE = '/review-reports';
 const STORAGE_PREFIX = 'draft-review:';
 const DEFAULT_FILTER = 'open';
+const SAVE_API = '/api/draft/save';
 
 const SECTION_LABELS = {
   unclear_phrasing: 'Unclear phrasing',
@@ -350,6 +351,15 @@ function navigateToReport(id) {
 }
 
 async function renderList() {
+  setBodyLayout(false);
+  unbindEditorShortcut();
+  editorState = {
+    reportId: null,
+    draftPath: null,
+    savedContent: '',
+    dirty: false,
+  };
+
   app.innerHTML = '<p class="empty-state">Loading reports…</p>';
 
   const ids = await loadReportList();
@@ -397,32 +407,150 @@ async function renderList() {
 
 let currentDetail = null;
 let currentFilter = DEFAULT_FILTER;
+let editorState = {
+  reportId: null,
+  draftPath: null,
+  savedContent: '',
+  dirty: false,
+};
 
-async function renderDetail(id) {
-  app.innerHTML = '<p class="empty-state">Loading report…</p>';
+function setBodyLayout(hasEditor) {
+  document.body.classList.toggle('has-editor-layout', hasEditor);
+}
 
-  let report;
+function getEditorTextarea() {
+  return document.getElementById('draft-editor');
+}
+
+function getEditorContent() {
+  const textarea = getEditorTextarea();
+  return textarea ? textarea.value : '';
+}
+
+function setEditorStatus(message, type = '') {
+  const statusEl = document.getElementById('editor-status');
+  if (!statusEl) return;
+  statusEl.textContent = message;
+  statusEl.className = `editor-status${type ? ` is-${type}` : ''}`;
+}
+
+function updateEditorStatus() {
+  if (editorState.dirty) {
+    setEditorStatus('Unsaved changes');
+    return;
+  }
+  setEditorStatus('Saved');
+}
+
+async function loadDraftText(draftPath) {
+  const response = await fetch(`/${draftPath}`);
+  if (!response.ok) {
+    throw new Error(`Failed to load ${draftPath}`);
+  }
+  return response.text();
+}
+
+async function saveDraft() {
+  const textarea = getEditorTextarea();
+  if (!textarea || !editorState.draftPath) return;
+
+  const content = textarea.value;
+  setEditorStatus('Saving…');
+
   try {
-    report = await loadReport(id);
+    const response = await fetch(SAVE_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: editorState.draftPath, content }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error.error || 'Save failed. Use npm run draft-review to start the server with save support.');
+    }
+
+    editorState.savedContent = content;
+    editorState.dirty = false;
+    setEditorStatus('Saved', 'success');
   } catch (error) {
-    app.innerHTML = `
-      <div class="error-state">
-        <p><a class="back-link" href="#/">← All reports</a></p>
-        <p>${escapeHtml(error.message)}</p>
-      </div>
-    `;
+    setEditorStatus(error.message, 'error');
+  }
+}
+
+function bindEditorEvents() {
+  const textarea = getEditorTextarea();
+  const saveBtn = document.getElementById('save-draft');
+
+  saveBtn?.addEventListener('click', () => {
+    saveDraft();
+  });
+
+  textarea?.addEventListener('input', () => {
+    editorState.dirty = textarea.value !== editorState.savedContent;
+    updateEditorStatus();
+  });
+}
+
+function bindEditorShortcut() {
+  document.addEventListener('keydown', onEditorKeydown);
+}
+
+function unbindEditorShortcut() {
+  document.removeEventListener('keydown', onEditorKeydown);
+}
+
+function onEditorKeydown(event) {
+  if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== 's') return;
+  if (!getEditorTextarea()) return;
+  event.preventDefault();
+  saveDraft();
+}
+
+async function initEditor(report, preservedContent = null) {
+  const textarea = getEditorTextarea();
+  const pathEl = document.getElementById('editor-path');
+  if (!textarea || !pathEl) return;
+
+  pathEl.textContent = report.draftPath || '';
+  editorState.reportId = report.id;
+  editorState.draftPath = report.draftPath || '';
+
+  if (preservedContent !== null) {
+    textarea.value = preservedContent;
+    editorState.dirty = preservedContent !== editorState.savedContent;
+    updateEditorStatus();
     return;
   }
 
-  currentDetail = { id, report };
-  const statusMap = loadStatus(id);
-  const progress = getProgress(report, statusMap);
+  if (!report.draftPath) {
+    textarea.value = '';
+    editorState.savedContent = '';
+    editorState.dirty = false;
+    setEditorStatus('No draft path in report', 'error');
+    return;
+  }
 
+  try {
+    const content = await loadDraftText(report.draftPath);
+    textarea.value = content;
+    editorState.savedContent = content;
+    editorState.dirty = false;
+    setEditorStatus('Saved', 'success');
+  } catch (error) {
+    textarea.value = '';
+    editorState.savedContent = '';
+    editorState.dirty = false;
+    setEditorStatus(error.message, 'error');
+  }
+}
+
+function buildReviewContent(id, report, statusMap, filter) {
+  const progress = getProgress(report, statusMap);
   const sectionsHtml = (report.sections || [])
-    .map((section) => renderSection(section, id, statusMap, currentFilter))
+    .map((section) => renderSection(section, id, statusMap, filter))
     .join('');
 
-  app.innerHTML = `
+  return `
     <div class="detail-header">
       <a class="back-link" href="#/">← All reports</a>
       <h2 class="detail-title">${escapeHtml(report.title || id)}</h2>
@@ -435,22 +563,24 @@ async function renderDetail(id) {
         <button type="button" class="btn btn-danger" id="clear-progress">Clear progress</button>
       </div>
     </div>
-    ${renderFilterToolbar(currentFilter)}
+    ${renderFilterToolbar(filter)}
     ${renderExecutiveSummary(report.executiveSummary)}
     ${sectionsHtml}
   `;
+}
 
+function bindReviewEvents(id) {
   document.getElementById('clear-progress')?.addEventListener('click', () => {
     if (window.confirm('Clear all progress for this report? This cannot be undone.')) {
       clearStatus(id);
-      renderDetail(id);
+      refreshReviewPanel(id);
     }
   });
 
   app.querySelectorAll('.filter-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       currentFilter = btn.dataset.filter;
-      renderDetail(id);
+      refreshReviewPanel(id);
     });
   });
 
@@ -469,10 +599,91 @@ async function renderDetail(id) {
         }
 
         saveStatus(reportId, status);
-        renderDetail(reportId);
+        refreshReviewPanel(reportId);
       });
     });
   });
+}
+
+async function refreshReviewPanel(id) {
+  const report = await loadReport(id);
+  currentDetail = { id, report };
+  const panel = document.getElementById('review-panel');
+  if (!panel) return;
+  panel.innerHTML = buildReviewContent(id, report, loadStatus(id), currentFilter);
+  bindReviewEvents(id);
+}
+
+async function renderDetail(id) {
+  const preserveEditor = editorState.reportId === id && document.querySelector('.detail-layout');
+  const preservedContent = preserveEditor ? getEditorContent() : null;
+
+  if (!preserveEditor) {
+    app.innerHTML = '<p class="empty-state">Loading report…</p>';
+    setBodyLayout(false);
+    unbindEditorShortcut();
+    editorState = {
+      reportId: null,
+      draftPath: null,
+      savedContent: '',
+      dirty: false,
+    };
+  }
+
+  let report;
+  try {
+    report = await loadReport(id);
+  } catch (error) {
+    setBodyLayout(false);
+    unbindEditorShortcut();
+    app.innerHTML = `
+      <div class="error-state">
+        <p><a class="back-link" href="#/">← All reports</a></p>
+        <p>${escapeHtml(error.message)}</p>
+      </div>
+    `;
+    return;
+  }
+
+  currentDetail = { id, report };
+  setBodyLayout(true);
+  bindEditorShortcut();
+
+  if (preserveEditor) {
+    await refreshReviewPanel(id);
+    return;
+  }
+
+  app.innerHTML = `
+    <div class="detail-layout">
+      <div class="review-panel" id="review-panel"></div>
+      <aside class="editor-panel" aria-label="Draft editor">
+        <div class="editor-toolbar">
+          <div class="editor-toolbar-main">
+            <span class="editor-label">Draft</span>
+            <span class="editor-path" id="editor-path"></span>
+          </div>
+          <div class="editor-toolbar-actions">
+            <span class="editor-status" id="editor-status"></span>
+            <button type="button" class="btn btn-primary" id="save-draft">Save</button>
+          </div>
+        </div>
+        <textarea id="draft-editor" class="draft-editor" spellcheck="true" aria-label="Draft text"></textarea>
+        <p class="editor-hint">Ctrl+S to save</p>
+      </aside>
+    </div>
+  `;
+
+  document.getElementById('review-panel').innerHTML = buildReviewContent(
+    id,
+    report,
+    loadStatus(id),
+    currentFilter
+  );
+
+  bindReviewEvents(id);
+  bindEditorEvents();
+  await initEditor(report, preservedContent);
 }
 
 async function render() {
@@ -489,7 +700,9 @@ async function render() {
 window.addEventListener('hashchange', () => {
   const route = getRoute();
   if (route.view === 'detail') {
-    currentFilter = DEFAULT_FILTER;
+    if (!currentDetail || currentDetail.id !== route.id) {
+      currentFilter = DEFAULT_FILTER;
+    }
   }
   render();
 });

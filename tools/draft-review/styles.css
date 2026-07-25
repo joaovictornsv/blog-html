@@ -60,6 +60,12 @@ a:hover {
   padding: 1.5rem 1.25rem 1.25rem;
 }
 
+body.has-editor-layout .header-inner {
+  max-width: none;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
 .site-title {
   margin: 0;
   font-size: 1.5rem;
@@ -83,6 +89,128 @@ a:hover {
   max-width: 52rem;
   margin: 0 auto;
   padding: 1.5rem 1.25rem 3rem;
+}
+
+body.has-editor-layout .app {
+  max-width: none;
+  padding: 1rem 1.25rem 1.5rem;
+}
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 40%);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.review-panel {
+  min-width: 0;
+}
+
+.editor-panel {
+  position: sticky;
+  top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 1.5rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  overflow: hidden;
+}
+
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  background: #f7f4ee;
+}
+
+.editor-toolbar-main {
+  min-width: 0;
+}
+
+.editor-label {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+}
+
+.editor-path {
+  display: block;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+  word-break: break-all;
+}
+
+.editor-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.editor-status {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+}
+
+.editor-status.is-success {
+  color: var(--accent);
+}
+
+.editor-status.is-error {
+  color: var(--discarded);
+}
+
+.draft-editor {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 1rem;
+  border: none;
+  resize: none;
+  background: #fff;
+  color: var(--ink);
+  font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, monospace;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.draft-editor:focus {
+  outline: none;
+}
+
+.editor-hint {
+  margin: 0;
+  padding: 0.45rem 0.75rem;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  color: var(--ink-faint);
+  background: #f7f4ee;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #244a3d;
+  border-color: #244a3d;
 }
 
 .empty-state,
@@ -446,6 +574,18 @@ a:hover {
   color: var(--ink-faint);
   font-family: var(--font-ui);
   font-size: 0.88rem;
+}
+
+@media (max-width: 960px) {
+  .detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-panel {
+    position: static;
+    height: 60vh;
+    min-height: 320px;
+  }
 }
 
 @media (max-width: 540px) {
