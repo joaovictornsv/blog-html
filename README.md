@@ -13,6 +13,15 @@ python3 -m http.server 8000
 Then open:
 - **Main blog**: http://localhost:8000/
 - **Devlog**: http://localhost:8000/devlog/
+- **Draft review tracker**: http://localhost:8000/tools/draft-review/
+
+## Draft review tracker
+
+Substantive draft reviews are written as JSON by the `review-draft-report` command (see `docs/text-review-guide.md` and `docs/review-report-schema.md`).
+
+Reports live in `review-reports/{slug}.json` (gitignored). One draft slug = one report. Progress (done / discarded) is stored in the browser via `localStorage`.
+
+With the static server running, open http://localhost:8000/tools/draft-review/ to list reports and work through items. Regenerating a report overwrites the JSON file; use **Clear progress** in the UI to reset tracking.
 
 To preview OG images locally, generate them first:
 

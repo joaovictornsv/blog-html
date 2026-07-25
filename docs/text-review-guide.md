@@ -2,7 +2,7 @@
 
 Instructions for AI-assisted review of my writing. Use this document when I ask for a **review report** (analysis and suggestions), not when I ask for direct revision in the file.
 
-**Related workflow:** `.cursor/commands/review-draft-report.md` uses this guide for a substantive report (logic, clarity, structure). `.cursor/commands/revise-draft-inline.md` handles grammar and style in a new `-revised` file.
+**Related workflow:** `.cursor/commands/review-draft-report.md` uses this guide for a substantive report (logic, clarity, structure) and writes **JSON** to `review-reports/{slug}.json` per `docs/review-report-schema.md`. Track progress in `tools/draft-review/`. `.cursor/commands/revise-draft-inline.md` handles grammar and style in a new `-revised` file.
 
 ---
 
@@ -77,7 +77,7 @@ If context is missing, state your assumptions at the top of the report.
 
 ## 5. Report structure
 
-Deliver the report in this order. Use markdown headings. Be specific: quote short phrases from my text and reference **paragraph numbers** (or line numbers if in a file).
+Deliver the report as JSON (`docs/review-report-schema.md`) in this order. Be specific: quote short phrases from my text and reference **paragraph numbers** (or line numbers if in a file).
 
 ### 5.1 Executive summary (required)
 
@@ -206,10 +206,13 @@ Tag suggestions when helpful:
 
 ## 8. How I use the report
 
-1. Read the **executive summary** for orientation.  
-2. Work through the body sections and apply substantive changes that resonate.  
-3. Run **`revise-draft-inline`** for grammar and style in a separate `-revised` file.  
-4. Ignore suggestions that do not fit. Keep lines that feel like **my signature**.
+1. Run `python3 -m http.server 8000` from the repo root and open `http://localhost:8000/tools/draft-review/`.  
+2. Read the **executive summary** for orientation.  
+3. Work through checkable items in the UI; mark each **done** or **discarded**. Default view shows open items only.  
+4. Apply substantive changes to the draft that resonate.  
+5. Run **`revise-draft-inline`** for grammar and style in a separate `-revised` file.  
+6. Ignore suggestions that do not fit. Keep lines that feel like **my signature**.  
+7. To regenerate a report, overwrite `review-reports/{slug}.json` and **clear progress** in the UI.
 
 ---
 
@@ -234,8 +237,8 @@ Optional per session: audience nuance, constraints ("don't touch the opening"), 
 
 ```text
 Review my text using docs/text-review-guide.md.
-Produce the full report (all sections in §5).
-Do not rewrite the whole piece in the response—report only.
+Write JSON to review-reports/{slug}.json per docs/review-report-schema.md.
+Do not rewrite the whole piece in the response—confirm path only.
 
 [Paste text or path]
 [Optional: context, constraints]
@@ -243,4 +246,10 @@ Do not rewrite the whole piece in the response—report only.
 
 ---
 
-*Last updated: 2026-07-18 (v3: logic-focused report, grammar split to revise-inline, slimmer tables)*
+## 11. JSON output
+
+Reports are written to `review-reports/{slug}.json` (gitignored). See `docs/review-report-schema.md` for the full schema, item ids, and manifest format.
+
+---
+
+*Last updated: 2026-07-25 (v4: JSON output + draft review tracker UI)*
