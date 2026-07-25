@@ -551,6 +551,55 @@ body.has-editor-layout .app {
   margin-bottom: 0.65rem;
 }
 
+.item-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-left: auto;
+}
+
+.ai-badge,
+.item-badge {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.ai-badge-open {
+  background: var(--open-bg);
+  color: #6a5018;
+}
+
+.ai-badge-addressed {
+  background: var(--done-bg);
+  color: var(--done);
+}
+
+.ai-badge-superseded {
+  background: #ebe8e2;
+  color: var(--ink-muted);
+}
+
+.badge-new {
+  background: #e0e8f4;
+  color: #2a4a6a;
+}
+
+.badge-mismatch {
+  background: #f5ded8;
+  color: #7a3028;
+}
+
+.item.is-mismatch {
+  border-color: #d4a090;
+  box-shadow: inset 3px 0 0 #b85a40;
+}
+
 .item-label {
   font-family: var(--font-ui);
   font-size: 0.78rem;

@@ -27,7 +27,9 @@ Start the tracker server (serves the site and supports saving drafts):
 npm run draft-review
 ```
 
-Then open http://localhost:8000/tools/draft-review/ to list reports, work through items, and edit the draft in the side panel. Use **Save** or `Ctrl+S` to write changes back to `txt/`. Regenerating a report overwrites the JSON file; use **Clear progress** in the UI to reset tracking.
+Then open http://localhost:8000/tools/draft-review/ to list reports, work through items, and edit the draft in the side panel. Use **Save** or `Ctrl+S` to write changes back to `txt/`.
+
+**Re-review:** Run `review-draft-report` again on the same draft to get an incremental update. The AI sets `aiStatus` on each item and can add new ones; your done/discarded progress in `localStorage` is preserved. Use AI filters in the UI to compare your status with the model's. Ask for a review **from scratch** only when you want to reset the report entirely (then use **Clear progress** if item ids changed).
 
 To preview OG images locally, generate them first:
 

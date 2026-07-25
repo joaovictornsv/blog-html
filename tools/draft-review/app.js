@@ -2,6 +2,7 @@ const REPORTS_BASE = '/review-reports';
 const STORAGE_PREFIX = 'draft-review:';
 const EXPAND_PREFIX = 'draft-review-expand:';
 const DEFAULT_FILTER = 'open';
+const DEFAULT_AI_FILTER = 'all';
 const SAVE_API = '/api/draft/save';
 
 const SECTION_LABELS = {
@@ -90,35 +91,85 @@ function getSectionCheckableItems(section) {
   return section.items;
 }
 
-function getSectionStats(section, statusMap) {
-  const items = getSectionCheckableItems(section);
-  let open = 0;
-
-  for (const item of items) {
-    if (getItemStatus(statusMap, item.id) === 'open') {
-      open += 1;
-    }
-  }
-
-  return { total: items.length, open };
+function getReviewRound(report) {
+  return report?.reviewRound || 1;
 }
 
-function renderSectionMeta(section, statusMap) {
+function getAiStatus(item) {
+  return item?.aiStatus || 'open';
+}
+
+function isItemNew(item, report) {
+  return item.addedInRound === getReviewRound(report);
+}
+
+function isMismatch(userStatus, item) {
+  return userStatus === 'done' && getAiStatus(item) === 'open';
+}
+
+function itemMatchesAiFilter(item, report, statusMap, aiFilter) {
+  if (aiFilter === 'all') return true;
+
+  const aiStatus = getAiStatus(item);
+  const userStatus = getItemStatus(statusMap, item.id);
+
+  switch (aiFilter) {
+    case 'flags':
+      return aiStatus === 'open';
+    case 'addressed':
+      return aiStatus === 'addressed' || aiStatus === 'superseded';
+    case 'new':
+      return isItemNew(item, report);
+    case 'mismatch':
+      return isMismatch(userStatus, item);
+    default:
+      return true;
+  }
+}
+
+function itemVisible(item, report, statusMap, userFilter, aiFilter) {
+  const userStatus = getItemStatus(statusMap, item.id);
+  if (!itemMatchesFilter(userStatus, userFilter)) return false;
+  return itemMatchesAiFilter(item, report, statusMap, aiFilter);
+}
+
+function getSectionStats(section, statusMap, report) {
+  const items = getSectionCheckableItems(section);
+  let userOpen = 0;
+  let newCount = 0;
+  let aiAddressed = 0;
+
+  for (const item of items) {
+    if (getItemStatus(statusMap, item.id) === 'open') userOpen += 1;
+    if (isItemNew(item, report)) newCount += 1;
+    const aiStatus = getAiStatus(item);
+    if (aiStatus === 'addressed' || aiStatus === 'superseded') aiAddressed += 1;
+  }
+
+  return { total: items.length, userOpen, newCount, aiAddressed };
+}
+
+function renderSectionMeta(section, statusMap, report) {
   if (!section) return '';
 
-  const stats = getSectionStats(section, statusMap);
+  const stats = getSectionStats(section, statusMap, report);
   if (stats.total === 0) return '';
 
-  if (stats.open === 0) {
+  const parts = [];
+  if (stats.userOpen > 0) parts.push(`${stats.userOpen} open`);
+  if (stats.newCount > 0) parts.push(`${stats.newCount} new`);
+  if (stats.aiAddressed > 0) parts.push(`${stats.aiAddressed} AI addressed`);
+
+  if (!parts.length) {
     return `<span class="section-meta">${stats.total} addressed</span>`;
   }
 
-  return `<span class="section-meta">${stats.open} open</span>`;
+  return `<span class="section-meta">${parts.join(' · ')}</span>`;
 }
 
-function renderCollapsibleSection(reportId, sectionId, title, bodyHtml, section, statusMap) {
+function renderCollapsibleSection(reportId, sectionId, title, bodyHtml, section, statusMap, report) {
   const expanded = isSectionExpanded(reportId, sectionId);
-  const meta = renderSectionMeta(section, statusMap);
+  const meta = renderSectionMeta(section, statusMap, report);
 
   return `
     <section class="section collapsible-section${expanded ? ' is-expanded' : ''}" data-section-id="${escapeHtml(sectionId)}">
@@ -209,6 +260,39 @@ function itemMatchesFilter(status, filter) {
   return status === filter;
 }
 
+function renderItemBadges(item, report, userStatus) {
+  const aiStatus = getAiStatus(item);
+  const badges = [`<span class="ai-badge ai-badge-${escapeHtml(aiStatus)}">AI: ${escapeHtml(aiStatus)}</span>`];
+
+  if (isItemNew(item, report)) {
+    badges.push('<span class="item-badge badge-new">New</span>');
+  }
+
+  if (isMismatch(userStatus, item)) {
+    badges.push('<span class="item-badge badge-mismatch">AI still flags</span>');
+  }
+
+  return badges.join('');
+}
+
+function renderItemCard(reportId, report, item, statusMap, userFilter, aiFilter, innerHtml, headerExtra = '') {
+  const userStatus = getItemStatus(statusMap, item.id);
+  const hidden = !itemVisible(item, report, statusMap, userFilter, aiFilter) ? ' is-hidden' : '';
+  const stateClass = userStatus === 'open' ? '' : ` is-${userStatus}`;
+  const mismatchClass = isMismatch(userStatus, item) ? ' is-mismatch' : '';
+
+  return `
+    <article class="item${stateClass}${hidden}${mismatchClass}" data-item-id="${escapeHtml(item.id)}">
+      <div class="item-header">
+        ${headerExtra}
+        <div class="item-badges">${renderItemBadges(item, report, userStatus)}</div>
+      </div>
+      ${innerHtml}
+      ${renderItemActions(reportId, item.id, userStatus)}
+    </article>
+  `;
+}
+
 function renderItemActions(reportId, itemId, status) {
   return `
     <div class="item-actions" data-report-id="${escapeHtml(reportId)}" data-item-id="${escapeHtml(itemId)}">
@@ -219,24 +303,20 @@ function renderItemActions(reportId, itemId, status) {
   `;
 }
 
-function renderUnclearPhrasingSection(section, reportId, statusMap, filter) {
+function renderUnclearPhrasingSection(section, reportId, report, statusMap, userFilter, aiFilter) {
   const itemsHtml = (section.items || [])
-    .map((item) => {
-      const status = getItemStatus(statusMap, item.id);
-      const hidden = !itemMatchesFilter(status, filter) ? ' is-hidden' : '';
-      const stateClass = status === 'open' ? '' : ` is-${status}`;
-
-      return `
-        <article class="item${stateClass}${hidden}" data-item-id="${escapeHtml(item.id)}">
-          <div class="item-header">
-            ${renderSeverity(item.severity)}
-          </div>
-          ${renderField('Original', item.original)}
-          ${renderField('Why', item.why)}
-          ${renderItemActions(reportId, item.id, status)}
-        </article>
-      `;
-    })
+    .map((item) =>
+      renderItemCard(
+        reportId,
+        report,
+        item,
+        statusMap,
+        userFilter,
+        aiFilter,
+        `${renderField('Original', item.original)}${renderField('Why', item.why)}`,
+        renderSeverity(item.severity)
+      )
+    )
     .join('');
 
   const tipsHtml =
@@ -253,27 +333,25 @@ function renderUnclearPhrasingSection(section, reportId, statusMap, filter) {
       ${tipsHtml ? `<h3 class="item-label" style="margin-top:1rem">Tips for your writing</h3>${tipsHtml}` : ''}
     `,
     section,
-    statusMap
+    statusMap,
+    report
   );
 }
 
-function renderOtherPerspectivesSection(section, reportId, statusMap, filter) {
+function renderOtherPerspectivesSection(section, reportId, report, statusMap, userFilter, aiFilter) {
   const itemsHtml = (section.items || [])
-    .map((item) => {
-      const status = getItemStatus(statusMap, item.id);
-      const hidden = !itemMatchesFilter(status, filter) ? ' is-hidden' : '';
-      const stateClass = status === 'open' ? '' : ` is-${status}`;
-
-      return `
-        <article class="item${stateClass}${hidden}" data-item-id="${escapeHtml(item.id)}">
-          <div class="item-header">${renderSeverity(item.severity)}</div>
-          ${renderField('What I wrote', item.whatIWrote)}
-          ${renderField('Who might disagree', item.whoMightDisagree)}
-          ${renderField('How to improve', item.howToImprove)}
-          ${renderItemActions(reportId, item.id, status)}
-        </article>
-      `;
-    })
+    .map((item) =>
+      renderItemCard(
+        reportId,
+        report,
+        item,
+        statusMap,
+        userFilter,
+        aiFilter,
+        `${renderField('What I wrote', item.whatIWrote)}${renderField('Who might disagree', item.whoMightDisagree)}${renderField('How to improve', item.howToImprove)}`,
+        renderSeverity(item.severity)
+      )
+    )
     .join('');
 
   return renderCollapsibleSection(
@@ -282,26 +360,25 @@ function renderOtherPerspectivesSection(section, reportId, statusMap, filter) {
     SECTION_LABELS.other_perspectives,
     itemsHtml || '<p class="section-empty">No perspective items.</p>',
     section,
-    statusMap
+    statusMap,
+    report
   );
 }
 
-function renderClaritySection(section, reportId, statusMap, filter) {
+function renderClaritySection(section, reportId, report, statusMap, userFilter, aiFilter) {
   const itemsHtml = (section.items || [])
-    .map((item) => {
-      const status = getItemStatus(statusMap, item.id);
-      const hidden = !itemMatchesFilter(status, filter) ? ' is-hidden' : '';
-      const stateClass = status === 'open' ? '' : ` is-${status}`;
-
-      return `
-        <article class="item${stateClass}${hidden}" data-item-id="${escapeHtml(item.id)}">
-          <div class="item-header">${renderSeverity(item.severity)}</div>
-          ${renderField('Issue', item.issue)}
-          ${renderField('Suggested fix', item.suggestedFix)}
-          ${renderItemActions(reportId, item.id, status)}
-        </article>
-      `;
-    })
+    .map((item) =>
+      renderItemCard(
+        reportId,
+        report,
+        item,
+        statusMap,
+        userFilter,
+        aiFilter,
+        `${renderField('Issue', item.issue)}${renderField('Suggested fix', item.suggestedFix)}`,
+        renderSeverity(item.severity)
+      )
+    )
     .join('');
 
   return renderCollapsibleSection(
@@ -310,29 +387,27 @@ function renderClaritySection(section, reportId, statusMap, filter) {
     SECTION_LABELS.clarity,
     itemsHtml || '<p class="section-empty">No clarity items.</p>',
     section,
-    statusMap
+    statusMap,
+    report
   );
 }
 
-function renderSubsectionSection(section, reportId, statusMap, filter) {
+function renderSubsectionSection(section, reportId, report, statusMap, userFilter, aiFilter) {
   const label = SECTION_LABELS[section.type] || section.type;
   const itemsHtml = (section.items || [])
     .filter((item) => item.content)
-    .map((item) => {
-      const status = getItemStatus(statusMap, item.id);
-      const hidden = !itemMatchesFilter(status, filter) ? ' is-hidden' : '';
-      const stateClass = status === 'open' ? '' : ` is-${status}`;
-
-      return `
-        <article class="item${stateClass}${hidden}" data-item-id="${escapeHtml(item.id)}">
-          <div class="item-header">
-            <span class="item-label">${escapeHtml(item.label || item.id)}</span>
-          </div>
-          <p class="field-value">${escapeHtml(item.content)}</p>
-          ${renderItemActions(reportId, item.id, status)}
-        </article>
-      `;
-    })
+    .map((item) =>
+      renderItemCard(
+        reportId,
+        report,
+        item,
+        statusMap,
+        userFilter,
+        aiFilter,
+        `<p class="field-value">${escapeHtml(item.content)}</p>`,
+        `<span class="item-label">${escapeHtml(item.label || item.id)}</span>`
+      )
+    )
     .join('');
 
   return renderCollapsibleSection(
@@ -341,21 +416,22 @@ function renderSubsectionSection(section, reportId, statusMap, filter) {
     label,
     itemsHtml || '<p class="section-empty">No items in this section.</p>',
     section,
-    statusMap
+    statusMap,
+    report
   );
 }
 
-function renderSection(section, reportId, statusMap, filter) {
+function renderSection(section, reportId, report, statusMap, userFilter, aiFilter) {
   switch (section.type) {
     case 'unclear_phrasing':
-      return renderUnclearPhrasingSection(section, reportId, statusMap, filter);
+      return renderUnclearPhrasingSection(section, reportId, report, statusMap, userFilter, aiFilter);
     case 'other_perspectives':
-      return renderOtherPerspectivesSection(section, reportId, statusMap, filter);
+      return renderOtherPerspectivesSection(section, reportId, report, statusMap, userFilter, aiFilter);
     case 'clarity':
-      return renderClaritySection(section, reportId, statusMap, filter);
+      return renderClaritySection(section, reportId, report, statusMap, userFilter, aiFilter);
     case 'organization_and_logic':
     case 'emotional_impact':
-      return renderSubsectionSection(section, reportId, statusMap, filter);
+      return renderSubsectionSection(section, reportId, report, statusMap, userFilter, aiFilter);
     default:
       return '';
   }
@@ -384,25 +460,44 @@ function renderExecutiveSummary(summary, reportId) {
   );
 }
 
-function renderFilterToolbar(activeFilter) {
-  const filters = [
+function renderDualFilterToolbar(userFilter, aiFilter) {
+  const userFilters = [
     { id: 'open', label: 'Open' },
     { id: 'done', label: 'Done' },
     { id: 'discarded', label: 'Discarded' },
     { id: 'all', label: 'All' },
   ];
 
-  const buttons = filters
+  const aiFilters = [
+    { id: 'all', label: 'All' },
+    { id: 'flags', label: 'Flags' },
+    { id: 'addressed', label: 'Addressed' },
+    { id: 'new', label: 'New' },
+    { id: 'mismatch', label: 'Mismatch' },
+  ];
+
+  const userButtons = userFilters
     .map(
       (f) =>
-        `<button type="button" class="filter-btn${f.id === activeFilter ? ' is-active' : ''}" data-filter="${f.id}">${f.label}</button>`
+        `<button type="button" class="filter-btn${f.id === userFilter ? ' is-active' : ''}" data-filter="${f.id}">${f.label}</button>`
+    )
+    .join('');
+
+  const aiButtons = aiFilters
+    .map(
+      (f) =>
+        `<button type="button" class="filter-btn${f.id === aiFilter ? ' is-active' : ''}" data-ai-filter="${f.id}">${f.label}</button>`
     )
     .join('');
 
   return `
     <div class="toolbar">
-      <span class="toolbar-label">Show</span>
-      <div class="filter-group" role="group" aria-label="Filter items">${buttons}</div>
+      <span class="toolbar-label">Your status</span>
+      <div class="filter-group" role="group" aria-label="Filter by your status">${userButtons}</div>
+    </div>
+    <div class="toolbar">
+      <span class="toolbar-label">AI status</span>
+      <div class="filter-group" role="group" aria-label="Filter by AI status">${aiButtons}</div>
     </div>
   `;
 }
@@ -501,6 +596,7 @@ async function renderList() {
 
 let currentDetail = null;
 let currentFilter = DEFAULT_FILTER;
+let currentAiFilter = DEFAULT_AI_FILTER;
 let editorState = {
   reportId: null,
   draftPath: null,
@@ -638,10 +734,15 @@ async function initEditor(report, preservedContent = null) {
   }
 }
 
-function buildReviewContent(id, report, statusMap, filter) {
+function buildReviewContent(id, report, statusMap, userFilter, aiFilter) {
   const progress = getProgress(report, statusMap);
+  const reviewRound = getReviewRound(report);
+  const roundMeta = report.lastReviewedAt
+    ? `Review round ${reviewRound} · last reviewed ${formatDate(report.lastReviewedAt)}`
+    : `Review round ${reviewRound}`;
+
   const sectionsHtml = (report.sections || [])
-    .map((section) => renderSection(section, id, statusMap, filter))
+    .map((section) => renderSection(section, id, report, statusMap, userFilter, aiFilter))
     .join('');
 
   return `
@@ -651,13 +752,14 @@ function buildReviewContent(id, report, statusMap, filter) {
       <p class="detail-meta">
         <span>${escapeHtml(report.draftPath || '')}</span>
         · <span>${escapeHtml(formatDate(report.createdAt))}</span>
+        · <span>${escapeHtml(roundMeta)}</span>
       </p>
       ${renderProgress(progress)}
       <div class="detail-actions">
         <button type="button" class="btn btn-danger" id="clear-progress">Clear progress</button>
       </div>
     </div>
-    ${renderFilterToolbar(filter)}
+    ${renderDualFilterToolbar(userFilter, aiFilter)}
     ${renderExecutiveSummary(report.executiveSummary, id)}
     ${sectionsHtml}
   `;
@@ -671,9 +773,16 @@ function bindReviewEvents(id) {
     }
   });
 
-  app.querySelectorAll('.filter-btn').forEach((btn) => {
+  app.querySelectorAll('.filter-btn[data-filter]').forEach((btn) => {
     btn.addEventListener('click', () => {
       currentFilter = btn.dataset.filter;
+      refreshReviewPanel(id);
+    });
+  });
+
+  app.querySelectorAll('.filter-btn[data-ai-filter]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      currentAiFilter = btn.dataset.aiFilter;
       refreshReviewPanel(id);
     });
   });
@@ -718,7 +827,7 @@ async function refreshReviewPanel(id) {
   currentDetail = { id, report };
   const panel = document.getElementById('review-panel');
   if (!panel) return;
-  panel.innerHTML = buildReviewContent(id, report, loadStatus(id), currentFilter);
+  panel.innerHTML = buildReviewContent(id, report, loadStatus(id), currentFilter, currentAiFilter);
   bindReviewEvents(id);
 }
 
@@ -786,7 +895,8 @@ async function renderDetail(id) {
     id,
     report,
     loadStatus(id),
-    currentFilter
+    currentFilter,
+    currentAiFilter
   );
 
   bindReviewEvents(id);
@@ -801,6 +911,7 @@ async function render() {
   } else {
     currentDetail = null;
     currentFilter = DEFAULT_FILTER;
+    currentAiFilter = DEFAULT_AI_FILTER;
     await renderList();
   }
 }
@@ -810,6 +921,7 @@ window.addEventListener('hashchange', () => {
   if (route.view === 'detail') {
     if (!currentDetail || currentDetail.id !== route.id) {
       currentFilter = DEFAULT_FILTER;
+      currentAiFilter = DEFAULT_AI_FILTER;
     }
   }
   render();

@@ -206,13 +206,15 @@ Tag suggestions when helpful:
 
 ## 8. How I use the report
 
-1. Run `python3 -m http.server 8000` from the repo root and open `http://localhost:8000/tools/draft-review/`.  
+1. Run `npm run draft-review` and open `http://localhost:8000/tools/draft-review/`.  
 2. Read the **executive summary** for orientation.  
-3. Work through checkable items in the UI; mark each **done** or **discarded**. Default view shows open items only.  
-4. Apply substantive changes to the draft that resonate.  
-5. Run **`revise-draft-inline`** for grammar and style in a separate `-revised` file.  
-6. Ignore suggestions that do not fit. Keep lines that feel like **my signature**.  
-7. To regenerate a report, overwrite `review-reports/{slug}.json` and **clear progress** in the UI.
+3. Work through checkable items in the UI; mark each **done** or **discarded**. Default view shows your open items only.  
+4. Apply substantive changes to the draft in the side editor (Save or `Ctrl+S`).  
+5. Re-run **`review-draft-report`** on the same draft to get an **incremental update** (AI sets `aiStatus` on each item; your progress in `localStorage` is preserved).  
+6. Use AI filters in the UI to see what the model still flags vs what you already marked done.  
+7. Run **`revise-draft-inline`** for grammar and style in a separate `-revised` file.  
+8. Ignore suggestions that do not fit. Keep lines that feel like **my signature**.  
+9. To reset the report entirely, ask for a review **from scratch** and use **Clear progress** in the UI if item ids changed.
 
 ---
 
@@ -248,8 +250,21 @@ Do not rewrite the whole piece in the response—confirm path only.
 
 ## 11. JSON output
 
-Reports are written to `review-reports/{slug}.json` (gitignored). See `docs/review-report-schema.md` for the full schema, item ids, and manifest format.
+Reports are written to `review-reports/{slug}.json` (gitignored). See `docs/review-report-schema.md` for the full schema, item ids, `aiStatus`, and manifest format.
 
 ---
 
-*Last updated: 2026-07-25 (v4: JSON output + draft review tracker UI)*
+## 12. Incremental re-review
+
+When a report already exists, `review-draft-report` runs in **update mode** by default:
+
+- Re-evaluates each existing item and sets `aiStatus` (`open`, `addressed`, or `superseded`)
+- Adds new items for newly found issues (stable ids; never renumbers old ones)
+- Refreshes executive summary and prose sections
+- Bumps `reviewRound` and preserves your UI progress in `localStorage`
+
+Ask for **from scratch** only when you want a full reset (warn: old item ids may no longer match your tracked progress).
+
+---
+
+*Last updated: 2026-07-25 (v5: incremental AI re-review with aiStatus)*
