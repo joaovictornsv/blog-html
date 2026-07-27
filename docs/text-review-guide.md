@@ -2,7 +2,7 @@
 
 Instructions for AI-assisted review of my writing. Use this document when I ask for a **review report** (analysis and suggestions), not when I ask for direct revision in the file.
 
-**Related workflow:** `.cursor/commands/review-draft-report.md` uses this guide for a substantive report (logic, clarity, structure). `.cursor/commands/revise-draft-inline.md` handles grammar and style in a new `-revised` file.
+**Related workflow:** `.cursor/commands/review-draft-report.md` uses this guide for a substantive report (logic, clarity, structure) and writes **JSON** to `review-reports/{slug}.json` per `docs/review-report-schema.md`. Track progress in `tools/draft-review/`. `.cursor/commands/revise-draft-inline.md` handles grammar and style in a new `-revised` file.
 
 ---
 
@@ -77,7 +77,7 @@ If context is missing, state your assumptions at the top of the report.
 
 ## 5. Report structure
 
-Deliver the report in this order. Use markdown headings. Be specific: quote short phrases from my text and reference **paragraph numbers** (or line numbers if in a file).
+Deliver the report as JSON (`docs/review-report-schema.md`) in this order. Be specific: quote short phrases from my text and reference **paragraph numbers** (or line numbers if in a file).
 
 ### 5.1 Executive summary (required)
 
@@ -206,10 +206,15 @@ Tag suggestions when helpful:
 
 ## 8. How I use the report
 
-1. Read the **executive summary** for orientation.  
-2. Work through the body sections and apply substantive changes that resonate.  
-3. Run **`revise-draft-inline`** for grammar and style in a separate `-revised` file.  
-4. Ignore suggestions that do not fit. Keep lines that feel like **my signature**.
+1. Run `npm run draft-review` and open `http://localhost:8000/tools/draft-review/`.  
+2. Read the **executive summary** for orientation.  
+3. Work through checkable items in the UI; mark each **done** or **discarded**. Default view shows your open items only.  
+4. Apply substantive changes to the draft in the side editor (Save or `Ctrl+S`).  
+5. Re-run **`review-draft-report`** on the same draft to get an **incremental update** (AI sets `aiStatus` on each item; your progress in `localStorage` is preserved).  
+6. Use AI filters in the UI to see what the model still flags vs what you already marked done.  
+7. Run **`revise-draft-inline`** for grammar and style in a separate `-revised` file.  
+8. Ignore suggestions that do not fit. Keep lines that feel like **my signature**.  
+9. To reset the report entirely, ask for a review **from scratch** and use **Clear progress** in the UI if item ids changed.
 
 ---
 
@@ -234,8 +239,8 @@ Optional per session: audience nuance, constraints ("don't touch the opening"), 
 
 ```text
 Review my text using docs/text-review-guide.md.
-Produce the full report (all sections in §5).
-Do not rewrite the whole piece in the response—report only.
+Write JSON to review-reports/{slug}.json per docs/review-report-schema.md.
+Do not rewrite the whole piece in the response—confirm path only.
 
 [Paste text or path]
 [Optional: context, constraints]
@@ -243,4 +248,23 @@ Do not rewrite the whole piece in the response—report only.
 
 ---
 
-*Last updated: 2026-07-18 (v3: logic-focused report, grammar split to revise-inline, slimmer tables)*
+## 11. JSON output
+
+Reports are written to `review-reports/{slug}.json` (gitignored). See `docs/review-report-schema.md` for the full schema, item ids, `aiStatus`, and manifest format.
+
+---
+
+## 12. Incremental re-review
+
+When a report already exists, `review-draft-report` runs in **update mode** by default:
+
+- Re-evaluates each existing item and sets `aiStatus` (`open`, `addressed`, or `superseded`)
+- Adds new items for newly found issues (stable ids; never renumbers old ones)
+- Refreshes executive summary and prose sections
+- Bumps `reviewRound` and preserves your UI progress in `localStorage`
+
+Ask for **from scratch** only when you want a full reset (warn: old item ids may no longer match your tracked progress).
+
+---
+
+*Last updated: 2026-07-25 (v5: incremental AI re-review with aiStatus)*

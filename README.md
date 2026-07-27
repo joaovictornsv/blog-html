@@ -13,6 +13,23 @@ python3 -m http.server 8000
 Then open:
 - **Main blog**: http://localhost:8000/
 - **Devlog**: http://localhost:8000/devlog/
+- **Draft review tracker**: http://localhost:8000/tools/draft-review/
+
+## Draft review tracker
+
+Substantive draft reviews are written as JSON by the `review-draft-report` command (see `docs/text-review-guide.md` and `docs/review-report-schema.md`).
+
+Reports live in `review-reports/{slug}.json` (gitignored). One draft slug = one report. Progress (done / discarded) is stored in the browser via `localStorage`.
+
+Start the tracker server (serves the site and supports saving drafts):
+
+```sh
+npm run draft-review
+```
+
+Then open http://localhost:8000/tools/draft-review/ to list reports, work through items, and edit the draft in the side panel. Use **Save** or `Ctrl+S` to write changes back to `txt/`.
+
+**Re-review:** Run `review-draft-report` again on the same draft to get an incremental update. The AI sets `aiStatus` on each item and can add new ones; your done/discarded progress in `localStorage` is preserved. Use AI filters in the UI to compare your status with the model's. Ask for a review **from scratch** only when you want to reset the report entirely (then use **Clear progress** if item ids changed).
 
 To preview OG images locally, generate them first:
 
