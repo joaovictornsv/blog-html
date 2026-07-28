@@ -338,6 +338,54 @@ body.has-editor-layout .app {
   border-bottom: 1px solid var(--border);
 }
 
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: flex-end;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex: 1;
+  min-width: 7rem;
+}
+
+.filter-label {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+}
+
+.filter-select {
+  width: 100%;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.filter-select:hover {
+  background: #f0ebe2;
+}
+
+.filter-select:focus {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 1px;
+}
+
 .toolbar-label {
   font-family: var(--font-ui);
   font-size: 0.82rem;
@@ -689,6 +737,65 @@ body.has-editor-layout .app {
   font-size: 0.88rem;
 }
 
+.focus-panel {
+  margin-top: 0.25rem;
+}
+
+.focus-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.focus-nav-meta {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 0;
+  text-align: center;
+}
+
+.focus-counter {
+  font-family: var(--font-ui);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.focus-section-label {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+}
+
+.focus-nav-btn {
+  flex-shrink: 0;
+  min-width: 2.5rem;
+  padding-inline: 0.65rem;
+}
+
+.focus-nav-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.focus-nav-btn:disabled:hover {
+  background: var(--bg-elevated);
+}
+
+.focus-panel .item {
+  margin-bottom: 0;
+}
+
 @media (max-width: 960px) {
   .detail-layout {
     grid-template-columns: 1fr;
@@ -713,6 +820,15 @@ body.has-editor-layout .app {
   .toolbar {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-field {
+    min-width: 0;
   }
 
   .filter-group {

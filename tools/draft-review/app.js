@@ -3,6 +3,7 @@ const STORAGE_PREFIX = 'draft-review:';
 const EXPAND_PREFIX = 'draft-review-expand:';
 const DEFAULT_FILTER = 'open';
 const DEFAULT_AI_FILTER = 'all';
+const DEFAULT_VIEW_MODE = 'list';
 const SAVE_API = '/api/draft/save';
 
 const SECTION_LABELS = {
@@ -275,9 +276,58 @@ function renderItemBadges(item, report, userStatus) {
   return badges.join('');
 }
 
-function renderItemCard(reportId, report, item, statusMap, userFilter, aiFilter, innerHtml, headerExtra = '') {
+function getVisibleFocusItems(report, statusMap, userFilter, aiFilter) {
+  const entries = [];
+  for (const section of report.sections || []) {
+    const items = getSectionCheckableItems(section);
+    for (const item of items) {
+      if (itemVisible(item, report, statusMap, userFilter, aiFilter)) {
+        entries.push({ item, sectionType: section.type });
+      }
+    }
+  }
+  return entries;
+}
+
+function clampFocusIndex(index, total) {
+  if (total === 0) return 0;
+  return Math.max(0, Math.min(index, total - 1));
+}
+
+function renderItemFields(sectionType, item) {
+  switch (sectionType) {
+    case 'unclear_phrasing':
+      return `${renderField('Original', item.original)}${renderField('Why', item.why)}`;
+    case 'other_perspectives':
+      return `${renderField('What I wrote', item.whatIWrote)}${renderField('Who might disagree', item.whoMightDisagree)}${renderField('How to improve', item.howToImprove)}`;
+    case 'clarity':
+      return `${renderField('Issue', item.issue)}${renderField('Suggested fix', item.suggestedFix)}`;
+    case 'organization_and_logic':
+    case 'emotional_impact':
+      return `<p class="field-value">${escapeHtml(item.content)}</p>`;
+    default:
+      return '';
+  }
+}
+
+function renderItemHeaderExtra(sectionType, item) {
+  switch (sectionType) {
+    case 'unclear_phrasing':
+    case 'other_perspectives':
+    case 'clarity':
+      return renderSeverity(item.severity);
+    case 'organization_and_logic':
+    case 'emotional_impact':
+      return `<span class="item-label">${escapeHtml(item.label || item.id)}</span>`;
+    default:
+      return '';
+  }
+}
+
+function renderItemCard(reportId, report, item, statusMap, userFilter, aiFilter, innerHtml, headerExtra = '', options = {}) {
+  const { forceVisible = false } = options;
   const userStatus = getItemStatus(statusMap, item.id);
-  const hidden = !itemVisible(item, report, statusMap, userFilter, aiFilter) ? ' is-hidden' : '';
+  const hidden = !forceVisible && !itemVisible(item, report, statusMap, userFilter, aiFilter) ? ' is-hidden' : '';
   const stateClass = userStatus === 'open' ? '' : ` is-${userStatus}`;
   const mismatchClass = isMismatch(userStatus, item) ? ' is-mismatch' : '';
 
@@ -313,8 +363,8 @@ function renderUnclearPhrasingSection(section, reportId, report, statusMap, user
         statusMap,
         userFilter,
         aiFilter,
-        `${renderField('Original', item.original)}${renderField('Why', item.why)}`,
-        renderSeverity(item.severity)
+        renderItemFields('unclear_phrasing', item),
+        renderItemHeaderExtra('unclear_phrasing', item)
       )
     )
     .join('');
@@ -348,8 +398,8 @@ function renderOtherPerspectivesSection(section, reportId, report, statusMap, us
         statusMap,
         userFilter,
         aiFilter,
-        `${renderField('What I wrote', item.whatIWrote)}${renderField('Who might disagree', item.whoMightDisagree)}${renderField('How to improve', item.howToImprove)}`,
-        renderSeverity(item.severity)
+        renderItemFields('other_perspectives', item),
+        renderItemHeaderExtra('other_perspectives', item)
       )
     )
     .join('');
@@ -375,8 +425,8 @@ function renderClaritySection(section, reportId, report, statusMap, userFilter, 
         statusMap,
         userFilter,
         aiFilter,
-        `${renderField('Issue', item.issue)}${renderField('Suggested fix', item.suggestedFix)}`,
-        renderSeverity(item.severity)
+        renderItemFields('clarity', item),
+        renderItemHeaderExtra('clarity', item)
       )
     )
     .join('');
@@ -404,8 +454,8 @@ function renderSubsectionSection(section, reportId, report, statusMap, userFilte
         statusMap,
         userFilter,
         aiFilter,
-        `<p class="field-value">${escapeHtml(item.content)}</p>`,
-        `<span class="item-label">${escapeHtml(item.label || item.id)}</span>`
+        renderItemFields(section.type, item),
+        renderItemHeaderExtra(section.type, item)
       )
     )
     .join('');
@@ -460,7 +510,7 @@ function renderExecutiveSummary(summary, reportId) {
   );
 }
 
-function renderDualFilterToolbar(userFilter, aiFilter) {
+function renderFilterToolbar(userFilter, aiFilter, viewMode) {
   const userFilters = [
     { id: 'open', label: 'Open' },
     { id: 'done', label: 'Done' },
@@ -476,28 +526,91 @@ function renderDualFilterToolbar(userFilter, aiFilter) {
     { id: 'mismatch', label: 'Mismatch' },
   ];
 
-  const userButtons = userFilters
-    .map(
-      (f) =>
-        `<button type="button" class="filter-btn${f.id === userFilter ? ' is-active' : ''}" data-filter="${f.id}">${f.label}</button>`
-    )
-    .join('');
+  const viewModes = [
+    { id: 'list', label: 'List' },
+    { id: 'focus', label: 'Focus' },
+  ];
 
-  const aiButtons = aiFilters
-    .map(
-      (f) =>
-        `<button type="button" class="filter-btn${f.id === aiFilter ? ' is-active' : ''}" data-ai-filter="${f.id}">${f.label}</button>`
-    )
-    .join('');
+  const renderOptions = (options, selected) =>
+    options
+      .map(
+        (option) =>
+          `<option value="${escapeHtml(option.id)}"${option.id === selected ? ' selected' : ''}>${escapeHtml(option.label)}</option>`
+      )
+      .join('');
 
   return `
-    <div class="toolbar">
-      <span class="toolbar-label">Your status</span>
-      <div class="filter-group" role="group" aria-label="Filter by your status">${userButtons}</div>
+    <div class="filter-bar">
+      <label class="filter-field">
+        <span class="filter-label">Your status</span>
+        <select id="filter-user-status" class="filter-select" aria-label="Filter by your status">
+          ${renderOptions(userFilters, userFilter)}
+        </select>
+      </label>
+      <label class="filter-field">
+        <span class="filter-label">AI status</span>
+        <select id="filter-ai-status" class="filter-select" aria-label="Filter by AI status">
+          ${renderOptions(aiFilters, aiFilter)}
+        </select>
+      </label>
+      <label class="filter-field">
+        <span class="filter-label">View</span>
+        <select id="filter-view-mode" class="filter-select" aria-label="Suggestion view">
+          ${renderOptions(viewModes, viewMode)}
+        </select>
+      </label>
     </div>
-    <div class="toolbar">
-      <span class="toolbar-label">AI status</span>
-      <div class="filter-group" role="group" aria-label="Filter by AI status">${aiButtons}</div>
+  `;
+}
+
+function renderFocusNav(counterText, sectionLabel, prevDisabled, nextDisabled) {
+  return `
+    <div class="focus-nav">
+      <button type="button" class="btn focus-nav-btn" id="focus-prev"${prevDisabled} aria-label="Previous suggestion">←</button>
+      <div class="focus-nav-meta">
+        <span class="focus-counter">${escapeHtml(counterText)}</span>
+        ${sectionLabel ? `<span class="focus-section-label">${escapeHtml(sectionLabel)}</span>` : ''}
+      </div>
+      <button type="button" class="btn focus-nav-btn" id="focus-next"${nextDisabled} aria-label="Next suggestion">→</button>
+    </div>
+  `;
+}
+
+function renderFocusPanel(id, report, statusMap, userFilter, aiFilter) {
+  const visibleItems = getVisibleFocusItems(report, statusMap, userFilter, aiFilter);
+  const index = clampFocusIndex(focusIndex, visibleItems.length);
+  focusIndex = index;
+
+  if (visibleItems.length === 0) {
+    return `
+      <div class="focus-panel">
+        ${renderFocusNav('No suggestions', '', ' disabled', ' disabled')}
+        <p class="section-empty">No suggestions match the current filters.</p>
+      </div>
+    `;
+  }
+
+  const { item, sectionType } = visibleItems[index];
+  const sectionLabel = SECTION_LABELS[sectionType] || sectionType;
+  const cardHtml = renderItemCard(
+    id,
+    report,
+    item,
+    statusMap,
+    userFilter,
+    aiFilter,
+    renderItemFields(sectionType, item),
+    renderItemHeaderExtra(sectionType, item),
+    { forceVisible: true }
+  );
+
+  const prevDisabled = index === 0 ? ' disabled' : '';
+  const nextDisabled = index >= visibleItems.length - 1 ? ' disabled' : '';
+
+  return `
+    <div class="focus-panel">
+      ${renderFocusNav(`Suggestion ${index + 1} of ${visibleItems.length}`, sectionLabel, prevDisabled, nextDisabled)}
+      ${cardHtml}
     </div>
   `;
 }
@@ -542,6 +655,7 @@ function navigateToReport(id) {
 async function renderList() {
   setBodyLayout(false);
   unbindEditorShortcut();
+  unbindFocusShortcut();
   editorState = {
     reportId: null,
     draftPath: null,
@@ -597,6 +711,8 @@ async function renderList() {
 let currentDetail = null;
 let currentFilter = DEFAULT_FILTER;
 let currentAiFilter = DEFAULT_AI_FILTER;
+let currentViewMode = DEFAULT_VIEW_MODE;
+let focusIndex = 0;
 let editorState = {
   reportId: null,
   draftPath: null,
@@ -696,6 +812,54 @@ function onEditorKeydown(event) {
   saveDraft();
 }
 
+function isEditableTarget(target) {
+  if (!target) return false;
+  if (target.id === 'draft-editor') return true;
+  const tag = target.tagName;
+  if (tag === 'TEXTAREA' || tag === 'INPUT' || tag === 'SELECT') return true;
+  if (target.isContentEditable) return true;
+  return false;
+}
+
+function bindFocusShortcut() {
+  document.addEventListener('keydown', onFocusKeydown);
+}
+
+function unbindFocusShortcut() {
+  document.removeEventListener('keydown', onFocusKeydown);
+}
+
+function onFocusKeydown(event) {
+  if (currentViewMode !== 'focus') return;
+  if (isEditableTarget(event.target)) return;
+
+  if (event.key === 'ArrowLeft') {
+    event.preventDefault();
+    moveFocusPrev(currentDetail?.id);
+  } else if (event.key === 'ArrowRight') {
+    event.preventDefault();
+    moveFocusNext(currentDetail?.id);
+  }
+}
+
+function moveFocusPrev(id) {
+  if (!id || !currentDetail?.report) return;
+  const visible = getVisibleFocusItems(currentDetail.report, loadStatus(id), currentFilter, currentAiFilter);
+  if (focusIndex > 0) {
+    focusIndex -= 1;
+    refreshReviewPanel(id);
+  }
+}
+
+function moveFocusNext(id) {
+  if (!id || !currentDetail?.report) return;
+  const visible = getVisibleFocusItems(currentDetail.report, loadStatus(id), currentFilter, currentAiFilter);
+  if (focusIndex < visible.length - 1) {
+    focusIndex += 1;
+    refreshReviewPanel(id);
+  }
+}
+
 async function initEditor(report, preservedContent = null) {
   const textarea = getEditorTextarea();
   const pathEl = document.getElementById('editor-path');
@@ -745,6 +909,11 @@ function buildReviewContent(id, report, statusMap, userFilter, aiFilter) {
     .map((section) => renderSection(section, id, report, statusMap, userFilter, aiFilter))
     .join('');
 
+  const bodyContent =
+    currentViewMode === 'focus'
+      ? renderFocusPanel(id, report, statusMap, userFilter, aiFilter)
+      : `${renderExecutiveSummary(report.executiveSummary, id)}${sectionsHtml}`;
+
   return `
     <div class="detail-header">
       <a class="back-link" href="#/">← All reports</a>
@@ -755,36 +924,34 @@ function buildReviewContent(id, report, statusMap, userFilter, aiFilter) {
         · <span>${escapeHtml(roundMeta)}</span>
       </p>
       ${renderProgress(progress)}
-      <div class="detail-actions">
-        <button type="button" class="btn btn-danger" id="clear-progress">Clear progress</button>
-      </div>
     </div>
-    ${renderDualFilterToolbar(userFilter, aiFilter)}
-    ${renderExecutiveSummary(report.executiveSummary, id)}
-    ${sectionsHtml}
+    ${renderFilterToolbar(userFilter, aiFilter, currentViewMode)}
+    ${bodyContent}
   `;
 }
 
 function bindReviewEvents(id) {
-  document.getElementById('clear-progress')?.addEventListener('click', () => {
-    if (window.confirm('Clear all progress for this report? This cannot be undone.')) {
-      clearStatus(id);
-      refreshReviewPanel(id);
-    }
+  document.getElementById('filter-user-status')?.addEventListener('change', (event) => {
+    currentFilter = event.target.value;
+    refreshReviewPanel(id);
   });
 
-  app.querySelectorAll('.filter-btn[data-filter]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      currentFilter = btn.dataset.filter;
-      refreshReviewPanel(id);
-    });
+  document.getElementById('filter-ai-status')?.addEventListener('change', (event) => {
+    currentAiFilter = event.target.value;
+    refreshReviewPanel(id);
   });
 
-  app.querySelectorAll('.filter-btn[data-ai-filter]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      currentAiFilter = btn.dataset.aiFilter;
-      refreshReviewPanel(id);
-    });
+  document.getElementById('filter-view-mode')?.addEventListener('change', (event) => {
+    currentViewMode = event.target.value;
+    refreshReviewPanel(id);
+  });
+
+  document.getElementById('focus-prev')?.addEventListener('click', () => {
+    moveFocusPrev(id);
+  });
+
+  document.getElementById('focus-next')?.addEventListener('click', () => {
+    moveFocusNext(id);
   });
 
   app.querySelectorAll('.item-actions').forEach((actions) => {
@@ -825,9 +992,16 @@ function bindReviewEvents(id) {
 async function refreshReviewPanel(id) {
   const report = await loadReport(id);
   currentDetail = { id, report };
+  const statusMap = loadStatus(id);
+
+  if (currentViewMode === 'focus') {
+    const visible = getVisibleFocusItems(report, statusMap, currentFilter, currentAiFilter);
+    focusIndex = clampFocusIndex(focusIndex, visible.length);
+  }
+
   const panel = document.getElementById('review-panel');
   if (!panel) return;
-  panel.innerHTML = buildReviewContent(id, report, loadStatus(id), currentFilter, currentAiFilter);
+  panel.innerHTML = buildReviewContent(id, report, statusMap, currentFilter, currentAiFilter);
   bindReviewEvents(id);
 }
 
@@ -839,6 +1013,7 @@ async function renderDetail(id) {
     app.innerHTML = '<p class="empty-state">Loading report…</p>';
     setBodyLayout(false);
     unbindEditorShortcut();
+    unbindFocusShortcut();
     editorState = {
       reportId: null,
       draftPath: null,
@@ -853,6 +1028,7 @@ async function renderDetail(id) {
   } catch (error) {
     setBodyLayout(false);
     unbindEditorShortcut();
+    unbindFocusShortcut();
     app.innerHTML = `
       <div class="error-state">
         <p><a class="back-link" href="#/">← All reports</a></p>
@@ -865,6 +1041,7 @@ async function renderDetail(id) {
   currentDetail = { id, report };
   setBodyLayout(true);
   bindEditorShortcut();
+  bindFocusShortcut();
 
   if (preserveEditor) {
     await refreshReviewPanel(id);
@@ -912,6 +1089,8 @@ async function render() {
     currentDetail = null;
     currentFilter = DEFAULT_FILTER;
     currentAiFilter = DEFAULT_AI_FILTER;
+    currentViewMode = DEFAULT_VIEW_MODE;
+    focusIndex = 0;
     await renderList();
   }
 }
@@ -922,6 +1101,8 @@ window.addEventListener('hashchange', () => {
     if (!currentDetail || currentDetail.id !== route.id) {
       currentFilter = DEFAULT_FILTER;
       currentAiFilter = DEFAULT_AI_FILTER;
+      currentViewMode = DEFAULT_VIEW_MODE;
+      focusIndex = 0;
     }
   }
   render();
