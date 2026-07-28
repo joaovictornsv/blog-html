@@ -1,6 +1,7 @@
 const REPORTS_BASE = '/review-reports';
 const STORAGE_PREFIX = 'draft-review:';
 const EXPAND_PREFIX = 'draft-review-expand:';
+const PREFS_KEY = 'draft-review:prefs';
 const DEFAULT_FILTER = 'open';
 const DEFAULT_AI_FILTER = 'all';
 const DEFAULT_VIEW_MODE = 'list';
@@ -325,27 +326,38 @@ function renderItemHeaderExtra(sectionType, item) {
 }
 
 function renderItemCard(reportId, report, item, statusMap, userFilter, aiFilter, innerHtml, headerExtra = '', options = {}) {
-  const { forceVisible = false } = options;
+  const { forceVisible = false, actionsInHeader = false } = options;
   const userStatus = getItemStatus(statusMap, item.id);
   const hidden = !forceVisible && !itemVisible(item, report, statusMap, userFilter, aiFilter) ? ' is-hidden' : '';
   const stateClass = userStatus === 'open' ? '' : ` is-${userStatus}`;
   const mismatchClass = isMismatch(userStatus, item) ? ' is-mismatch' : '';
+  const actionsHtml = renderItemActions(reportId, item.id, userStatus, actionsInHeader);
 
-  return `
-    <article class="item${stateClass}${hidden}${mismatchClass}" data-item-id="${escapeHtml(item.id)}">
-      <div class="item-header">
-        ${headerExtra}
+  const headerEnd = actionsInHeader
+    ? `
+      <div class="item-header-end">
+        ${actionsHtml}
         <div class="item-badges">${renderItemBadges(item, report, userStatus)}</div>
       </div>
+    `
+    : `<div class="item-badges">${renderItemBadges(item, report, userStatus)}</div>`;
+
+  return `
+    <article class="item${stateClass}${hidden}${mismatchClass}${actionsInHeader ? ' item--header-actions' : ''}" data-item-id="${escapeHtml(item.id)}">
+      <div class="item-header">
+        ${headerExtra}
+        ${headerEnd}
+      </div>
       ${innerHtml}
-      ${renderItemActions(reportId, item.id, userStatus)}
+      ${actionsInHeader ? '' : actionsHtml}
     </article>
   `;
 }
 
-function renderItemActions(reportId, itemId, status) {
+function renderItemActions(reportId, itemId, status, inline = false) {
+  const inlineClass = inline ? ' item-actions--inline' : '';
   return `
-    <div class="item-actions" data-report-id="${escapeHtml(reportId)}" data-item-id="${escapeHtml(itemId)}">
+    <div class="item-actions${inlineClass}" data-report-id="${escapeHtml(reportId)}" data-item-id="${escapeHtml(itemId)}">
       <button type="button" class="btn btn-done${status === 'done' ? ' is-active' : ''}" data-action="done">Done</button>
       <button type="button" class="btn btn-discard${status === 'discarded' ? ' is-active' : ''}" data-action="discarded">Discard</button>
       ${status !== 'open' ? '<button type="button" class="btn" data-action="open">Reset</button>' : ''}
@@ -563,15 +575,22 @@ function renderFilterToolbar(userFilter, aiFilter, viewMode) {
   `;
 }
 
-function renderFocusNav(counterText, sectionLabel, prevDisabled, nextDisabled) {
+function renderFocusTopBar(counterText, sectionLabel, prevDisabled, nextDisabled) {
+  const toggleLabel = focusMetaExpanded ? 'Hide info' : 'Info & filters';
   return `
-    <div class="focus-nav">
-      <button type="button" class="btn focus-nav-btn" id="focus-prev"${prevDisabled} aria-label="Previous suggestion">←</button>
-      <div class="focus-nav-meta">
-        <span class="focus-counter">${escapeHtml(counterText)}</span>
-        ${sectionLabel ? `<span class="focus-section-label">${escapeHtml(sectionLabel)}</span>` : ''}
+    <div class="focus-top">
+      <a class="back-link focus-back-link" href="#/">← Reports</a>
+      <div class="focus-nav">
+        <button type="button" class="btn focus-nav-btn" id="focus-prev"${prevDisabled} aria-label="Previous suggestion">←</button>
+        <div class="focus-nav-meta">
+          <span class="focus-counter">${escapeHtml(counterText)}</span>
+          ${sectionLabel ? `<span class="focus-section-label">${escapeHtml(sectionLabel)}</span>` : ''}
+        </div>
+        <button type="button" class="btn focus-nav-btn" id="focus-next"${nextDisabled} aria-label="Next suggestion">→</button>
       </div>
-      <button type="button" class="btn focus-nav-btn" id="focus-next"${nextDisabled} aria-label="Next suggestion">→</button>
+      <button type="button" class="btn focus-meta-toggle" id="focus-meta-toggle" aria-expanded="${focusMetaExpanded}">
+        ${escapeHtml(toggleLabel)}
+      </button>
     </div>
   `;
 }
@@ -584,7 +603,7 @@ function renderFocusPanel(id, report, statusMap, userFilter, aiFilter) {
   if (visibleItems.length === 0) {
     return `
       <div class="focus-panel">
-        ${renderFocusNav('No suggestions', '', ' disabled', ' disabled')}
+        ${renderFocusTopBar('No suggestions', '', ' disabled', ' disabled')}
         <p class="section-empty">No suggestions match the current filters.</p>
       </div>
     `;
@@ -601,15 +620,16 @@ function renderFocusPanel(id, report, statusMap, userFilter, aiFilter) {
     aiFilter,
     renderItemFields(sectionType, item),
     renderItemHeaderExtra(sectionType, item),
-    { forceVisible: true }
+    { forceVisible: true, actionsInHeader: true }
   );
 
   const prevDisabled = index === 0 ? ' disabled' : '';
   const nextDisabled = index >= visibleItems.length - 1 ? ' disabled' : '';
+  const counterText = `${index + 1} / ${visibleItems.length}`;
 
   return `
     <div class="focus-panel">
-      ${renderFocusNav(`Suggestion ${index + 1} of ${visibleItems.length}`, sectionLabel, prevDisabled, nextDisabled)}
+      ${renderFocusTopBar(counterText, sectionLabel, prevDisabled, nextDisabled)}
       ${cardHtml}
     </div>
   `;
@@ -713,6 +733,7 @@ let currentFilter = DEFAULT_FILTER;
 let currentAiFilter = DEFAULT_AI_FILTER;
 let currentViewMode = DEFAULT_VIEW_MODE;
 let focusIndex = 0;
+let focusMetaExpanded = false;
 let editorState = {
   reportId: null,
   draftPath: null,
@@ -720,8 +741,37 @@ let editorState = {
   dirty: false,
 };
 
+function loadPrefs() {
+  try {
+    const raw = localStorage.getItem(PREFS_KEY);
+    if (!raw) return;
+    const prefs = JSON.parse(raw);
+    if (prefs.userFilter) currentFilter = prefs.userFilter;
+    if (prefs.aiFilter) currentAiFilter = prefs.aiFilter;
+    if (prefs.viewMode) currentViewMode = prefs.viewMode;
+    if (typeof prefs.focusMetaExpanded === 'boolean') focusMetaExpanded = prefs.focusMetaExpanded;
+  } catch {
+    // ignore invalid prefs
+  }
+}
+
+function savePrefs() {
+  localStorage.setItem(
+    PREFS_KEY,
+    JSON.stringify({
+      userFilter: currentFilter,
+      aiFilter: currentAiFilter,
+      viewMode: currentViewMode,
+      focusMetaExpanded,
+    })
+  );
+}
+
 function setBodyLayout(hasEditor) {
   document.body.classList.toggle('has-editor-layout', hasEditor);
+  if (!hasEditor) {
+    document.body.classList.remove('is-focus-view');
+  }
 }
 
 function getEditorTextarea() {
@@ -898,21 +948,12 @@ async function initEditor(report, preservedContent = null) {
   }
 }
 
-function buildReviewContent(id, report, statusMap, userFilter, aiFilter) {
+function buildReviewHeader(id, report, statusMap) {
   const progress = getProgress(report, statusMap);
   const reviewRound = getReviewRound(report);
   const roundMeta = report.lastReviewedAt
     ? `Review round ${reviewRound} · last reviewed ${formatDate(report.lastReviewedAt)}`
     : `Review round ${reviewRound}`;
-
-  const sectionsHtml = (report.sections || [])
-    .map((section) => renderSection(section, id, report, statusMap, userFilter, aiFilter))
-    .join('');
-
-  const bodyContent =
-    currentViewMode === 'focus'
-      ? renderFocusPanel(id, report, statusMap, userFilter, aiFilter)
-      : `${renderExecutiveSummary(report.executiveSummary, id)}${sectionsHtml}`;
 
   return `
     <div class="detail-header">
@@ -925,25 +966,78 @@ function buildReviewContent(id, report, statusMap, userFilter, aiFilter) {
       </p>
       ${renderProgress(progress)}
     </div>
-    ${renderFilterToolbar(userFilter, aiFilter, currentViewMode)}
-    ${bodyContent}
+    ${renderFilterToolbar(currentFilter, currentAiFilter, currentViewMode)}
   `;
+}
+
+function buildListBody(id, report, statusMap, userFilter, aiFilter) {
+  const sectionsHtml = (report.sections || [])
+    .map((section) => renderSection(section, id, report, statusMap, userFilter, aiFilter))
+    .join('');
+
+  return `${renderExecutiveSummary(report.executiveSummary, id)}${sectionsHtml}`;
+}
+
+function buildReviewContent(id, report, statusMap, userFilter, aiFilter) {
+  const header = buildReviewHeader(id, report, statusMap);
+
+  if (currentViewMode === 'focus') {
+    return header;
+  }
+
+  return `${header}${buildListBody(id, report, statusMap, userFilter, aiFilter)}`;
+}
+
+function updateDetailLayoutMode() {
+  const layout = document.querySelector('.detail-layout');
+  const focusStack = document.getElementById('focus-stack');
+  const reviewPanel = document.getElementById('review-panel');
+  if (!layout) return;
+
+  const isFocus = currentViewMode === 'focus';
+  layout.classList.toggle('detail-layout--focus', isFocus);
+  layout.classList.toggle('detail-layout--focus-meta-collapsed', isFocus && !focusMetaExpanded);
+  document.body.classList.toggle('is-focus-view', isFocus);
+
+  if (focusStack) {
+    focusStack.hidden = !isFocus;
+  }
+
+  if (reviewPanel) {
+    reviewPanel.hidden = isFocus && !focusMetaExpanded;
+  }
+
+  const toggle = document.getElementById('focus-meta-toggle');
+  if (toggle) {
+    const label = focusMetaExpanded ? 'Hide info' : 'Info & filters';
+    toggle.textContent = label;
+    toggle.setAttribute('aria-expanded', String(focusMetaExpanded));
+  }
 }
 
 function bindReviewEvents(id) {
   document.getElementById('filter-user-status')?.addEventListener('change', (event) => {
     currentFilter = event.target.value;
+    savePrefs();
     refreshReviewPanel(id);
   });
 
   document.getElementById('filter-ai-status')?.addEventListener('change', (event) => {
     currentAiFilter = event.target.value;
+    savePrefs();
     refreshReviewPanel(id);
   });
 
   document.getElementById('filter-view-mode')?.addEventListener('change', (event) => {
     currentViewMode = event.target.value;
+    savePrefs();
     refreshReviewPanel(id);
+  });
+
+  document.getElementById('focus-meta-toggle')?.addEventListener('click', () => {
+    focusMetaExpanded = !focusMetaExpanded;
+    savePrefs();
+    updateDetailLayoutMode();
   });
 
   document.getElementById('focus-prev')?.addEventListener('click', () => {
@@ -1002,6 +1096,16 @@ async function refreshReviewPanel(id) {
   const panel = document.getElementById('review-panel');
   if (!panel) return;
   panel.innerHTML = buildReviewContent(id, report, statusMap, currentFilter, currentAiFilter);
+
+  const focusStack = document.getElementById('focus-stack');
+  if (focusStack) {
+    focusStack.innerHTML =
+      currentViewMode === 'focus'
+        ? renderFocusPanel(id, report, statusMap, currentFilter, currentAiFilter)
+        : '';
+  }
+
+  updateDetailLayoutMode();
   bindReviewEvents(id);
 }
 
@@ -1051,20 +1155,19 @@ async function renderDetail(id) {
   app.innerHTML = `
     <div class="detail-layout">
       <div class="review-panel" id="review-panel"></div>
-      <aside class="editor-panel" aria-label="Draft editor">
-        <div class="editor-toolbar">
-          <div class="editor-toolbar-main">
-            <span class="editor-label">Draft</span>
+      <div class="editor-stack" id="editor-stack">
+        <div class="focus-stack" id="focus-stack" hidden></div>
+        <aside class="editor-panel" aria-label="Draft editor">
+          <div class="editor-toolbar">
             <span class="editor-path" id="editor-path"></span>
+            <div class="editor-toolbar-actions">
+              <span class="editor-status" id="editor-status"></span>
+              <button type="button" class="btn btn-primary" id="save-draft">Save</button>
+            </div>
           </div>
-          <div class="editor-toolbar-actions">
-            <span class="editor-status" id="editor-status"></span>
-            <button type="button" class="btn btn-primary" id="save-draft">Save</button>
-          </div>
-        </div>
-        <textarea id="draft-editor" class="draft-editor" spellcheck="true" aria-label="Draft text"></textarea>
-        <p class="editor-hint">Ctrl+S to save</p>
-      </aside>
+          <textarea id="draft-editor" class="draft-editor" spellcheck="true" aria-label="Draft text"></textarea>
+        </aside>
+      </div>
     </div>
   `;
 
@@ -1075,6 +1178,12 @@ async function renderDetail(id) {
     currentFilter,
     currentAiFilter
   );
+
+  const focusStack = document.getElementById('focus-stack');
+  if (focusStack && currentViewMode === 'focus') {
+    focusStack.innerHTML = renderFocusPanel(id, report, loadStatus(id), currentFilter, currentAiFilter);
+  }
+  updateDetailLayoutMode();
 
   bindReviewEvents(id);
   bindEditorEvents();
@@ -1087,9 +1196,6 @@ async function render() {
     await renderDetail(route.id);
   } else {
     currentDetail = null;
-    currentFilter = DEFAULT_FILTER;
-    currentAiFilter = DEFAULT_AI_FILTER;
-    currentViewMode = DEFAULT_VIEW_MODE;
     focusIndex = 0;
     await renderList();
   }
@@ -1099,13 +1205,11 @@ window.addEventListener('hashchange', () => {
   const route = getRoute();
   if (route.view === 'detail') {
     if (!currentDetail || currentDetail.id !== route.id) {
-      currentFilter = DEFAULT_FILTER;
-      currentAiFilter = DEFAULT_AI_FILTER;
-      currentViewMode = DEFAULT_VIEW_MODE;
       focusIndex = 0;
     }
   }
   render();
 });
 
+loadPrefs();
 render();
