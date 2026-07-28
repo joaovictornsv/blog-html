@@ -510,23 +510,68 @@ function renderExecutiveSummary(summary, reportId) {
   );
 }
 
-function renderViewToolbar(viewMode) {
-  const modes = [
+function renderFilterToolbar(userFilter, aiFilter, viewMode) {
+  const userFilters = [
+    { id: 'open', label: 'Open' },
+    { id: 'done', label: 'Done' },
+    { id: 'discarded', label: 'Discarded' },
+    { id: 'all', label: 'All' },
+  ];
+
+  const aiFilters = [
+    { id: 'all', label: 'All' },
+    { id: 'flags', label: 'Flags' },
+    { id: 'addressed', label: 'Addressed' },
+    { id: 'new', label: 'New' },
+    { id: 'mismatch', label: 'Mismatch' },
+  ];
+
+  const viewModes = [
     { id: 'list', label: 'List' },
     { id: 'focus', label: 'Focus' },
   ];
 
-  const buttons = modes
-    .map(
-      (mode) =>
-        `<button type="button" class="filter-btn${mode.id === viewMode ? ' is-active' : ''}" data-view-mode="${mode.id}">${mode.label}</button>`
-    )
-    .join('');
+  const renderOptions = (options, selected) =>
+    options
+      .map(
+        (option) =>
+          `<option value="${escapeHtml(option.id)}"${option.id === selected ? ' selected' : ''}>${escapeHtml(option.label)}</option>`
+      )
+      .join('');
 
   return `
-    <div class="toolbar">
-      <span class="toolbar-label">View</span>
-      <div class="filter-group" role="group" aria-label="Suggestion view">${buttons}</div>
+    <div class="filter-bar">
+      <label class="filter-field">
+        <span class="filter-label">Your status</span>
+        <select id="filter-user-status" class="filter-select" aria-label="Filter by your status">
+          ${renderOptions(userFilters, userFilter)}
+        </select>
+      </label>
+      <label class="filter-field">
+        <span class="filter-label">AI status</span>
+        <select id="filter-ai-status" class="filter-select" aria-label="Filter by AI status">
+          ${renderOptions(aiFilters, aiFilter)}
+        </select>
+      </label>
+      <label class="filter-field">
+        <span class="filter-label">View</span>
+        <select id="filter-view-mode" class="filter-select" aria-label="Suggestion view">
+          ${renderOptions(viewModes, viewMode)}
+        </select>
+      </label>
+    </div>
+  `;
+}
+
+function renderFocusNav(counterText, sectionLabel, prevDisabled, nextDisabled) {
+  return `
+    <div class="focus-nav">
+      <button type="button" class="btn focus-nav-btn" id="focus-prev"${prevDisabled} aria-label="Previous suggestion">←</button>
+      <div class="focus-nav-meta">
+        <span class="focus-counter">${escapeHtml(counterText)}</span>
+        ${sectionLabel ? `<span class="focus-section-label">${escapeHtml(sectionLabel)}</span>` : ''}
+      </div>
+      <button type="button" class="btn focus-nav-btn" id="focus-next"${nextDisabled} aria-label="Next suggestion">→</button>
     </div>
   `;
 }
@@ -539,11 +584,7 @@ function renderFocusPanel(id, report, statusMap, userFilter, aiFilter) {
   if (visibleItems.length === 0) {
     return `
       <div class="focus-panel">
-        <div class="focus-nav">
-          <button type="button" class="btn focus-nav-btn" id="focus-prev" disabled aria-label="Previous suggestion">← Previous</button>
-          <span class="focus-counter">No suggestions</span>
-          <button type="button" class="btn focus-nav-btn" id="focus-next" disabled aria-label="Next suggestion">Next →</button>
-        </div>
+        ${renderFocusNav('No suggestions', '', ' disabled', ' disabled')}
         <p class="section-empty">No suggestions match the current filters.</p>
       </div>
     `;
@@ -568,55 +609,8 @@ function renderFocusPanel(id, report, statusMap, userFilter, aiFilter) {
 
   return `
     <div class="focus-panel">
-      <div class="focus-nav">
-        <button type="button" class="btn focus-nav-btn" id="focus-prev"${prevDisabled} aria-label="Previous suggestion">← Previous</button>
-        <span class="focus-counter">Suggestion ${index + 1} of ${visibleItems.length}</span>
-        <span class="focus-section-label">${escapeHtml(sectionLabel)}</span>
-        <button type="button" class="btn focus-nav-btn" id="focus-next"${nextDisabled} aria-label="Next suggestion">Next →</button>
-      </div>
+      ${renderFocusNav(`Suggestion ${index + 1} of ${visibleItems.length}`, sectionLabel, prevDisabled, nextDisabled)}
       ${cardHtml}
-    </div>
-  `;
-}
-
-function renderDualFilterToolbar(userFilter, aiFilter) {
-  const userFilters = [
-    { id: 'open', label: 'Open' },
-    { id: 'done', label: 'Done' },
-    { id: 'discarded', label: 'Discarded' },
-    { id: 'all', label: 'All' },
-  ];
-
-  const aiFilters = [
-    { id: 'all', label: 'All' },
-    { id: 'flags', label: 'Flags' },
-    { id: 'addressed', label: 'Addressed' },
-    { id: 'new', label: 'New' },
-    { id: 'mismatch', label: 'Mismatch' },
-  ];
-
-  const userButtons = userFilters
-    .map(
-      (f) =>
-        `<button type="button" class="filter-btn${f.id === userFilter ? ' is-active' : ''}" data-filter="${f.id}">${f.label}</button>`
-    )
-    .join('');
-
-  const aiButtons = aiFilters
-    .map(
-      (f) =>
-        `<button type="button" class="filter-btn${f.id === aiFilter ? ' is-active' : ''}" data-ai-filter="${f.id}">${f.label}</button>`
-    )
-    .join('');
-
-  return `
-    <div class="toolbar">
-      <span class="toolbar-label">Your status</span>
-      <div class="filter-group" role="group" aria-label="Filter by your status">${userButtons}</div>
-    </div>
-    <div class="toolbar">
-      <span class="toolbar-label">AI status</span>
-      <div class="filter-group" role="group" aria-label="Filter by AI status">${aiButtons}</div>
     </div>
   `;
 }
@@ -930,43 +924,26 @@ function buildReviewContent(id, report, statusMap, userFilter, aiFilter) {
         · <span>${escapeHtml(roundMeta)}</span>
       </p>
       ${renderProgress(progress)}
-      <div class="detail-actions">
-        <button type="button" class="btn btn-danger" id="clear-progress">Clear progress</button>
-      </div>
     </div>
-    ${renderDualFilterToolbar(userFilter, aiFilter)}
-    ${renderViewToolbar(currentViewMode)}
+    ${renderFilterToolbar(userFilter, aiFilter, currentViewMode)}
     ${bodyContent}
   `;
 }
 
 function bindReviewEvents(id) {
-  document.getElementById('clear-progress')?.addEventListener('click', () => {
-    if (window.confirm('Clear all progress for this report? This cannot be undone.')) {
-      clearStatus(id);
-      refreshReviewPanel(id);
-    }
+  document.getElementById('filter-user-status')?.addEventListener('change', (event) => {
+    currentFilter = event.target.value;
+    refreshReviewPanel(id);
   });
 
-  app.querySelectorAll('.filter-btn[data-filter]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      currentFilter = btn.dataset.filter;
-      refreshReviewPanel(id);
-    });
+  document.getElementById('filter-ai-status')?.addEventListener('change', (event) => {
+    currentAiFilter = event.target.value;
+    refreshReviewPanel(id);
   });
 
-  app.querySelectorAll('.filter-btn[data-ai-filter]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      currentAiFilter = btn.dataset.aiFilter;
-      refreshReviewPanel(id);
-    });
-  });
-
-  app.querySelectorAll('.filter-btn[data-view-mode]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      currentViewMode = btn.dataset.viewMode;
-      refreshReviewPanel(id);
-    });
+  document.getElementById('filter-view-mode')?.addEventListener('change', (event) => {
+    currentViewMode = event.target.value;
+    refreshReviewPanel(id);
   });
 
   document.getElementById('focus-prev')?.addEventListener('click', () => {
