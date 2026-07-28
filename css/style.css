@@ -24,6 +24,10 @@ body {
 }
 
 @media (max-width: 600px) {
+  :root {
+    --font-size: 16px;
+  }
+
   body {
     padding: calc(var(--spacing) * 1.5);
   }
