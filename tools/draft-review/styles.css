@@ -689,6 +689,54 @@ body.has-editor-layout .app {
   font-size: 0.88rem;
 }
 
+.focus-panel {
+  margin-top: 0.25rem;
+}
+
+.focus-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.focus-counter {
+  flex: 1;
+  min-width: 8rem;
+  font-family: var(--font-ui);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink);
+  text-align: center;
+}
+
+.focus-section-label {
+  width: 100%;
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+  text-align: center;
+}
+
+.focus-nav-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.focus-nav-btn:disabled:hover {
+  background: var(--bg-elevated);
+}
+
+.focus-panel .item {
+  margin-bottom: 0;
+}
+
 @media (max-width: 960px) {
   .detail-layout {
     grid-template-columns: 1fr;
@@ -720,6 +768,24 @@ body.has-editor-layout .app {
   }
 
   .filter-btn {
+    flex: 1;
+  }
+
+  .focus-nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .focus-counter {
+    order: -1;
+    width: 100%;
+  }
+
+  .focus-section-label {
+    order: -1;
+  }
+
+  .focus-nav-btn {
     flex: 1;
   }
 }
