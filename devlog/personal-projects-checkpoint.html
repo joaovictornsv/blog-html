@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <title>Personal Projects Checkpoint: books-cli, cards-cli, ship-it, and More</title>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://blog.joaovictornsv.dev/devlog/personal-projects-checkpoint.html">
+  <meta name="description" content="A checkpoint of recent vibe-coded personal projects, and how a shared AI harness keeps them organized with issues, PRs, and changelogs.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://blog.joaovictornsv.dev/og/devlog/personal-projects-checkpoint.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JV's devlog">
+  <meta name="twitter:description" content="A checkpoint of recent vibe-coded personal projects, and how a shared AI harness keeps them organized with issues, PRs, and changelogs.">
+  <meta name="twitter:title" content="Personal Projects Checkpoint: books-cli, cards-cli, ship-it, and More">
+  <meta property="og:url" content="https://blog.joaovictornsv.dev/devlog/personal-projects-checkpoint.html">
+  <meta property="og:description" content="A checkpoint of recent vibe-coded personal projects, and how a shared AI harness keeps them organized with issues, PRs, and changelogs.">
+  <meta property="og:title" content="Personal Projects Checkpoint: books-cli, cards-cli, ship-it, and More">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <script type="application/ld+json" id="json-ld">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Personal Projects Checkpoint: books-cli, cards-cli, ship-it, and More",
+  "url": "https://blog.joaovictornsv.dev/devlog/personal-projects-checkpoint.html",
+  "description": "A checkpoint of recent vibe-coded personal projects, and how a shared AI harness keeps them organized with issues, PRs, and changelogs.",
+  "author": {
+    "@type": "Person",
+    "name": "João Victor",
+    "url": "https://joaovictornsv.dev"
+  },
+  "mainEntityOfPage": "https://blog.joaovictornsv.dev/devlog/personal-projects-checkpoint.html",
+  "publisher": {
+    "@type": "Person",
+    "name": "João Victor"
+  },
+  "datePublished": "2026-07-29"
+}
+</script>
+
+</head>
+<body>
+  <main>
+    <a href="index.html" class="back">&lt; back</a>
+
+    <article id="post-content">
+      <h1 id="post-title">Personal Projects Checkpoint: books-cli, cards-cli, ship-it, and More</h1>
+      <div id="post-body">
+<time class="post-date" datetime="2026-07-29">July 29, 2026</time>
+
+<p>This post is a quick checkpoint of my recent personal projects. All of them are 100% vibe-coded. Maybe I did not read 1% of their code. But they share the same thing, or at least a very similar one: the AI harness around the agent. That is the main point I want to highlight first.</p>
+
+<p>If you check the repos, you will see the same kind of setup helping me create issues, implement them, review code quality, and manage releases and changelogs. That is what keeps the projects organized, even when I am vibe coding. I open an issue for each fix or adjustment, PRs go through CI, and features land in the changelog. I just talk to the AI with ideas and suggestions, and it does the organized work: issues, branches, and so on. In other words, I can vibe code more safely.</p>
+
+<p>My friend Filipe Nevola wrote a great post about this: <a href="https://filipenevola.com/blog/ai-harness-is-the-system-around-the-agent" target="_blank" rel="noopener noreferrer">AI Harness Is the System Around the Agent</a>. I highly recommend reading it.</p>
+
+<p>Okay, with the main point said, here is a brief look at each project. I promise it will not be boring, especially the last one.</p>
+
+<h2>books-cli</h2>
+
+<p><a href="https://github.com/joaovictornsv/books-cli" target="_blank" rel="noopener noreferrer">books-cli</a> is the most helpful one. It is a simple CLI to manage my readings in a local SQLite database. I built it as a tool for agents, so I can manage books, buy priority, and custom flags using natural language in an AI chat. I already wrote about this idea in <a href="create-the-tool-not-only-the-prompt.html">Give the Tool, Not Only the Prompt</a>. Some examples:</p>
+
+<ul>
+  <li>"Please add this book &lt;link&gt; as priority to buy."</li>
+  <li>"Which books of Sherlock Holmes are missing from my collection? Please add all of them and put the next 2 in the sequence in the priority list."</li>
+  <li>"List all books I have but didn't start yet, grouped by category."</li>
+  <li>"Mark these books as eligible to donate." (<span class="code-text">eligible_to_donate</span> is a custom flag)</li>
+</ul>
+
+<p>Recently I donated more than 50 books to different people, and this project helped a lot to keep that under control.</p>
+
+<h2>cards-cli</h2>
+
+<p><a href="https://github.com/joaovictornsv/cards-cli" target="_blank" rel="noopener noreferrer">cards-cli</a> simulates a flashcard app in the terminal. I run something like <span class="code-text">cards study &lt;deck name&gt;</span> to start a session for a specific deck. I was able to create good decks with AI by adjusting the level of each question and guiding it to focus on a theme. But I realized flashcards are not my way to study.</p>
+
+<p>The project works well. The methodology just does not match me. Well, at least I discovered something about myself, and that is very good. I usually say: be your own rat lab. Test everything, discover new things, discard what does not work well, improve what does.</p>
+
+<h2>ship-it</h2>
+
+<p><a href="https://github.com/joaovictornsv/ship-it" target="_blank" rel="noopener noreferrer">ship-it</a> is a simple clicker game for devs. When I was younger, I liked those eternal clicker games with infinite upgrades. So last Sunday I woke up, decided to create my own, and spent some hours vibe coding a developer clicker game. It was very fun.</p>
+
+<h2>md-to-latex</h2>
+
+<p><a href="https://github.com/joaovictornsv/md-to-latex" target="_blank" rel="noopener noreferrer">md-to-latex</a> came from a conversation with a friend about how they organize their curriculum with LaTeX. I was never a fan of LaTeX, not because of the tool itself, but because writing text by coding feels weird. I joke with friends who use it by saying "you are debugging text." So in that moment I decided to create a simple project that converts a curriculum in a specific markdown format to LaTeX, so I have the best of both worlds: simple maintenance of a markdown file with the high-quality format output of LaTeX. Very useful. Worth a try.</p>
+
+<h2>Ethical company analysis (not versioned)</h2>
+
+<p>This one I did not push to GitHub, and I do not intend to. It is still worth a short note. I am a long-term buy-and-hold investor, and I have many companies in my portfolio. I usually look at net income numbers, but I was always curious about the "dark secrets" of each company I invest in. So I created a simple skill to analyze companies and give me a full report, plus a companies ethical ranking.</p>
+
+<p>I made multiple rounds of tests and had to fine-tune the skill to match how I think about these topics. For example, since I am a long-term holder, isolated human actions like corruption or accusations are less relevant to me than the business model. I told the AI to explicitly differentiate human actions from the business model, and to give different weights to each.</p>
+
+<p>I liked the final version and shared the reports with some friends. If you are interested, just ping me.</p>
+
+<h2>Conclusion</h2>
+
+<p>The idea of this post was not another reflection about AI usage, like some of my recent ones. It is just a checkpoint of my personal projects. Maybe I will do this more in the future. For now, that is all.</p>
+
+<p>See you next time!</p>
+</div>
+    </article>
+  </main>
+</body>
+</html>
