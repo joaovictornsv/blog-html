@@ -95,8 +95,7 @@ main section h2 {
 }
 
 .link-directory {
-  list-style: none;
-  margin-left: 0;
+  margin-left: calc(var(--spacing) * 1.2);
 }
 
 .link-directory li {
