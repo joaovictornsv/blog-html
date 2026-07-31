@@ -8,7 +8,7 @@ Instructions for AI-assisted review of my writing. Use this document when I ask 
 
 ## 1. Purpose
 
-Help me improve texts that **inspire, advise, teach, and provoke reflection**—without replacing my voice or turning my opinions into universal truths.
+Help me improve texts that **inspire, advise, teach, and provoke reflection**, without replacing my voice or turning my opinions into universal truths.
 
 The report should **boost my potential**, not rewrite me. I keep final decisions and my personal signature.
 
@@ -27,11 +27,11 @@ When reviewing, measure the text against these intentions:
 
 | Intention | What it means |
 |-----------|----------------|
-| **Help people** | Useful, humane, oriented toward the reader's growth—not performance or ego. |
+| **Help people** | Useful, humane, oriented toward the reader's growth, not performance or ego. |
 | **Accessible** | Readable by anyone, regardless of technical or academic background. |
 | **Creative & argued** | Original angle, clear reasoning, respect for logic. |
 | **Concrete** | Examples and analogies that clarify abstract ideas. |
-| **Reflective** | Analysis and ideas about life, habits, mindset, choices—not only facts. |
+| **Reflective** | Analysis and ideas about life, habits, mindset, choices, not only facts. |
 | **Humble authority** | Opinions grounded in my experience; I am **not** claiming to own the truth. |
 
 **Preserve unless I ask otherwise:**
@@ -57,7 +57,7 @@ You are an **editor and thoughtful reader**, not a co-author.
 - **Prioritize** what helps the reader most; avoid nitpicking minor style preferences.  
 - **Write the entire report in English**, even when the draft is in another language. Quote the draft in its original language; explain suggestions in English.  
 - **Do not** flag grammar, spelling, or typos. Point those out only in `revise-draft-inline`.  
-- **Respect punctuation preferences** from my other workflow: do not add em dashes (—), hyphens as asides (-), or semicolons (;) unless they already appear in the draft or I explicitly allow it in this session.
+- **Respect punctuation preferences** from my other workflow: do not add em dashes (Unicode U+2014), hyphens as asides (-), or semicolons (;) unless they already appear in the draft or I explicitly allow it in this session.
 
 ---
 
@@ -94,14 +94,14 @@ Do **not** list prioritized action items here. The body sections should be clear
 
 **Do not include:** spelling errors, missing articles, verb agreement, typos, or other fixes that belong in `revise-draft-inline`.
 
-**Important rephrases** — Table with **two columns only**:
+**Important rephrases:** Table with **two columns only**:
 
 | Original (short quote) | Why |
 |------------------------|-----|
 
 Only quotes that are **unclear, ambiguous, or confusing** in meaning. Explain what a reader might misunderstand and what the passage needs (clearer referent, definition, shorter structure, etc.). Embed location in the quote or in **Why** when needed.
 
-**Tips for my writing** — 3–5 short, actionable habits based on **patterns in this draft** (not generic advice). Focus on **clarity and comprehension**, not grammar.
+**Tips for my writing:** 3–5 short, actionable habits based on **patterns in this draft** (not generic advice). Focus on **clarity and comprehension**, not grammar.
 
 ---
 
@@ -113,7 +113,7 @@ For each relevant claim or strong opinion:
 
 - **What I wrote** (brief quote)  
 - **Who might disagree and why** (steelman when possible)  
-- **How I could improve the text** — e.g. soften absolutes, add "in my experience," acknowledge limits, add one sentence of counterpoint, or invite the reader to judge.
+- **How I could improve the text:** e.g. soften absolutes, add "in my experience," acknowledge limits, add one sentence of counterpoint, or invite the reader to judge.
 
 Flag:
 
@@ -153,10 +153,10 @@ Focus on **issues only**. Do not add a "what already works" subsection.
 
 Address:
 
-1. **Sequence** — Does the order of ideas match how a reader builds understanding? (Hook → context → development → reflection → close, or whatever fits this piece.)  
-2. **Back-and-forth** — Flag sections that repeat, contradict without intent, or return to an idea without adding value.  
-3. **Logic gaps** — Missing premises, unsupported leaps, examples that don't prove the claim.  
-4. **Structure map** — Short outline of the draft as it is, then **optional** suggested reorder (only if it would clearly help; explain why).
+1. **Sequence:** Does the order of ideas match how a reader builds understanding? (Hook → context → development → reflection → close, or whatever fits this piece.)  
+2. **Back-and-forth:** Flag sections that repeat, contradict without intent, or return to an idea without adding value.  
+3. **Logic gaps:** Missing premises, unsupported leaps, examples that don't prove the claim.  
+4. **Structure map:** Short outline of the draft as it is, then **optional** suggested reorder (only if it would clearly help; explain why).
 
 Use a simple diagram only when the piece is long or structurally tangled:
 
@@ -175,10 +175,10 @@ Focus on **weak points and opportunities only**. Do not praise strong lines or l
 
 Address:
 
-1. **Flat or weak moments** — Where reflection or urgency drops. What feels generic or underdeveloped?  
-2. **Main message** — State in one sentence what you believe the **core message** is. Is it obvious by the end? If not, what buries it?  
-3. **Drop-off risk** — Where might readers stop reading? Why?  
-4. **Closing** — Does the ending land (emotion, insight, call to reflect)? What is missing or weak? One concrete suggestion if it does not land.
+1. **Flat or weak moments:** Where reflection or urgency drops. What feels generic or underdeveloped?  
+2. **Main message:** State in one sentence what you believe the **core message** is. Is it obvious by the end? If not, what buries it?  
+3. **Drop-off risk:** Where might readers stop reading? Why?  
+4. **Closing:** Does the ending land (emotion, insight, call to reflect)? What is missing or weak? One concrete suggestion if it does not land.
 
 ---
 
@@ -200,7 +200,7 @@ Tag suggestions when helpful:
 - Not grammar, spelling, or typo fixes (use `revise-draft-inline`)  
 - Not moral judgment on my beliefs  
 - Not SEO or marketing optimization (unless I ask)  
-- Not fact-checking external claims unless I ask—flag "verify if factual" instead  
+- Not fact-checking external claims unless I ask. Flag "verify if factual" instead  
 
 ---
 
@@ -226,10 +226,10 @@ Tag suggestions when helpful:
 | **Draft language** | Any (quotes stay in the draft's language) |
 | **Typical use** | Long-form texts only (blog posts, essays) |
 | **Audience** | General public; mixed backgrounds |
-| **Provocation level** | Medium—challenge ideas, respect people |
+| **Provocation level** | Medium: challenge ideas, respect people |
 | **Scores** | Never use numeric ratings (1–10 or similar) in the report |
-| **Grammar and typos** | Never in the report—only in `revise-draft-inline` |
-| **Focus** | Improvements only—no strengths section, no revision checklist |
+| **Grammar and typos** | Never in the report, only in `revise-draft-inline` |
+| **Focus** | Improvements only, no strengths section, no revision checklist |
 
 Optional per session: audience nuance, constraints ("don't touch the opening"), provocation level if this piece is an exception.
 
@@ -240,7 +240,7 @@ Optional per session: audience nuance, constraints ("don't touch the opening"), 
 ```text
 Review my text using docs/text-review-guide.md.
 Write JSON to review-reports/{slug}.json per docs/review-report-schema.md.
-Do not rewrite the whole piece in the response—confirm path only.
+Do not rewrite the whole piece in the response. Confirm path only.
 
 [Paste text or path]
 [Optional: context, constraints]

@@ -4,11 +4,11 @@ Follow these rules for all git operations in this repository.
 
 ## Prohibited operations
 
-- **Never squash merge** — use a regular merge commit when merging pull requests.
-- **Never rebase** — do not rebase branches onto `main` or other bases.
-- **Never `git reset` to undo commits** — do not use reset to remove or rewrite committed history.
-- **Never `git amend`** — do not amend existing commits; create a new commit instead.
-- **Never force push** — do not use `git push --force` or `git push --force-with-lease`.
+- **Never squash merge**: use a regular merge commit when merging pull requests.
+- **Never rebase**: do not rebase branches onto `main` or other bases.
+- **Never `git reset` to undo commits**: do not use reset to remove or rewrite committed history.
+- **Never `git amend`**: do not amend existing commits; create a new commit instead.
+- **Never force push**: do not use `git push --force` or `git push --force-with-lease`.
 
 ## Preferred workflow
 

@@ -1,5 +1,5 @@
 ---
-description: Substantive review report for a draft (logic, clarity, structure)—no grammar, no inline edits
+description: Substantive review report for a draft (logic, clarity, structure), no grammar, no inline edits
 ---
 
 Review the text I provide using the guide at `docs/text-review-guide.md`.
@@ -12,8 +12,8 @@ Review the text I provide using the guide at `docs/text-review-guide.md`.
 
 | Condition | Mode |
 |-----------|------|
-| `review-reports/{slug}.json` exists and I did **not** say "from scratch" or "regenerate" | **Update** — incremental merge per schema |
-| No report, or I explicitly asked from scratch / regenerate | **Create** — full report from scratch |
+| `review-reports/{slug}.json` exists and I did **not** say "from scratch" or "regenerate" | **Update**: incremental merge per schema |
+| No report, or I explicitly asked from scratch / regenerate | **Create**: full report from scratch |
 
 ### Create mode
 
@@ -44,13 +44,13 @@ Review the text I provide using the guide at `docs/text-review-guide.md`.
 - No tone table, no strengths section, no revision checklist.
 
 **Remember:**
-- I write to inspire, advise, teach, and provoke—accessible to any reader.
+- I write to inspire, advise, teach, and provoke, accessible to any reader.
 - I share opinions from experience; I do not claim to own the truth.
 - Boost my potential; preserve my voice and signature.
 - Write the **full report in English** (draft may be any language; keep quotes in the draft's language).
 - **No numeric scores** (no 1–10 ratings).
 - For **long-form** drafts only; always use the complete report structure.
-- Do not add em dashes (—), aside hyphens (-), or semicolons (;) unless they already exist in the draft.
+- Do not add em dashes (Unicode U+2014), aside hyphens (-), or semicolons (;) unless they already exist in the draft.
 - Use stable item ids per `docs/review-report-schema.md`.
 - Tag `severity` (`critical`, `recommended`, `optional`) on checkable items when helpful.
 

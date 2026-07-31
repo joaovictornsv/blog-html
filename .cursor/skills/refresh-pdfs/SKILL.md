@@ -36,8 +36,8 @@ Override the source folder with `DOWNLOADS=/path/to/folder` if needed.
 
 `links/index.html` should link to:
 
-- `files/joaovictornsv-curriculum.pdf` — label **Curriculum**
-- `files/joaovictornsv-cover-letter.pdf` — label **Cover Letter**
+- `files/joaovictornsv-curriculum.pdf`: label **Curriculum**
+- `files/joaovictornsv-cover-letter.pdf`: label **Cover Letter**
 
 Place both entries after GitHub if they are missing. Do not change descriptions unless the user asks.
 

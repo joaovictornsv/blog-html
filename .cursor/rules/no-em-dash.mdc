@@ -1,0 +1,16 @@
+---
+description: Do not use em dashes in blog content or docs
+globs:
+  - "**/*.html"
+  - "**/*.md"
+  - "txt/**"
+alwaysApply: true
+---
+
+# No em dashes
+
+Never use the em dash character (Unicode U+2014) in this repository.
+
+Use commas, periods, parentheses, or colons instead. For page titles, use a comma before `JV's blog` (e.g. `Elsewhere, JV's blog`).
+
+Full guidance: `.agents/writing-style.md`

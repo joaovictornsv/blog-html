@@ -62,7 +62,7 @@ async function main() {
 
     const rel = path.relative(path.join(__dirname, '..'), outputPath).replace(/\\/g, '/');
     const label = [content.brand, content.title, content.description].filter(Boolean).join(' / ');
-    console.log(`✓ ${rel} — ${label}`);
+    console.log(`✓ ${rel}: ${label}`);
   }
 
   console.log(`\nGenerated ${generated} OG images (${patched} HTML files patched).`);

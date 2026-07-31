@@ -43,5 +43,5 @@ Provide a detailed explanation of the changes you made. Do **not** repeat the fu
 
 **Important Rules:**
 - Do NOT change the author's voice, alter main ideas, remove important details, or add new information
-- Do NOT add punctuation marks like dashes (—, -) or semicolons (;) that weren't in the original text
+- Do NOT add punctuation marks like em dashes (Unicode U+2014), aside hyphens (-), or semicolons (;) that weren't in the original text
 - Keep the original punctuation style and frequency

@@ -2,11 +2,13 @@
 
 Canonical markup and SEO standards for blog posts (`posts/`) and devlog entries (`devlog/`). Use when **creating** or **auditing** a post HTML file.
 
+**Writing style:** No em dashes. See `.agents/writing-style.md`.
+
 ---
 
 ## SEO & `<head>`
 
-- [ ] `meta description` exists and is a **complete short phrase** — no trailing `…`
+- [ ] `meta description` exists and is a **complete short phrase**, no trailing `…`
 - [ ] Same description in `og:description`, `twitter:description`, JSON-LD, and index excerpt
 - [ ] `link rel="canonical"` points to the correct URL:
   - Blog: `https://blog.joaovictornsv.dev/posts/<slug>.html`
@@ -28,13 +30,13 @@ Inside `#post-body`:
 
 - [ ] Publish date is `<time class="post-date" datetime="YYYY-MM-DD">`, not plain text
 - [ ] Paragraphs use `<p>`, section titles use `<h2>`/`<h3>` (not `<strong>`)
-- [ ] Lists use `<ul>`/`<ol>`/`<li>` — flag any `- item` or `1. item` lines still inside `<p>` tags
+- [ ] Lists use `<ul>`/`<ol>`/`<li>`. Flag any `- item` or `1. item` lines still inside `<p>` tags
 - [ ] Horizontal rules are `<hr>`, not `---`
 - [ ] Markdown links `[text](url)` → `<a href="url">text</a>`
 - [ ] Internal links use relative paths within the same folder (e.g. `other-post.html`)
 - [ ] `target="_blank"` links include `rel="noopener noreferrer"`
 
-When converting from `.txt`, `scripts/post-body.js` (`formatPostBody`) handles most body markup — verify output manually.
+When converting from `.txt`, `scripts/post-body.js` (`formatPostBody`) handles most body markup. Verify output manually.
 
 ---
 
@@ -59,6 +61,6 @@ After creating or updating a post:
 
 ## Verification scripts
 
-- `node scripts/update-index-listings.js` — sync index excerpts and dates
-- `node scripts/check-links.js` — verify internal links resolve
-- `npm ci && node scripts/generate-og-images.js` — generate per-page OG images and sync `og:image` meta tags
+- `node scripts/update-index-listings.js`: sync index excerpts and dates
+- `node scripts/check-links.js`: verify internal links resolve
+- `npm ci && node scripts/generate-og-images.js`: generate per-page OG images and sync `og:image` meta tags

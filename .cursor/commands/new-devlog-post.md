@@ -13,7 +13,7 @@ You're receiving initial considerations for a new devlog entry. Follow this work
 - Ask clarifying questions if needed (what happened, tech involved, outcome, surprises)
 - Draft the post following JV's voice: conversational, honest, short (2-6 paragraphs), one idea per post
 - Get feedback: Does the tone feel right? Anything missing? Sections to expand or cut?
-- Remember: No em dashes (—). Use commas, periods, or parentheses instead.
+- Remember: No em dashes (Unicode U+2014). Use commas, periods, or parentheses instead.
 
 ### Title Guidelines
 
