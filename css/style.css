@@ -39,6 +39,10 @@ h2 {
   margin-bottom: var(--spacing);
 }
 
+main section h2 {
+  font-weight: bold;
+}
+
 .about {
   margin-bottom: var(--spacing);
 }
