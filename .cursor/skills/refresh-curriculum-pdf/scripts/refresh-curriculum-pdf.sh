@@ -29,7 +29,5 @@ copy_pdf() {
 }
 
 CURRICULUM_SOURCE="$(newest_match 'curriculum-complete*.pdf')"
-LETTER_SOURCE="$(newest_match 'letter*.pdf')"
 
 copy_pdf "curriculum" "$CURRICULUM_SOURCE" "$DEST/${NAME_SLUG}-curriculum.pdf"
-copy_pdf "cover letter" "$LETTER_SOURCE" "$DEST/${NAME_SLUG}-cover-letter.pdf"
