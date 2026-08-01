@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <title>How I Keep My Curriculum Updated in Under 10 Minutes</title>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://blog.joaovictornsv.dev/devlog/how-i-keep-my-curriculum-updated-without-effort.html">
+  <meta name="description" content="A simple workflow with experience.md as the source of truth, Cursor commands, and LaTeX conversion to keep my CV and cover letter updated in under 10 minutes.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://blog.joaovictornsv.dev/og/devlog/how-i-keep-my-curriculum-updated-without-effort.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JV's devlog">
+  <meta name="twitter:description" content="A simple workflow with experience.md as the source of truth, Cursor commands, and LaTeX conversion to keep my CV and cover letter updated in under 10 minutes.">
+  <meta name="twitter:title" content="How I Keep My Curriculum Updated in Under 10 Minutes">
+  <meta property="og:url" content="https://blog.joaovictornsv.dev/devlog/how-i-keep-my-curriculum-updated-without-effort.html">
+  <meta property="og:description" content="A simple workflow with experience.md as the source of truth, Cursor commands, and LaTeX conversion to keep my CV and cover letter updated in under 10 minutes.">
+  <meta property="og:title" content="How I Keep My Curriculum Updated in Under 10 Minutes">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <script type="application/ld+json" id="json-ld">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How I Keep My Curriculum Updated in Under 10 Minutes",
+  "url": "https://blog.joaovictornsv.dev/devlog/how-i-keep-my-curriculum-updated-without-effort.html",
+  "description": "A simple workflow with experience.md as the source of truth, Cursor commands, and LaTeX conversion to keep my CV and cover letter updated in under 10 minutes.",
+  "author": {
+    "@type": "Person",
+    "name": "João Victor",
+    "url": "https://joaovictornsv.dev"
+  },
+  "mainEntityOfPage": "https://blog.joaovictornsv.dev/devlog/how-i-keep-my-curriculum-updated-without-effort.html",
+  "publisher": {
+    "@type": "Person",
+    "name": "João Victor"
+  },
+  "datePublished": "2026-08-01"
+}
+</script>
+
+</head>
+<body>
+  <main>
+    <a href="index.html" class="back">&lt; back</a>
+
+    <article id="post-content">
+      <h1 id="post-title">How I Keep My Curriculum Updated in Under 10 Minutes</h1>
+      <div id="post-body">
+<time class="post-date" datetime="2026-08-01">August 1, 2026</time>
+
+<p>I have a simple setup to keep my career files updated: different versions of my curriculum and my cover letter. Today I want to share how it works.</p>
+
+<h2>experience.md: single source of truth</h2>
+
+<p>This file is the main source for all my career timeline details. It follows a specific markdown format. Here is a fictional example (not my real experience):</p>
+
+<pre><code>### Acme Corp, Senior Engineer (Mar 2024 – Present)
+
+Working on Platform Redesign (Mar 2024 – Jan 2026):
+- Led migration of 12 services to a shared observability stack, cutting incident triage time by ~40%
+- Introduced AI-assisted code review in the team workflow, reducing review turnaround from days to hours
+
+Working on API Gateway (Jun 2025 – Present):
+- Designed rate limiting and auth middleware used by 8 internal products
+- Shipped GraphQL federation layer on Node.js and PostgreSQL</code></pre>
+
+<p>Whenever I want to update a block of experience, I run <span class="code-text">/add-experience</span>. The command is programmed to update the right timeline block following content rules (more on those later). Before it writes anything, the AI asks me for details: metrics, dates, tech stack, and anything else that could make the text stronger.</p>
+
+<h2>/refresh-curriculum: what makes everything easy</h2>
+
+<p>This command reads <span class="code-text">experience.md</span> and checks whether the other files need an update. It touches <span class="code-text">curriculum-international.md</span>, <span class="code-text">curriculum-basic.md</span>, and <span class="code-text">letter.md</span>.</p>
+
+<p>Those three files, plus <span class="code-text">experience.md</span>, have version control that prevents calling the command multiple times and changing them without new input. The sync state lives in <span class="code-text">.experience-sync.json</span>.</p>
+
+<h2>CONTENT-RULES.md: the personal touch</h2>
+
+<p>Both commands above read this file. It guides the AI on how to structure text in my voice:</p>
+
+<ul>
+  <li>Punctuation and formatting preferences</li>
+  <li>Tone and language</li>
+  <li>No customer product names, real customer names, or anything that exposes internal details</li>
+  <li>A standing order to highlight AI skills: how I use AI in my workflows and what benefits came from it</li>
+</ul>
+
+<h2>/to-latex: the final step</h2>
+
+<p>After adding experience and refreshing the other files, I run <span class="code-text">/to-latex</span> to convert the three markdown files to LaTeX. The templates are customized by me too.</p>
+
+<p>I skipped PDF generation on purpose. It would mean adding dependencies on my machine, or a Docker Compose setup with large images. I convert the LaTeX files to PDF online instead.</p>
+
+<h2>Where is the result?</h2>
+
+<p>The final curriculum PDF is on my <a href="../links/index.html">Elsewhere</a> page: <a href="../links/files/joaovictornsv-curriculum.pdf">joaovictornsv-curriculum.pdf</a>.</p>
+
+<h2>Conclusion</h2>
+
+<p>In summary, the workflow is simple:</p>
+
+<ol>
+  <li>Run <span class="code-text">/add-experience</span>, provide the text, and answer the AI's questions</li>
+  <li>Call <span class="code-text">/refresh-curriculum</span>, and validate the changes</li>
+  <li>Use <span class="code-text">/to-latex</span>, convert the output files to PDF online, and download them</li>
+</ol>
+
+<p>In less than 10 minutes, the work is done.</p>
+
+<p>This project is highly customized. If you are not a developer, you can still adapt the idea for your own purpose.</p>
+
+<p>I have not versioned this setup. It lives in my private vault (I wrote about that in my <a href="ai-beyond-code-disk-cleanup-and-proton-sync.html">last post</a>). If you want a copy, get in touch.</p>
+
+<p>Hope this post is useful for you.</p>
+
+<p>See you next time!</p>
+      </div>
+    </article>
+  </main>
+</body>
+</html>
