@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <title>Beyond Code: How AI Helped Me Free ~120GB and Organize My Backups</title>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://blog.joaovictornsv.dev/devlog/ai-beyond-code-disk-cleanup-and-proton-sync.html">
+  <meta name="description" content="How AI helped me free ~120GB before a LUKS backup, reorganize a USB drive, and build a bidirectional Proton Drive sync script.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://blog.joaovictornsv.dev/og/devlog/ai-beyond-code-disk-cleanup-and-proton-sync.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JV's devlog">
+  <meta name="twitter:description" content="How AI helped me free ~120GB before a LUKS backup, reorganize a USB drive, and build a bidirectional Proton Drive sync script.">
+  <meta name="twitter:title" content="Beyond Code: How AI Helped Me Free ~120GB and Organize My Backups">
+  <meta property="og:url" content="https://blog.joaovictornsv.dev/devlog/ai-beyond-code-disk-cleanup-and-proton-sync.html">
+  <meta property="og:description" content="How AI helped me free ~120GB before a LUKS backup, reorganize a USB drive, and build a bidirectional Proton Drive sync script.">
+  <meta property="og:title" content="Beyond Code: How AI Helped Me Free ~120GB and Organize My Backups">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <script type="application/ld+json" id="json-ld">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Beyond Code: How AI Helped Me Free ~120GB and Organize My Backups",
+  "url": "https://blog.joaovictornsv.dev/devlog/ai-beyond-code-disk-cleanup-and-proton-sync.html",
+  "description": "How AI helped me free ~120GB before a LUKS backup, reorganize a USB drive, and build a bidirectional Proton Drive sync script.",
+  "author": {
+    "@type": "Person",
+    "name": "João Victor",
+    "url": "https://joaovictornsv.dev"
+  },
+  "mainEntityOfPage": "https://blog.joaovictornsv.dev/devlog/ai-beyond-code-disk-cleanup-and-proton-sync.html",
+  "publisher": {
+    "@type": "Person",
+    "name": "João Victor"
+  },
+  "datePublished": "2026-08-01"
+}
+</script>
+
+</head>
+<body>
+  <main>
+    <a href="index.html" class="back">&lt; back</a>
+
+    <article id="post-content">
+      <h1 id="post-title">Beyond Code: How AI Helped Me Free ~120GB and Organize My Backups</h1>
+      <div id="post-body">
+<time class="post-date" datetime="2026-08-01">August 1, 2026</time>
+
+<p>I usually write about AI in the context of code or software engineering. Today I want to share a few cases where it helped me a lot outside the editor.</p>
+
+<h2>Clean disk space</h2>
+
+<p>I needed to encrypt my Linux partition using LUKS, so before that I had to back up my entire home folder. I asked AI to check the home size and see how many GB the backup would require. The answer was 149 GB. Then I asked what was causing so much usage. It replied that most of the space was cache, <span class="code-text">node_modules</span>, old Node versions, app builds, and other files I could remove safely.</p>
+
+<p>I started removing them one by one. The final result was a home folder with just 31 GB. I prevented 118 GB of unnecessary files from being included in the backup.</p>
+
+<h2>USB drive organization</h2>
+
+<p>I have a USB drive where I store personal stuff. I don't use big cloud providers anymore (check <a href="../posts/my-degoogle-journey.html">My DeGoogle Journey</a> for more details about this decision). Over time it accumulated redundant files, duplicates, and related stuff split across different folders. I asked AI to suggest a better organization. It removed redundancy by merging duplicated folders and split files, and also flattened single-child folders, since they create unnecessary wrappers. The result was not free space, but a much better visualization of my data.</p>
+
+<h2>Sync backups with Proton Drive</h2>
+
+<p>I still need somewhere safe to keep personal stuff synced. If I lose my pendrive or it stops working, I don't want to worry, because everything will be safe in another place. That's why I chose Proton Drive. Proton services are end-to-end encrypted, so at least there is a layer of privacy that other big clouds don't provide. You can sign up through <a href="https://pr.tn/ref/Y8MN7X2T" target="_blank" rel="noopener noreferrer">my Proton referral link</a>. I also have a dedicated section on the <a href="../links/index.html">Elsewhere</a> page with all my referral links.</p>
+
+<p>I asked AI to create a simple sync script, <span class="code-text">pendrive-sync</span>, that uses <span class="code-text">rclone</span> to back up my USB drive to Proton Drive. The script works in both directions, like git. I can push changes and pull changes from Proton.</p>
+
+<p>My USB drive has two folders, <span class="code-text">cold</span> and <span class="code-text">vault</span>, and the sync flow works differently for each one:</p>
+
+<ul>
+  <li><span class="code-text">cold</span>: Cold storage. Files I rarely touch, just archived stuff. The canonical source is Proton. If I want to save photos or any type of file in my cold storage, I just save to Proton and run a pull to sync on my USB drive. In this case, the USB drive works as a backup.</li>
+  <li><span class="code-text">vault</span>: Hot storage. The folder I touch often. It contains sensitive personal stuff like notes and financial data. I use it to save my private git repos, not GitHub, only git. The sync workflow for this folder is the opposite of <span class="code-text">cold</span>. The canonical source is the USB drive. I do all the changes locally and just push to Proton. The difference is that on Proton it's not saved as a normal synced folder. For <span class="code-text">vault</span>, the sync script creates a zip file for the entire folder and pushes it to Proton. On the Proton side I have a list with the last 30 pushed zip files.</li>
+</ul>
+
+<p>Here's the CLI surface:</p>
+
+<pre><code>➜ pendrive-sync --help
+Usage: pendrive-sync [--yes] &lt;command&gt;
+
+Commands:
+  status                 Mount check, sizes, last sync times, rclone remote check
+  vault push             Archive vault → upload to Proton (hot backup)
+  vault pull             Restore vault from a Proton archive (destructive)
+  vault list             List vault archives on Proton
+  cold pull              Sync Proton → pen-drive cold/ (cloud wins)
+  cold push              Sync pen-drive cold/ → Proton (explicit)
+  setup-hint             Print rclone / Proton setup steps
+
+Options:
+  --yes                  Skip confirmation prompts (still prints dry-run for cold)
+
+Environment:
+  PENDRIVE_SYNC_CONFIG   Path to config.env (default: ~/.config/pendrive-sync/config.env)
+  LOCATE_VAULT           Path to locate-pendrive-vault.sh</code></pre>
+
+<p>So far it's working very well.</p>
+
+<h2>Conclusion</h2>
+
+<p>As developers we used to use AI only for code stuff, and sometimes we forget that it could be used for everything. These are just some examples of my usage. What about you? What have you been doing with AI? Feel free to reach out if you want to talk about it.</p>
+
+<p>See you next time!</p>
+      </div>
+    </article>
+  </main>
+</body>
+</html>
