@@ -210,5 +210,27 @@
       </ul>
   </section>
 </main>
+<script>
+  (function () {
+    const host = location.hostname;
+    if (host !== 'localhost' && host !== '127.0.0.1' && host !== '[::1]') return;
+
+    const links = document.querySelector('header .links');
+    if (!links) return;
+
+    const sep = document.createElement('li');
+    sep.className = 'link-sep';
+    sep.textContent = '|';
+
+    const item = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = 'tools/draft-review/';
+    a.textContent = 'Reports review';
+    item.appendChild(a);
+
+    links.appendChild(sep);
+    links.appendChild(item);
+  })();
+</script>
 </body>
 </html>
