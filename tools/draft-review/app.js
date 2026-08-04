@@ -334,7 +334,7 @@ function renderSchemaError(id, message) {
     <div class="error-state">
       <p><a class="back-link" href="#/">← All reports</a></p>
       <p>${escapeHtml(message)}</p>
-      <p>Delete <code>review-reports/${escapeHtml(id)}.json</code> and re-run <code>review-draft-report</code> to generate a v2 report.</p>
+      <p>Delete <code>review-reports/${escapeHtml(id)}.json</code> and re-run <code>review-draft-report</code> on the draft.</p>
     </div>
   `;
 }
@@ -387,7 +387,7 @@ async function renderList() {
     app.innerHTML = `
       <div class="empty-state">
         <p>No review reports found.</p>
-        <p>Run <code>review-draft-report</code> on a draft to create <code>review-reports/{slug}.json</code> (v2), then refresh this page.</p>
+        <p>Run <code>review-draft-report</code> on a draft to create <code>review-reports/{slug}.json</code>, then refresh this page.</p>
       </div>
     `;
     return;
@@ -401,7 +401,7 @@ async function renderList() {
           return `
             <li>
               <div class="error-state">
-                Report <strong>${escapeHtml(id)}</strong> uses an old format. Delete <code>review-reports/${escapeHtml(id)}.json</code> and re-run review.
+                Report <strong>${escapeHtml(id)}</strong> could not be loaded. Delete <code>review-reports/${escapeHtml(id)}.json</code> and re-run review.
               </div>
             </li>
           `;
@@ -863,7 +863,7 @@ async function renderDetail(id) {
     setBodyLayout(false);
     unbindEditorShortcut();
     unbindFocusShortcut();
-    app.innerHTML = renderSchemaError(id, 'This report uses an old format (v1).');
+    app.innerHTML = renderSchemaError(id, 'This report file is not valid for the current tracker.');
     return;
   }
 

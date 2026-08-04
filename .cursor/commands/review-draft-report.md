@@ -1,10 +1,10 @@
 ---
-description: Substantive review report for a draft (logic, clarity, structure), v2 flat format, no grammar, no inline edits
+description: Substantive review report for a draft (logic, clarity, structure), no grammar, no inline edits
 ---
 
-Review the text I provide using the guide at `docs/text-review-guide.md` (v2).
+Review the text I provide using the guide at `docs/text-review-guide.md`.
 
-**Deliver:** Write a **JSON report only** to `review-reports/{slug}.json` following `docs/review-report-schema.md` (`schemaVersion: 2`). Update `review-reports/index.json`. Do **not** output the full report in chat (short confirmation + path + counts only). Do **not** rewrite the entire piece unless I explicitly ask.
+**Deliver:** Write a **JSON report only** to `review-reports/{slug}.json` following `docs/review-report-schema.md`. Update `review-reports/index.json`. Do **not** output the full report in chat (short confirmation + path + counts only). Do **not** rewrite the entire piece unless I explicitly ask.
 
 **Slug:** basename of the draft file without extension (e.g. `txt/we-are-batteries.txt` → `we-are-batteries`). One draft = one report file.
 
@@ -12,10 +12,10 @@ Review the text I provide using the guide at `docs/text-review-guide.md` (v2).
 
 | Condition | Mode |
 |-----------|------|
-| `review-reports/{slug}.json` exists and I did **not** say "from scratch" or "regenerate" | **Update**: incremental merge per schema |
-| No report, or I explicitly asked from scratch / regenerate | **Create**: full report from scratch |
+| `review-reports/{slug}.json` exists and I did **not** ask for a new report | **Update**: incremental merge per schema |
+| No report, or I explicitly asked for a new report | **Create**: full report |
 
-**Revised draft check:** If `reviewRound >= 1` or an existing report is present, assume the draft may have changed since the last review. Always run **Update** mode unless I asked for from scratch. Re-read the **current** draft file (not an older paste) before judging any item.
+**Revised draft check:** If a report already exists, assume the draft may have changed since the last review. Always run **Update** mode unless I asked for a new report. Re-read the **current** draft file (not an older paste) before judging any item.
 
 ### Create mode
 
@@ -24,7 +24,7 @@ Review the text I provide using the guide at `docs/text-review-guide.md` (v2).
 - `reviewRound: 1`, `aiStatus: "open"` on every item
 - Set `createdAt` and `lastReviewedAt` to now
 - Soft target: 3-8 items; **zero items is valid** when the draft is clear, coherent, and well organized
-- **Still flag real clarity, logic, or organization problems** even when that adds items
+- Flag real clarity, logic, or organization problems when they exist
 - Warn in confirmation if you produced more than 10 items
 
 ### Update mode (re-review revised drafts)
@@ -53,11 +53,10 @@ When the report already exists (`reviewRound >= 1`), refresh every existing item
 - Items: flat list with `quote`, `issue`, `example` (concrete rewrite required)
 - Optional `theme`: `clarity`, `logic`, `fairness`, `flow`
 - AI status: `open` or `addressed` only
-- No tips list, no severity labels, no section arrays, no strengths section
 
 **Remember:**
 
-- Personal hobby blog for friends; lighter process, same substance
+- Personal hobby blog for friends; short rounds, substantive feedback
 - Every item needs a **concrete example** fix, not generic advice
 - I write to inspire, advise, teach, and provoke; preserve my voice
 - Write the **full report in English** (draft may be any language; keep quotes in draft language)
@@ -71,5 +70,4 @@ When the report already exists (`reviewRound >= 1`), refresh every existing item
 
 - **Create:** path, slug, item count, `reviewRound: 1`; warn if item count > 10
 - **Update:** path, new `reviewRound`, counts: addressed this round, still open, new items
-- **From scratch:** note that old v1 reports are incompatible; delete old JSON if needed
 - Remind me to run `npm run draft-review` and open http://localhost:8000/tools/draft-review/

@@ -15,13 +15,11 @@ Then open:
 - **Devlog**: http://localhost:8000/devlog/
 - **Draft review tracker**: http://localhost:8000/tools/draft-review/
 
-## Draft review tracker (v2)
+## Draft review tracker
 
-Substantive draft reviews are written as JSON by the `review-draft-report` command (see `docs/text-review-guide.md` and `docs/review-report-schema.md`). Reports use **schema v2**: a short summary plus a flat list of suggestions (`quote`, `issue`, `concrete example`).
+Substantive draft reviews are written as JSON by the `review-draft-report` command (see `docs/text-review-guide.md` and `docs/review-report-schema.md`). Each report has a short summary plus a flat list of suggestions (`quote`, `issue`, `concrete example`).
 
 Reports live in `review-reports/{slug}.json` (gitignored). One draft slug = one report. Progress (done / discarded) is stored in the browser via `localStorage`. AI status (`open` / `addressed`) lives in the JSON.
-
-**v1 reports are obsolete.** Delete old `review-reports/*.json` and re-run the command to generate v2.
 
 Start the tracker server (serves the site and supports saving drafts):
 
@@ -31,7 +29,7 @@ npm run draft-review
 
 Then open http://localhost:8000/tools/draft-review/ to list reports, work through open items, and edit the draft in the side panel. Use **Save** or `Ctrl+S` to write changes back to `txt/`.
 
-**Re-review:** Run `review-draft-report` again on the same draft for an incremental update. The AI re-evaluates each item, sets `aiStatus` and `aiNote`, and may add a few new items. Soft targets: 3-8 items on first review, 0-3 new per update; zero items is fine when the draft is already clear and well organized. Your done/discarded progress in `localStorage` is preserved. Use **Show addressed** to see items the AI already considers fixed. Delete the JSON and ask **from scratch** only when you want a full reset.
+**Re-review:** Run `review-draft-report` again on the same draft for an incremental update. The AI re-evaluates each item, sets `aiStatus` and `aiNote`, and may add a few new items. Soft targets: 3-8 items on first review, 0-3 new per update; zero items is fine when the draft is already clear and well organized. Your done/discarded progress in `localStorage` is preserved. Use **Show addressed** to see items the AI already considers fixed. Delete the JSON file to start a new report from scratch.
 
 To preview OG images locally, generate them first:
 

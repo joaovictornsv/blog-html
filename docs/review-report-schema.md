@@ -1,10 +1,8 @@
-# Review Report JSON Schema (v2)
+# Review Report JSON Schema
 
 Structured output for the draft review tracker UI at `tools/draft-review/`.
 
 **Related:** `docs/text-review-guide.md` (content), `.cursor/commands/review-draft-report.md` (command).
-
-**v1 reports are obsolete.** Delete `review-reports/{slug}.json` and re-run `review-draft-report` to generate v2.
 
 ---
 
@@ -99,7 +97,7 @@ User status (`done` / `discarded`) stays in `localStorage`, not in JSON.
 
 ## Create mode (first review)
 
-When `review-reports/{id}.json` does not exist, or the user explicitly requests **from scratch**:
+When `review-reports/{id}.json` does not exist, or the user explicitly requests a **new report**:
 
 1. Write a report per `docs/text-review-guide.md`
 2. Set `schemaVersion: 2`, `reviewRound: 1`, `lastReviewedAt` and `createdAt` to now
@@ -110,7 +108,7 @@ When `review-reports/{id}.json` does not exist, or the user explicitly requests 
 
 ## Update mode (incremental re-review)
 
-When `review-reports/{id}.json` exists (`reviewRound >= 1`) and the user did **not** ask for from scratch:
+When `review-reports/{id}.json` exists (`reviewRound >= 1`) and the user did **not** ask for a new report:
 
 1. Read existing report and **current** draft
 2. **Never delete or renumber** existing item ids
@@ -154,7 +152,3 @@ When writing `review-reports/{id}.json`:
 1. Load existing report and current draft
 2. Merge per update rules above
 3. Reply with path, new `reviewRound`, counts: addressed this round, still open, new items
-
----
-
-*Last updated: 2026-08-03 (v2: flat items, open/addressed only)*

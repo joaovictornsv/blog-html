@@ -1,8 +1,8 @@
-# Text Review Guide (v2)
+# Text Review Guide
 
 Instructions for AI-assisted review of my writing. Use this document when I ask for a **review report** (analysis and suggestions), not when I ask for direct revision in the file.
 
-**Related workflow:** `.cursor/commands/review-draft-report.md` uses this guide for a substantive report and writes **JSON** to `review-reports/{slug}.json` per `docs/review-report-schema.md` (v2). Track progress in `tools/draft-review/`. `.cursor/commands/revise-draft-inline.md` handles grammar and style in a new `-revised` file.
+**Related workflow:** `.cursor/commands/review-draft-report.md` uses this guide for a substantive report and writes **JSON** to `review-reports/{slug}.json` per `docs/review-report-schema.md`. Track progress in `tools/draft-review/`. `.cursor/commands/revise-draft-inline.md` handles grammar and style in a new `-revised` file.
 
 ---
 
@@ -12,7 +12,7 @@ Help me improve texts that **inspire, advise, teach, and provoke reflection**, w
 
 The report should **boost my potential**, not rewrite me. I keep final decisions and my personal signature.
 
-**Lighter process, same substance:** fewer items and a simpler tracker, but still actively check clarity, coherence, and organization. Do not skip real problems to keep the list short.
+Short review rounds with substantive feedback: a simple list of issues that matter for clarity, coherence, and organization. Do not skip real problems to keep the list short.
 
 **Split of concerns:**
 
@@ -56,7 +56,7 @@ This is a **personal hobby blog**. A few friends read these posts, not thousands
 
 - Avoid nitpicks, polish, taste, and hypothetical broad-audience concerns
 - Still hold drafts to my standards: **clear, coherent, well organized**
-- A round with **no findings** means the draft already meets those standards, not that the review was shallow
+- A round with **no findings** means the draft already meets those standards
 - Flag substantive issues: confusing passages, logic gaps, weak sequence, ideas that don't land, claims that read as universal truth
 
 ---
@@ -74,7 +74,7 @@ You are an **editor and thoughtful reader**, not a co-author.
 
 ---
 
-## 5. Report structure (v2)
+## 5. Report structure
 
 Deliver JSON per `docs/review-report-schema.md`. Be specific: quote short phrases and reference paragraph numbers when helpful.
 
@@ -110,9 +110,7 @@ Optional `theme` for light UI grouping: `clarity`, `logic`, `fairness`, `flow`.
 | **Organization** (`flow`) | Weak sequence, repetition without payoff, buried main message, drop-off points, weak closing |
 | **Fairness** (`fairness`) | Claims that sound like universal truth when I mean personal experience (one item per strong case, not per-claim lists) |
 
-**How this differs from v1:** same dimensions, fewer items. One clear `flow` item with a concrete fix beats four prose subsections. Multiple `flow` or `logic` items are fine when the draft has several distinct problems. Do not collapse real issues into silence to hit a low count.
-
-**Still flag real clarity, logic, or organization problems even when that adds items.**
+Prefer one clear item with a concrete fix over several vague notes. Multiple `flow` or `logic` items are fine when the draft has several distinct problems. Do not collapse real issues into silence to hit a low count.
 
 ---
 
@@ -136,7 +134,7 @@ Optional `theme` for light UI grouping: `clarity`, `logic`, `fairness`, `flow`.
 5. Re-run **`review-draft-report`** on the same draft for an **incremental update** (AI sets `aiStatus` and `aiNote` on each item; your progress in `localStorage` is preserved).
 6. Run **`revise-draft-inline`** for grammar and style in a separate `-revised` file.
 7. Ignore suggestions that do not fit. Keep lines that feel like **my signature**.
-8. To reset the report entirely, delete `review-reports/{slug}.json` and ask for a review **from scratch**. Use **Clear my progress** in the UI to reset local tracking.
+8. To reset the report entirely, delete `review-reports/{slug}.json` and run the command again. Use **Clear my progress** in the UI to reset local tracking.
 
 ---
 
@@ -144,7 +142,6 @@ Optional `theme` for light UI grouping: `clarity`, `logic`, `fairness`, `flow`.
 
 | Preference | Value |
 |------------|--------|
-| **Schema** | v2 (`schemaVersion: 2`) |
 | **Report language** | Always English |
 | **Draft language** | Any (quotes stay in the draft's language) |
 | **Typical use** | Long-form texts (blog posts, essays) |
@@ -161,7 +158,7 @@ Optional per session: constraints ("don't touch the opening"), provocation level
 ## 9. Prompt template (copy when requesting a review)
 
 ```text
-Review my text using docs/text-review-guide.md (v2).
+Review my text using docs/text-review-guide.md.
 Write JSON to review-reports/{slug}.json per docs/review-report-schema.md.
 Do not rewrite the whole piece in the response. Confirm path only.
 
@@ -184,8 +181,4 @@ When a report already exists (`reviewRound >= 1`), `review-draft-report` runs in
 - Replace `summary` in place
 - Bump `reviewRound`; preserve UI progress in `localStorage`
 
-Ask for **from scratch** only when you want a full reset (delete old JSON first).
-
----
-
-*Last updated: 2026-08-03 (v7: v2 flat items, hobby scope, lighter process same substance)*
+To start over, delete `review-reports/{slug}.json` and run the command again on the draft.
