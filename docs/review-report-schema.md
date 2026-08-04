@@ -1,8 +1,10 @@
-# Review Report JSON Schema
+# Review Report JSON Schema (v2)
 
 Structured output for the draft review tracker UI at `tools/draft-review/`.
 
 **Related:** `docs/text-review-guide.md` (content), `.cursor/commands/review-draft-report.md` (command).
+
+**v1 reports are obsolete.** Delete `review-reports/{slug}.json` and re-run `review-draft-report` to generate v2.
 
 ---
 
@@ -23,155 +25,75 @@ Structured output for the draft review tracker UI at `tools/draft-review/`.
 
 ```json
 {
+  "schemaVersion": 2,
   "id": "we-are-batteries",
   "title": "We Are Batteries",
   "draftPath": "txt/we-are-batteries.txt",
   "createdAt": "2026-07-25T12:00:00.000Z",
   "reviewRound": 1,
   "lastReviewedAt": "2026-07-25T12:00:00.000Z",
-  "previousReviewedAt": null,
-  "executiveSummary": {
-    "paragraph": "One paragraph: overall impression and main opportunities.",
-    "assumptions": ["Audience: general public.", "Draft language: English."]
-  },
-  "sections": []
+  "summary": "Two or three sentences: overall impression and whether clarity, flow, or logic need work.",
+  "items": []
 }
 ```
 
 | Field | Required | Notes |
 |-------|----------|-------|
+| `schemaVersion` | yes | Must be `2` |
 | `id` | yes | Draft slug; matches filename |
 | `title` | yes | Human-readable title (from draft or first line) |
 | `draftPath` | yes | Path to the reviewed draft |
 | `createdAt` | yes | ISO 8601 UTC; set on first review, never changed |
 | `reviewRound` | yes | Starts at `1`; increment on each incremental update |
 | `lastReviewedAt` | yes | ISO 8601 UTC; set on every review |
-| `previousReviewedAt` | no | ISO 8601 UTC; prior `lastReviewedAt` before last bump |
-| `executiveSummary` | yes | Orientation only; not checkable in UI |
-| `sections` | yes | Ordered array; all section types below |
+| `summary` | yes | 2-3 sentences; not checkable in UI |
+| `items` | yes | Flat array of checkable suggestions |
 
 ---
 
-## AI status (per checkable item)
+## AI status (per item)
 
-| Field | Required | Notes |
-|-------|----------|-------|
-| `aiStatus` | yes | `open` \| `addressed` \| `outdated` \| `superseded` |
-| `addedInRound` | no | Set to current `reviewRound` when the item is new |
-| `supersedes` | no | Id of a prior item this one replaces |
-| `lastAiReviewedAt` | no | ISO 8601 UTC; set when the item is re-evaluated or edited in update mode |
-
-- `open`: AI still sees the issue in the current draft
-- `addressed`: AI believes the draft fixed the substantive issue
-- `outdated`: passage removed or rewritten so the finding no longer applies; kept for history, not an active flag
-- `superseded`: kept for history; replaced by a newer item (`supersedes` links them)
+| Value | Meaning |
+|-------|---------|
+| `open` | AI still sees the issue in the current draft |
+| `addressed` | AI believes the draft fixed the issue, or the passage was removed (use `aiNote` to explain) |
 
 User status (`done` / `discarded`) stays in `localStorage`, not in JSON.
 
+| Field | Required | Notes |
+|-------|----------|-------|
+| `aiStatus` | yes | `open` \| `addressed` |
+| `aiNote` | no | Short note on update: why addressed, or why still open |
+| `addedInRound` | no | Set to current `reviewRound` when the item is new |
+| `lastAiReviewedAt` | no | ISO 8601 UTC when re-evaluated in update mode |
+
 ---
 
-## Severity
-
-Optional on checkable items: `"critical"` | `"recommended"` | `"optional"`.
-
----
-
-## Sections (in order)
-
-### `unclear_phrasing`
+## Item object
 
 ```json
 {
-  "type": "unclear_phrasing",
-  "items": [
-    {
-      "id": "up-1",
-      "original": "Short quote from draft",
-      "why": "What a reader might misunderstand and what the passage needs.",
-      "severity": "recommended",
-      "aiStatus": "open"
-    }
-  ],
-  "tips": [
-    "Actionable habit based on patterns in this draft."
-  ]
+  "id": "item-1",
+  "quote": "Short quote from draft",
+  "issue": "One sentence: what a friend might miss or misread",
+  "example": "Concrete fix: sample rewrite or specific edit",
+  "theme": "clarity",
+  "aiStatus": "open",
+  "aiNote": null,
+  "addedInRound": 1
 }
 ```
 
-- `items`: checkable; stable ids `up-1`, `up-2`, …
-- `tips`: 3–5 strings; display only, not checkable; replace entire array on each review
-
-### `other_perspectives`
-
-```json
-{
-  "type": "other_perspectives",
-  "items": [
-    {
-      "id": "op-1",
-      "whatIWrote": "Brief quote",
-      "whoMightDisagree": "Steelman counter-view",
-      "howToImprove": "How to present the claim more fairly",
-      "severity": "recommended",
-      "aiStatus": "open"
-    }
-  ]
-}
-```
-
-### `clarity`
-
-```json
-{
-  "type": "clarity",
-  "items": [
-    {
-      "id": "cl-1",
-      "issue": "Quote or phrase plus what is unclear",
-      "suggestedFix": "Wording or structure fix",
-      "severity": "critical",
-      "aiStatus": "open"
-    }
-  ]
-}
-```
-
-### `organization_and_logic`
-
-```json
-{
-  "type": "organization_and_logic",
-  "items": [
-    {
-      "id": "org-sequence",
-      "label": "Sequence",
-      "content": "Prose addressing order of ideas.",
-      "aiStatus": "open"
-    }
-  ]
-}
-```
-
-- Include only items with non-empty `content`
-- Fixed ids: `org-sequence`, `org-back-and-forth`, `org-logic-gaps`, `org-structure`
-
-### `emotional_impact`
-
-```json
-{
-  "type": "emotional_impact",
-  "items": [
-    {
-      "id": "emo-flat",
-      "label": "Flat or weak moments",
-      "content": "Where reflection or urgency drops.",
-      "aiStatus": "open"
-    }
-  ]
-}
-```
-
-- Fixed ids: `emo-flat`, `emo-main-message`, `emo-drop-off`, `emo-closing`
+| Field | Required | Notes |
+|-------|----------|-------|
+| `id` | yes | Stable ids: `item-1`, `item-2`, … never renumbered |
+| `quote` | yes | Short quote from the draft |
+| `issue` | yes | What is wrong or risky |
+| `example` | yes | Concrete sample rewrite or specific edit (not generic advice) |
+| `theme` | no | `clarity` \| `logic` \| `fairness` \| `flow` (UI grouping only) |
+| `aiStatus` | yes | `open` \| `addressed` |
+| `aiNote` | no | Required on update when status changes or stays `open` |
+| `addedInRound` | no | Round when item was first added |
 
 ---
 
@@ -179,30 +101,29 @@ Optional on checkable items: `"critical"` | `"recommended"` | `"optional"`.
 
 When `review-reports/{id}.json` does not exist, or the user explicitly requests **from scratch**:
 
-1. Write a full report per `docs/text-review-guide.md` §5
-2. Set `reviewRound: 1`, `lastReviewedAt` and `createdAt` to now
-3. Set `aiStatus: "open"` on every checkable item
-4. Omit `previousReviewedAt` and `addedInRound` on first-round items
+1. Write a report per `docs/text-review-guide.md`
+2. Set `schemaVersion: 2`, `reviewRound: 1`, `lastReviewedAt` and `createdAt` to now
+3. Set `aiStatus: "open"` on every item (or omit `items` when zero findings)
+4. Soft target: 3-8 items; zero items is valid when the draft is already clear and well organized
 
 ---
 
 ## Update mode (incremental re-review)
 
-When `review-reports/{id}.json` exists (`reviewRound >= 1`) and the user did **not** ask for from scratch, assume the draft may have been revised. Re-read the current draft file before updating.
+When `review-reports/{id}.json` exists (`reviewRound >= 1`) and the user did **not** ask for from scratch:
 
 1. Read existing report and **current** draft
 2. **Never delete or renumber** existing item ids
 3. **Re-evaluate every existing item** against the draft today:
-   - `addressed` if the issue was fixed
-   - `open` if the issue still stands (edit item text when quotes or context shifted)
-   - `outdated` if the passage is gone or the finding no longer applies (no successor)
-   - `superseded` when a new item replaces this one (`supersedes` on the successor)
-4. **Edit item fields in place** when the user revised nearby text but the concern still applies (`original`, `why`, `issue`, `suggestedFix`, perspective fields, org/emotion `content`). Do not leave stale quotes.
-5. Append new items with next sequential id per prefix (`cl-11`, `op-6`, …); set `addedInRound` to the new round
-6. Replace `executiveSummary`, `tips`, and org/emotion `content` in place
-7. Set `previousReviewedAt` to the old `lastReviewedAt`; bump `reviewRound` by 1; set `lastReviewedAt` to now; set `lastAiReviewedAt` on touched items
-8. Keep `createdAt` and `id` unchanged
-9. Do **not** modify user `localStorage` progress
+   - `addressed` if fixed or passage removed (set `aiNote`, e.g. "Paragraph removed" or "You clarified this in ¶3")
+   - `open` if still stands: refresh `quote`, `issue`, `example` if needed; set `aiNote` explaining why
+4. Append new items only for genuinely new issues (`item-N` next id); set `addedInRound`
+5. Replace `summary` in place
+6. Bump `reviewRound` by 1; set `lastReviewedAt` to now; set `lastAiReviewedAt` on touched items
+7. Keep `createdAt`, `id`, and `schemaVersion` unchanged
+8. Do **not** modify user `localStorage` progress
+
+Soft target: 0-3 new items per update round.
 
 ---
 
@@ -222,17 +143,18 @@ When writing `review-reports/{id}.json`:
 **Create mode:**
 
 1. Derive `id` from draft path
-2. Fill all section types with substantive content per `docs/text-review-guide.md` §5
-3. Set `aiStatus: "open"` on all checkable items
-4. Write `review-reports/{id}.json`; update `index.json`
-5. Reply with path, item counts, `reviewRound: 1`
+2. Set `schemaVersion: 2`
+3. Fill `summary` and `items` per guide (zero items OK)
+4. Set `aiStatus: "open"` on all items
+5. Write `review-reports/{id}.json`; update `index.json`
+6. Reply with path, item count, `reviewRound: 1`; warn if more than 10 items
 
 **Update mode:**
 
-1. Load existing `review-reports/{id}.json` and current draft
+1. Load existing report and current draft
 2. Merge per update rules above
-3. Reply with path, new `reviewRound`, counts for `addressed`, `outdated`, `superseded`, still `open`, edited in place, and new items
+3. Reply with path, new `reviewRound`, counts: addressed this round, still open, new items
 
 ---
 
-*Last updated: 2026-08-03*
+*Last updated: 2026-08-03 (v2: flat items, open/addressed only)*
