@@ -181,7 +181,7 @@ body.has-editor-layout.is-focus-view .app {
 .detail-layout--focus .editor-stack {
   flex: 1;
   min-height: 0;
-  overflow: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
@@ -197,14 +197,9 @@ body.has-editor-layout.is-focus-view .app {
 .detail-layout--focus .focus-stack {
   position: static;
   flex-shrink: 0;
-  max-height: min(32vh, 300px);
-  overflow: auto;
+  overflow: visible;
   margin-bottom: 0.15rem;
   border-bottom: 1px solid var(--border);
-}
-
-.detail-layout--focus.detail-layout--focus-meta-collapsed .focus-stack {
-  max-height: min(24vh, 200px);
 }
 
 .detail-layout--focus .editor-panel {
