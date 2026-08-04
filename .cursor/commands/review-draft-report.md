@@ -15,22 +15,35 @@ Review the text I provide using the guide at `docs/text-review-guide.md`.
 | `review-reports/{slug}.json` exists and I did **not** say "from scratch" or "regenerate" | **Update**: incremental merge per schema |
 | No report, or I explicitly asked from scratch / regenerate | **Create**: full report from scratch |
 
+**Revised draft check:** If `reviewRound >= 1` or an existing report is present, assume the draft may have changed since the last review. Always run **Update** mode unless I asked for from scratch. Re-read the **current** draft file (not an older paste) before judging any item.
+
 ### Create mode
 
 - Full report per guide §5
 - `reviewRound: 1`, `aiStatus: "open"` on every checkable item
 - Set `createdAt` and `lastReviewedAt` to now
 
-### Update mode
+### Update mode (re-review revised drafts)
 
-1. Read existing `review-reports/{slug}.json` and the current draft
+When the report already exists (`reviewRound >= 1`), your main job is to **refresh every existing item** against the current draft so nothing stays stale.
+
+1. Read existing `review-reports/{slug}.json` and the **current** draft (full file)
 2. **Never delete or renumber** existing item ids
-3. For each existing item: re-evaluate; set `aiStatus` (`open`, `addressed`, or `superseded`); refresh text if quotes moved
-4. Append new items with next sequential ids; set `addedInRound` to the new round
-5. Use `supersedes` when replacing a stale finding with a sharper one
-6. Replace `executiveSummary`, `tips`, and org/emotion `content` in place
-7. Bump `reviewRound`, set `previousReviewedAt` from old `lastReviewedAt`, set `lastReviewedAt` to now
-8. Do **not** touch browser `localStorage` user progress
+3. **Re-evaluate every existing item** against the draft today. For each item, choose one outcome:
+
+| Outcome | When | Action |
+|---------|------|--------|
+| `addressed` | The draft fixed the substantive issue | Set `aiStatus: "addressed"`; update quotes if the fixed passage moved |
+| `open` | The issue still stands (same or sharper) | Keep or set `aiStatus: "open"`; **edit item text** if the draft changed but the finding still applies (new quote, reframed `why` / `issue` / `suggestedFix`, updated org/emotion `content`) |
+| `outdated` | The passage is gone, rewritten beyond recognition, or the finding no longer applies, and there is no useful successor | Set `aiStatus: "outdated"`; refresh text to note what changed (e.g. quote removed, section cut) |
+| `superseded` | The old finding is obsolete but a **new** item captures the issue better | Set old item to `superseded`; append successor with `supersedes` pointing at the old id |
+
+4. **Edit items in place** when the user revised nearby text: update `original`, `why`, `issue`, `suggestedFix`, `whatIWrote`, `whoMightDisagree`, `howToImprove`, and org/emotion `content` so each item still describes the draft accurately. Do not leave quotes or claims that no longer match the file.
+5. Append **new** items only for genuinely new issues; set `addedInRound` to the new round
+6. Prefer `outdated` over leaving a wrong `open` item. Prefer editing in place over adding duplicates when the same concern still applies.
+7. Replace `executiveSummary`, `tips`, and org/emotion `content` in place (org/emotion items follow the same status rules as other checkable items)
+8. Bump `reviewRound`, set `previousReviewedAt` from old `lastReviewedAt`, set `lastReviewedAt` to now; set `lastAiReviewedAt` on items you touched
+9. Do **not** touch browser `localStorage` user progress
 
 **Scope:** Logic and substance only. Do **not** cover grammar, spelling, typos, or routine phrasing fixes. Those belong in `revise-draft-inline`.
 
@@ -59,6 +72,6 @@ Review the text I provide using the guide at `docs/text-review-guide.md`.
 **After writing:**
 
 - **Create:** path, slug, checkable item count, `reviewRound: 1`
-- **Update:** path, new `reviewRound`, count of items AI marked `addressed`, count of new items
+- **Update:** path, new `reviewRound`, counts of items marked `addressed`, `outdated`, `superseded`, still `open`, edited in place, and new items
 - **From scratch:** warn that old item ids may not match UI progress; suggest Clear progress if needed
 - Remind me to run `npm run draft-review` and open http://localhost:8000/tools/draft-review/

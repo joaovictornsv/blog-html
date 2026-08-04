@@ -56,13 +56,14 @@ Structured output for the draft review tracker UI at `tools/draft-review/`.
 
 | Field | Required | Notes |
 |-------|----------|-------|
-| `aiStatus` | yes | `open` \| `addressed` \| `superseded` |
+| `aiStatus` | yes | `open` \| `addressed` \| `outdated` \| `superseded` |
 | `addedInRound` | no | Set to current `reviewRound` when the item is new |
 | `supersedes` | no | Id of a prior item this one replaces |
-| `lastAiReviewedAt` | no | ISO 8601 UTC |
+| `lastAiReviewedAt` | no | ISO 8601 UTC; set when the item is re-evaluated or edited in update mode |
 
 - `open`: AI still sees the issue in the current draft
-- `addressed`: AI believes the draft fixed it
+- `addressed`: AI believes the draft fixed the substantive issue
+- `outdated`: passage removed or rewritten so the finding no longer applies; kept for history, not an active flag
 - `superseded`: kept for history; replaced by a newer item (`supersedes` links them)
 
 User status (`done` / `discarded`) stays in `localStorage`, not in JSON.
@@ -187,15 +188,19 @@ When `review-reports/{id}.json` does not exist, or the user explicitly requests 
 
 ## Update mode (incremental re-review)
 
-When `review-reports/{id}.json` exists and the user did **not** ask for from scratch:
+When `review-reports/{id}.json` exists (`reviewRound >= 1`) and the user did **not** ask for from scratch, assume the draft may have been revised. Re-read the current draft file before updating.
 
-1. Read existing report and current draft
+1. Read existing report and **current** draft
 2. **Never delete or renumber** existing item ids
-3. For each existing item: re-evaluate against the draft; set `aiStatus`; refresh text fields if quotes moved
-4. Append new items with next sequential id per prefix (`cl-11`, `op-6`, …); set `addedInRound` to the new round
-5. Mark replaced findings `superseded` when adding a sharper successor (`supersedes` on the new item)
+3. **Re-evaluate every existing item** against the draft today:
+   - `addressed` if the issue was fixed
+   - `open` if the issue still stands (edit item text when quotes or context shifted)
+   - `outdated` if the passage is gone or the finding no longer applies (no successor)
+   - `superseded` when a new item replaces this one (`supersedes` on the successor)
+4. **Edit item fields in place** when the user revised nearby text but the concern still applies (`original`, `why`, `issue`, `suggestedFix`, perspective fields, org/emotion `content`). Do not leave stale quotes.
+5. Append new items with next sequential id per prefix (`cl-11`, `op-6`, …); set `addedInRound` to the new round
 6. Replace `executiveSummary`, `tips`, and org/emotion `content` in place
-7. Set `previousReviewedAt` to the old `lastReviewedAt`; bump `reviewRound` by 1; set `lastReviewedAt` to now
+7. Set `previousReviewedAt` to the old `lastReviewedAt`; bump `reviewRound` by 1; set `lastReviewedAt` to now; set `lastAiReviewedAt` on touched items
 8. Keep `createdAt` and `id` unchanged
 9. Do **not** modify user `localStorage` progress
 
@@ -226,8 +231,8 @@ When writing `review-reports/{id}.json`:
 
 1. Load existing `review-reports/{id}.json` and current draft
 2. Merge per update rules above
-3. Reply with path, new `reviewRound`, `N` items addressed by AI, `M` new items
+3. Reply with path, new `reviewRound`, counts for `addressed`, `outdated`, `superseded`, still `open`, edited in place, and new items
 
 ---
 
-*Last updated: 2026-07-25*
+*Last updated: 2026-08-03*

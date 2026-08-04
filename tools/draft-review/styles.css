@@ -756,6 +756,11 @@ body.has-editor-layout.is-focus-view .app {
   color: var(--ink-muted);
 }
 
+.ai-badge-outdated {
+  background: #f0e8dc;
+  color: #7a5c3a;
+}
+
 .badge-new {
   background: #e0e8f4;
   color: #2a4a6a;

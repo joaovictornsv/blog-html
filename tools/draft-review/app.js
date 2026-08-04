@@ -120,6 +120,8 @@ function itemMatchesAiFilter(item, report, statusMap, aiFilter) {
       return aiStatus === 'open';
     case 'addressed':
       return aiStatus === 'addressed' || aiStatus === 'superseded';
+    case 'outdated':
+      return aiStatus === 'outdated';
     case 'new':
       return isItemNew(item, report);
     case 'mismatch':
@@ -140,15 +142,17 @@ function getSectionStats(section, statusMap, report) {
   let userOpen = 0;
   let newCount = 0;
   let aiAddressed = 0;
+  let aiOutdated = 0;
 
   for (const item of items) {
     if (getItemStatus(statusMap, item.id) === 'open') userOpen += 1;
     if (isItemNew(item, report)) newCount += 1;
     const aiStatus = getAiStatus(item);
     if (aiStatus === 'addressed' || aiStatus === 'superseded') aiAddressed += 1;
+    if (aiStatus === 'outdated') aiOutdated += 1;
   }
 
-  return { total: items.length, userOpen, newCount, aiAddressed };
+  return { total: items.length, userOpen, newCount, aiAddressed, aiOutdated };
 }
 
 function renderSectionMeta(section, statusMap, report) {
@@ -161,6 +165,7 @@ function renderSectionMeta(section, statusMap, report) {
   if (stats.userOpen > 0) parts.push(`${stats.userOpen} open`);
   if (stats.newCount > 0) parts.push(`${stats.newCount} new`);
   if (stats.aiAddressed > 0) parts.push(`${stats.aiAddressed} AI addressed`);
+  if (stats.aiOutdated > 0) parts.push(`${stats.aiOutdated} outdated`);
 
   if (!parts.length) {
     return `<span class="section-meta">${stats.total} addressed</span>`;
@@ -534,6 +539,7 @@ function renderFilterToolbar(userFilter, aiFilter, viewMode) {
     { id: 'all', label: 'All' },
     { id: 'flags', label: 'Flags' },
     { id: 'addressed', label: 'Addressed' },
+    { id: 'outdated', label: 'Outdated' },
     { id: 'new', label: 'New' },
     { id: 'mismatch', label: 'Mismatch' },
   ];

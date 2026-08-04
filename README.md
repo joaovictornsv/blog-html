@@ -29,7 +29,7 @@ npm run draft-review
 
 Then open http://localhost:8000/tools/draft-review/ to list reports, work through items, and edit the draft in the side panel. Use **Save** or `Ctrl+S` to write changes back to `txt/`.
 
-**Re-review:** Run `review-draft-report` again on the same draft to get an incremental update. The AI sets `aiStatus` on each item and can add new ones; your done/discarded progress in `localStorage` is preserved. Use AI filters in the UI to compare your status with the model's. Ask for a review **from scratch** only when you want to reset the report entirely (then use **Clear progress** if item ids changed).
+**Re-review:** Run `review-draft-report` again on the same draft to get an incremental update. The AI re-evaluates every existing item against the current draft, sets `aiStatus` (`open`, `addressed`, `outdated`, or `superseded`), edits stale quotes in place, and can add new items. Your done/discarded progress in `localStorage` is preserved. Use AI filters in the UI to compare your status with the model's. Ask for a review **from scratch** only when you want to reset the report entirely (then use **Clear progress** if item ids changed).
 
 To preview OG images locally, generate them first:
 

@@ -256,10 +256,16 @@ Reports are written to `review-reports/{slug}.json` (gitignored). See `docs/revi
 
 ## 12. Incremental re-review
 
-When a report already exists, `review-draft-report` runs in **update mode** by default:
+When a report already exists (`reviewRound >= 1`), `review-draft-report` runs in **update mode** by default. Treat the draft as potentially revised since the last round.
 
-- Re-evaluates each existing item and sets `aiStatus` (`open`, `addressed`, or `superseded`)
-- Adds new items for newly found issues (stable ids; never renumbers old ones)
+- Re-read the **current** draft file before judging any item
+- Re-evaluates **every** existing item and sets `aiStatus`:
+  - `addressed` when you fixed the issue
+  - `open` when it still stands
+  - `outdated` when the passage is gone or the finding no longer applies
+  - `superseded` when a newer item replaces it (`supersedes` link)
+- **Edits item text in place** when your revisions shifted quotes or context but the concern still applies
+- Adds new items only for genuinely new issues (stable ids; never renumbers old ones)
 - Refreshes executive summary and prose sections
 - Bumps `reviewRound` and preserves your UI progress in `localStorage`
 
@@ -267,4 +273,4 @@ Ask for **from scratch** only when you want a full reset (warn: old item ids may
 
 ---
 
-*Last updated: 2026-07-25 (v5: incremental AI re-review with aiStatus)*
+*Last updated: 2026-08-03 (v6: outdated status, stale-item refresh on re-review)*
