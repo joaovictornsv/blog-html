@@ -683,14 +683,13 @@ function buildListBody(id, report, statusMap, userFilter, showAddressedFlag) {
   return `${renderSummary(report.summary)}${renderSuggestionsList(id, report, statusMap, userFilter, showAddressedFlag)}`;
 }
 
-function buildReviewContent(id, report, statusMap, userFilter, showAddressedFlag) {
-  const header = buildReviewHeader(id, report, statusMap);
+function buildReviewPanelContent(id, report, statusMap, userFilter, showAddressedFlag) {
+  if (currentViewMode === 'focus') return '';
+  return buildListBody(id, report, statusMap, userFilter, showAddressedFlag);
+}
 
-  if (currentViewMode === 'focus') {
-    return header;
-  }
-
-  return `${header}${buildListBody(id, report, statusMap, userFilter, showAddressedFlag)}`;
+function buildHeaderBar(id, report, statusMap) {
+  return buildReviewHeader(id, report, statusMap);
 }
 
 function updateFilterEmptyState() {
@@ -706,6 +705,7 @@ function updateDetailLayoutMode() {
   const layout = document.querySelector('.detail-layout');
   const focusStack = document.getElementById('focus-stack');
   const reviewPanel = document.getElementById('review-panel');
+  const headerBar = document.getElementById('detail-header-bar');
   if (!layout) return;
 
   const isFocus = currentViewMode === 'focus';
@@ -717,8 +717,12 @@ function updateDetailLayoutMode() {
     focusStack.hidden = !isFocus;
   }
 
+  if (headerBar) {
+    headerBar.hidden = isFocus && !focusMetaExpanded;
+  }
+
   if (reviewPanel) {
-    reviewPanel.hidden = isFocus && !focusMetaExpanded;
+    reviewPanel.hidden = isFocus;
   }
 
   const toggle = document.getElementById('focus-meta-toggle');
@@ -801,8 +805,13 @@ async function refreshReviewPanel(id) {
   }
 
   const panel = document.getElementById('review-panel');
+  const headerBar = document.getElementById('detail-header-bar');
   if (!panel) return;
-  panel.innerHTML = buildReviewContent(id, report, statusMap, currentFilter, showAddressed);
+
+  if (headerBar) {
+    headerBar.innerHTML = buildHeaderBar(id, report, statusMap);
+  }
+  panel.innerHTML = buildReviewPanelContent(id, report, statusMap, currentFilter, showAddressed);
 
   const focusStack = document.getElementById('focus-stack');
   if (focusStack) {
@@ -870,6 +879,7 @@ async function renderDetail(id) {
 
   app.innerHTML = `
     <div class="detail-layout">
+      <div class="detail-header-bar" id="detail-header-bar"></div>
       <div class="review-panel" id="review-panel"></div>
       <div class="editor-stack" id="editor-stack">
         <div class="focus-stack" id="focus-stack" hidden></div>
@@ -887,7 +897,12 @@ async function renderDetail(id) {
     </div>
   `;
 
-  document.getElementById('review-panel').innerHTML = buildReviewContent(
+  const headerBar = document.getElementById('detail-header-bar');
+  if (headerBar) {
+    headerBar.innerHTML = buildHeaderBar(id, report, loadStatus(id));
+  }
+
+  document.getElementById('review-panel').innerHTML = buildReviewPanelContent(
     id,
     report,
     loadStatus(id),
