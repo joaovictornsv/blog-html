@@ -1,18 +1,16 @@
 const REPORTS_BASE = '/review-reports';
 const STORAGE_PREFIX = 'draft-review:';
-const EXPAND_PREFIX = 'draft-review-expand:';
 const PREFS_KEY = 'draft-review:prefs';
+const SCHEMA_VERSION = 2;
 const DEFAULT_FILTER = 'open';
-const DEFAULT_AI_FILTER = 'all';
 const DEFAULT_VIEW_MODE = 'list';
 const SAVE_API = '/api/draft/save';
 
-const SECTION_LABELS = {
-  unclear_phrasing: 'Unclear phrasing',
-  other_perspectives: 'Other perspectives',
-  clarity: 'Clarity analysis',
-  organization_and_logic: 'Text organization and logic',
-  emotional_impact: 'Emotional impact and attention',
+const THEME_LABELS = {
+  clarity: 'Clarity',
+  logic: 'Logic',
+  fairness: 'Fairness',
+  flow: 'Flow',
 };
 
 const app = document.getElementById('app');
@@ -58,39 +56,12 @@ function clearStatus(reportId) {
   localStorage.removeItem(storageKey(reportId));
 }
 
-function sectionExpandKey(reportId) {
-  return `${EXPAND_PREFIX}${reportId}`;
+function isValidReport(report) {
+  return report && report.schemaVersion === SCHEMA_VERSION;
 }
 
-function loadSectionExpandedMap(reportId) {
-  try {
-    const raw = localStorage.getItem(sectionExpandKey(reportId));
-    return raw ? JSON.parse(raw) : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveSectionExpanded(reportId, sectionId, expanded) {
-  const map = loadSectionExpandedMap(reportId);
-  map[sectionId] = expanded;
-  localStorage.setItem(sectionExpandKey(reportId), JSON.stringify(map));
-}
-
-function isSectionExpanded(reportId, sectionId) {
-  const map = loadSectionExpandedMap(reportId);
-  if (Object.prototype.hasOwnProperty.call(map, sectionId)) {
-    return map[sectionId];
-  }
-  return true;
-}
-
-function getSectionCheckableItems(section) {
-  if (!section?.items) return [];
-  if (section.type === 'organization_and_logic' || section.type === 'emotional_impact') {
-    return section.items.filter((item) => item.content);
-  }
-  return section.items;
+function getItemStatus(statusMap, itemId) {
+  return statusMap[itemId] || 'open';
 }
 
 function getReviewRound(report) {
@@ -101,155 +72,73 @@ function getAiStatus(item) {
   return item?.aiStatus || 'open';
 }
 
-function isItemNew(item, report) {
-  return item.addedInRound === getReviewRound(report);
-}
-
-function isMismatch(userStatus, item) {
-  return userStatus === 'done' && getAiStatus(item) === 'open';
-}
-
-function itemMatchesAiFilter(item, report, statusMap, aiFilter) {
-  if (aiFilter === 'all') return true;
-
-  const aiStatus = getAiStatus(item);
-  const userStatus = getItemStatus(statusMap, item.id);
-
-  switch (aiFilter) {
-    case 'flags':
-      return aiStatus === 'open';
-    case 'addressed':
-      return aiStatus === 'addressed' || aiStatus === 'superseded';
-    case 'outdated':
-      return aiStatus === 'outdated';
-    case 'new':
-      return isItemNew(item, report);
-    case 'mismatch':
-      return isMismatch(userStatus, item);
-    default:
-      return true;
-  }
-}
-
-function itemVisible(item, report, statusMap, userFilter, aiFilter) {
-  const userStatus = getItemStatus(statusMap, item.id);
-  if (!itemMatchesFilter(userStatus, userFilter)) return false;
-  return itemMatchesAiFilter(item, report, statusMap, aiFilter);
-}
-
-function getSectionStats(section, statusMap, report) {
-  const items = getSectionCheckableItems(section);
-  let userOpen = 0;
-  let newCount = 0;
-  let aiAddressed = 0;
-  let aiOutdated = 0;
-
-  for (const item of items) {
-    if (getItemStatus(statusMap, item.id) === 'open') userOpen += 1;
-    if (isItemNew(item, report)) newCount += 1;
-    const aiStatus = getAiStatus(item);
-    if (aiStatus === 'addressed' || aiStatus === 'superseded') aiAddressed += 1;
-    if (aiStatus === 'outdated') aiOutdated += 1;
-  }
-
-  return { total: items.length, userOpen, newCount, aiAddressed, aiOutdated };
-}
-
-function renderSectionMeta(section, statusMap, report) {
-  if (!section) return '';
-
-  const stats = getSectionStats(section, statusMap, report);
-  if (stats.total === 0) return '';
-
-  const parts = [];
-  if (stats.userOpen > 0) parts.push(`${stats.userOpen} open`);
-  if (stats.newCount > 0) parts.push(`${stats.newCount} new`);
-  if (stats.aiAddressed > 0) parts.push(`${stats.aiAddressed} AI addressed`);
-  if (stats.aiOutdated > 0) parts.push(`${stats.aiOutdated} outdated`);
-
-  if (!parts.length) {
-    return `<span class="section-meta">${stats.total} addressed</span>`;
-  }
-
-  return `<span class="section-meta">${parts.join(' · ')}</span>`;
-}
-
-function renderCollapsibleSection(reportId, sectionId, title, bodyHtml, section, statusMap, report) {
-  const expanded = isSectionExpanded(reportId, sectionId);
-  const meta = renderSectionMeta(section, statusMap, report);
-
-  return `
-    <section class="section collapsible-section${expanded ? ' is-expanded' : ''}" data-section-id="${escapeHtml(sectionId)}">
-      <button type="button" class="section-toggle" aria-expanded="${expanded}">
-        <span class="section-chevron" aria-hidden="true"></span>
-        <span class="section-title-text">${escapeHtml(title)}</span>
-        ${meta}
-      </button>
-      <div class="section-body">
-        ${bodyHtml}
-      </div>
-    </section>
-  `;
-}
-
-function getItemStatus(statusMap, itemId) {
-  return statusMap[itemId] || 'open';
-}
-
 function getCheckableItems(report) {
-  const items = [];
-  for (const section of report.sections || []) {
-    if (section.type === 'unclear_phrasing') {
-      for (const item of section.items || []) items.push(item);
-    } else if (section.items) {
-      for (const item of section.items) items.push(item);
-    }
-  }
-  return items;
+  return report?.items || [];
 }
 
 function getProgress(report, statusMap) {
-  const checkable = getCheckableItems(report);
-  const total = checkable.length;
-  let done = 0;
-  let discarded = 0;
-  let open = 0;
+  const items = getCheckableItems(report);
+  let actionableOpen = 0;
+  let userOpen = 0;
 
-  for (const item of checkable) {
-    const status = getItemStatus(statusMap, item.id);
-    if (status === 'done') done += 1;
-    else if (status === 'discarded') discarded += 1;
-    else open += 1;
+  for (const item of items) {
+    const userStatus = getItemStatus(statusMap, item.id);
+    if (userStatus === 'open') {
+      userOpen += 1;
+      if (getAiStatus(item) === 'open') actionableOpen += 1;
+    }
   }
 
-  const addressed = done + discarded;
-  const percent = total === 0 ? 100 : Math.round((addressed / total) * 100);
-
-  return { total, done, discarded, open, addressed, percent };
+  return { total: items.length, actionableOpen, userOpen };
 }
 
-function renderProgress(progress, compact = false) {
-  const label = compact
-    ? `${progress.percent}% addressed`
-    : `${progress.addressed} of ${progress.total} addressed (${progress.open} open)`;
+function renderProgress(progress) {
+  if (progress.total === 0) {
+    return `<p class="progress-simple">No suggestions</p>`;
+  }
 
+  const label =
+    progress.actionableOpen === 0
+      ? 'Nothing open to address'
+      : `${progress.actionableOpen} open`;
+
+  return `<p class="progress-simple">${escapeHtml(label)}</p>`;
+}
+
+function itemMatchesFilter(status, filter) {
+  if (filter === 'all') return true;
+  return status === filter;
+}
+
+function itemVisible(item, statusMap, userFilter, showAddressed) {
+  const userStatus = getItemStatus(statusMap, item.id);
+  if (!itemMatchesFilter(userStatus, userFilter)) return false;
+  if (!showAddressed && getAiStatus(item) === 'addressed') return false;
+  return true;
+}
+
+function renderThemeBadge(theme) {
+  if (!theme) return '';
+  const label = THEME_LABELS[theme] || theme;
+  return `<span class="theme-badge">${escapeHtml(label)}</span>`;
+}
+
+function renderAiLine(item) {
+  const aiStatus = getAiStatus(item);
+  const note = item.aiNote ? `: ${item.aiNote}` : '';
+  return `<p class="ai-line"><span class="ai-badge ai-badge-${escapeHtml(aiStatus)}">${escapeHtml(aiStatus)}</span>${escapeHtml(note)}</p>`;
+}
+
+function renderItemFields(item) {
   return `
-    <div class="progress-wrap">
-      <div class="progress-label">
-        <span>${escapeHtml(label)}</span>
-        <span>${progress.done} done · ${progress.discarded} discarded</span>
-      </div>
-      <div class="progress-bar" role="progressbar" aria-valuenow="${progress.percent}" aria-valuemin="0" aria-valuemax="100">
-        <div class="progress-fill" style="width: ${progress.percent}%"></div>
-      </div>
+    <blockquote class="item-quote">${escapeHtml(item.quote || '')}</blockquote>
+    ${renderField('Issue', item.issue)}
+    <div class="example-block">
+      <span class="field-label">Try this</span>
+      <p class="example-value">${escapeHtml(item.example || '')}</p>
     </div>
+    ${renderAiLine(item)}
   `;
-}
-
-function renderSeverity(severity) {
-  if (!severity) return '';
-  const cls = `severity severity-${escapeHtml(severity)}`;
-  return `<span class="${cls}">${escapeHtml(severity)}</span>`;
 }
 
 function renderField(label, value) {
@@ -259,103 +148,6 @@ function renderField(label, value) {
       <span class="field-label">${escapeHtml(label)}</span>
       <p class="field-value">${escapeHtml(value)}</p>
     </div>
-  `;
-}
-
-function itemMatchesFilter(status, filter) {
-  if (filter === 'all') return true;
-  return status === filter;
-}
-
-function renderItemBadges(item, report, userStatus) {
-  const aiStatus = getAiStatus(item);
-  const badges = [`<span class="ai-badge ai-badge-${escapeHtml(aiStatus)}">AI: ${escapeHtml(aiStatus)}</span>`];
-
-  if (isItemNew(item, report)) {
-    badges.push('<span class="item-badge badge-new">New</span>');
-  }
-
-  if (isMismatch(userStatus, item)) {
-    badges.push('<span class="item-badge badge-mismatch">AI still flags</span>');
-  }
-
-  return badges.join('');
-}
-
-function getVisibleFocusItems(report, statusMap, userFilter, aiFilter) {
-  const entries = [];
-  for (const section of report.sections || []) {
-    const items = getSectionCheckableItems(section);
-    for (const item of items) {
-      if (itemVisible(item, report, statusMap, userFilter, aiFilter)) {
-        entries.push({ item, sectionType: section.type });
-      }
-    }
-  }
-  return entries;
-}
-
-function clampFocusIndex(index, total) {
-  if (total === 0) return 0;
-  return Math.max(0, Math.min(index, total - 1));
-}
-
-function renderItemFields(sectionType, item) {
-  switch (sectionType) {
-    case 'unclear_phrasing':
-      return `${renderField('Original', item.original)}${renderField('Why', item.why)}`;
-    case 'other_perspectives':
-      return `${renderField('What I wrote', item.whatIWrote)}${renderField('Who might disagree', item.whoMightDisagree)}${renderField('How to improve', item.howToImprove)}`;
-    case 'clarity':
-      return `${renderField('Issue', item.issue)}${renderField('Suggested fix', item.suggestedFix)}`;
-    case 'organization_and_logic':
-    case 'emotional_impact':
-      return `<p class="field-value">${escapeHtml(item.content)}</p>`;
-    default:
-      return '';
-  }
-}
-
-function renderItemHeaderExtra(sectionType, item) {
-  switch (sectionType) {
-    case 'unclear_phrasing':
-    case 'other_perspectives':
-    case 'clarity':
-      return renderSeverity(item.severity);
-    case 'organization_and_logic':
-    case 'emotional_impact':
-      return `<span class="item-label">${escapeHtml(item.label || item.id)}</span>`;
-    default:
-      return '';
-  }
-}
-
-function renderItemCard(reportId, report, item, statusMap, userFilter, aiFilter, innerHtml, headerExtra = '', options = {}) {
-  const { forceVisible = false, actionsInHeader = false } = options;
-  const userStatus = getItemStatus(statusMap, item.id);
-  const hidden = !forceVisible && !itemVisible(item, report, statusMap, userFilter, aiFilter) ? ' is-hidden' : '';
-  const stateClass = userStatus === 'open' ? '' : ` is-${userStatus}`;
-  const mismatchClass = isMismatch(userStatus, item) ? ' is-mismatch' : '';
-  const actionsHtml = renderItemActions(reportId, item.id, userStatus, actionsInHeader);
-
-  const headerEnd = actionsInHeader
-    ? `
-      <div class="item-header-end">
-        ${actionsHtml}
-        <div class="item-badges">${renderItemBadges(item, report, userStatus)}</div>
-      </div>
-    `
-    : `<div class="item-badges">${renderItemBadges(item, report, userStatus)}</div>`;
-
-  return `
-    <article class="item${stateClass}${hidden}${mismatchClass}${actionsInHeader ? ' item--header-actions' : ''}" data-item-id="${escapeHtml(item.id)}">
-      <div class="item-header">
-        ${headerExtra}
-        ${headerEnd}
-      </div>
-      ${innerHtml}
-      ${actionsInHeader ? '' : actionsHtml}
-    </article>
   `;
 }
 
@@ -370,178 +162,83 @@ function renderItemActions(reportId, itemId, status, inline = false) {
   `;
 }
 
-function renderUnclearPhrasingSection(section, reportId, report, statusMap, userFilter, aiFilter) {
-  const itemsHtml = (section.items || [])
-    .map((item) =>
-      renderItemCard(
-        reportId,
-        report,
-        item,
-        statusMap,
-        userFilter,
-        aiFilter,
-        renderItemFields('unclear_phrasing', item),
-        renderItemHeaderExtra('unclear_phrasing', item)
-      )
-    )
-    .join('');
+function renderItemCard(reportId, report, item, statusMap, userFilter, showAddressed, options = {}) {
+  const { forceVisible = false, actionsInHeader = false } = options;
+  const userStatus = getItemStatus(statusMap, item.id);
+  const hidden = !forceVisible && !itemVisible(item, statusMap, userFilter, showAddressed) ? ' is-hidden' : '';
+  const stateClass = userStatus === 'open' ? '' : ` is-${userStatus}`;
+  const actionsHtml = renderItemActions(reportId, item.id, userStatus, actionsInHeader);
+  const headerExtra = renderThemeBadge(item.theme);
 
-  const tipsHtml =
-    section.tips && section.tips.length
-      ? `<ol class="tips-list">${section.tips.map((tip) => `<li>${escapeHtml(tip)}</li>`).join('')}</ol>`
-      : '';
-
-  return renderCollapsibleSection(
-    reportId,
-    'unclear_phrasing',
-    SECTION_LABELS.unclear_phrasing,
-    `
-      ${itemsHtml || '<p class="section-empty">No unclear phrasing items.</p>'}
-      ${tipsHtml ? `<h3 class="item-label" style="margin-top:1rem">Tips for your writing</h3>${tipsHtml}` : ''}
-    `,
-    section,
-    statusMap,
-    report
-  );
-}
-
-function renderOtherPerspectivesSection(section, reportId, report, statusMap, userFilter, aiFilter) {
-  const itemsHtml = (section.items || [])
-    .map((item) =>
-      renderItemCard(
-        reportId,
-        report,
-        item,
-        statusMap,
-        userFilter,
-        aiFilter,
-        renderItemFields('other_perspectives', item),
-        renderItemHeaderExtra('other_perspectives', item)
-      )
-    )
-    .join('');
-
-  return renderCollapsibleSection(
-    reportId,
-    'other_perspectives',
-    SECTION_LABELS.other_perspectives,
-    itemsHtml || '<p class="section-empty">No perspective items.</p>',
-    section,
-    statusMap,
-    report
-  );
-}
-
-function renderClaritySection(section, reportId, report, statusMap, userFilter, aiFilter) {
-  const itemsHtml = (section.items || [])
-    .map((item) =>
-      renderItemCard(
-        reportId,
-        report,
-        item,
-        statusMap,
-        userFilter,
-        aiFilter,
-        renderItemFields('clarity', item),
-        renderItemHeaderExtra('clarity', item)
-      )
-    )
-    .join('');
-
-  return renderCollapsibleSection(
-    reportId,
-    'clarity',
-    SECTION_LABELS.clarity,
-    itemsHtml || '<p class="section-empty">No clarity items.</p>',
-    section,
-    statusMap,
-    report
-  );
-}
-
-function renderSubsectionSection(section, reportId, report, statusMap, userFilter, aiFilter) {
-  const label = SECTION_LABELS[section.type] || section.type;
-  const itemsHtml = (section.items || [])
-    .filter((item) => item.content)
-    .map((item) =>
-      renderItemCard(
-        reportId,
-        report,
-        item,
-        statusMap,
-        userFilter,
-        aiFilter,
-        renderItemFields(section.type, item),
-        renderItemHeaderExtra(section.type, item)
-      )
-    )
-    .join('');
-
-  return renderCollapsibleSection(
-    reportId,
-    section.type,
-    label,
-    itemsHtml || '<p class="section-empty">No items in this section.</p>',
-    section,
-    statusMap,
-    report
-  );
-}
-
-function renderSection(section, reportId, report, statusMap, userFilter, aiFilter) {
-  switch (section.type) {
-    case 'unclear_phrasing':
-      return renderUnclearPhrasingSection(section, reportId, report, statusMap, userFilter, aiFilter);
-    case 'other_perspectives':
-      return renderOtherPerspectivesSection(section, reportId, report, statusMap, userFilter, aiFilter);
-    case 'clarity':
-      return renderClaritySection(section, reportId, report, statusMap, userFilter, aiFilter);
-    case 'organization_and_logic':
-    case 'emotional_impact':
-      return renderSubsectionSection(section, reportId, report, statusMap, userFilter, aiFilter);
-    default:
-      return '';
-  }
-}
-
-function renderExecutiveSummary(summary, reportId) {
-  if (!summary) return '';
-
-  const assumptions =
-    summary.assumptions && summary.assumptions.length
-      ? `<ul class="assumptions">${summary.assumptions.map((a) => `<li>${escapeHtml(a)}</li>`).join('')}</ul>`
-      : '';
-
-  return renderCollapsibleSection(
-    reportId,
-    'executive-summary',
-    'Executive summary',
-    `
-      <div class="summary-block">
-        <p>${escapeHtml(summary.paragraph || '')}</p>
-        ${assumptions}
+  const headerEnd = actionsInHeader
+    ? `
+      <div class="item-header-end">
+        ${actionsHtml}
       </div>
-    `,
-    null,
-    {}
-  );
+    `
+    : '';
+
+  return `
+    <article class="item${stateClass}${hidden}${actionsInHeader ? ' item--header-actions' : ''}" data-item-id="${escapeHtml(item.id)}">
+      <div class="item-header">
+        ${headerExtra}
+        ${headerEnd}
+      </div>
+      ${renderItemFields(item)}
+      ${actionsInHeader ? '' : actionsHtml}
+    </article>
+  `;
 }
 
-function renderFilterToolbar(userFilter, aiFilter, viewMode) {
+function renderSummary(summary) {
+  if (!summary) return '';
+  return `
+    <section class="summary-section">
+      <h3 class="section-heading">Summary</h3>
+      <div class="summary-block">
+        <p>${escapeHtml(summary)}</p>
+      </div>
+    </section>
+  `;
+}
+
+function renderSuggestionsList(id, report, statusMap, userFilter, showAddressed) {
+  const items = getCheckableItems(report);
+  const itemsHtml = items
+    .map((item) => renderItemCard(id, report, item, statusMap, userFilter, showAddressed))
+    .join('');
+
+  const emptyHtml =
+    items.length === 0
+      ? '<p class="section-empty">No suggestions in this report.</p>'
+      : '<p class="section-empty is-hidden" id="filter-empty">No suggestions match the current filters.</p>';
+
+  return `
+    <section class="suggestions-section">
+      <h3 class="section-heading">Suggestions</h3>
+      ${itemsHtml}
+      ${emptyHtml}
+    </section>
+  `;
+}
+
+function getVisibleFocusItems(report, statusMap, userFilter, showAddressed) {
+  return getCheckableItems(report)
+    .filter((item) => itemVisible(item, statusMap, userFilter, showAddressed))
+    .map((item) => ({ item, theme: item.theme }));
+}
+
+function clampFocusIndex(index, total) {
+  if (total === 0) return 0;
+  return Math.max(0, Math.min(index, total - 1));
+}
+
+function renderFilterToolbar(userFilter, showAddressed, viewMode) {
   const userFilters = [
     { id: 'open', label: 'Open' },
     { id: 'done', label: 'Done' },
     { id: 'discarded', label: 'Discarded' },
     { id: 'all', label: 'All' },
-  ];
-
-  const aiFilters = [
-    { id: 'all', label: 'All' },
-    { id: 'flags', label: 'Flags' },
-    { id: 'addressed', label: 'Addressed' },
-    { id: 'outdated', label: 'Outdated' },
-    { id: 'new', label: 'New' },
-    { id: 'mismatch', label: 'Mismatch' },
   ];
 
   const viewModes = [
@@ -560,16 +257,14 @@ function renderFilterToolbar(userFilter, aiFilter, viewMode) {
   return `
     <div class="filter-bar">
       <label class="filter-field">
-        <span class="filter-label">Your status</span>
+        <span class="filter-label">Show</span>
         <select id="filter-user-status" class="filter-select" aria-label="Filter by your status">
           ${renderOptions(userFilters, userFilter)}
         </select>
       </label>
-      <label class="filter-field">
-        <span class="filter-label">AI status</span>
-        <select id="filter-ai-status" class="filter-select" aria-label="Filter by AI status">
-          ${renderOptions(aiFilters, aiFilter)}
-        </select>
+      <label class="filter-field filter-checkbox">
+        <input type="checkbox" id="filter-show-addressed" ${showAddressed ? 'checked' : ''} />
+        <span>Show addressed</span>
       </label>
       <label class="filter-field">
         <span class="filter-label">View</span>
@@ -581,7 +276,7 @@ function renderFilterToolbar(userFilter, aiFilter, viewMode) {
   `;
 }
 
-function renderFocusTopBar(counterText, sectionLabel, prevDisabled, nextDisabled) {
+function renderFocusTopBar(counterText, themeLabel, prevDisabled, nextDisabled) {
   const toggleLabel = focusMetaExpanded ? 'Hide info' : 'Info & filters';
   return `
     <div class="focus-top">
@@ -590,7 +285,7 @@ function renderFocusTopBar(counterText, sectionLabel, prevDisabled, nextDisabled
         <button type="button" class="btn focus-nav-btn" id="focus-prev"${prevDisabled} aria-label="Previous suggestion">←</button>
         <div class="focus-nav-meta">
           <span class="focus-counter">${escapeHtml(counterText)}</span>
-          ${sectionLabel ? `<span class="focus-section-label">${escapeHtml(sectionLabel)}</span>` : ''}
+          ${themeLabel ? `<span class="focus-section-label">${escapeHtml(themeLabel)}</span>` : ''}
         </div>
         <button type="button" class="btn focus-nav-btn" id="focus-next"${nextDisabled} aria-label="Next suggestion">→</button>
       </div>
@@ -601,8 +296,8 @@ function renderFocusTopBar(counterText, sectionLabel, prevDisabled, nextDisabled
   `;
 }
 
-function renderFocusPanel(id, report, statusMap, userFilter, aiFilter) {
-  const visibleItems = getVisibleFocusItems(report, statusMap, userFilter, aiFilter);
+function renderFocusPanel(id, report, statusMap, userFilter, showAddressed) {
+  const visibleItems = getVisibleFocusItems(report, statusMap, userFilter, showAddressed);
   const index = clampFocusIndex(focusIndex, visibleItems.length);
   focusIndex = index;
 
@@ -615,19 +310,12 @@ function renderFocusPanel(id, report, statusMap, userFilter, aiFilter) {
     `;
   }
 
-  const { item, sectionType } = visibleItems[index];
-  const sectionLabel = SECTION_LABELS[sectionType] || sectionType;
-  const cardHtml = renderItemCard(
-    id,
-    report,
-    item,
-    statusMap,
-    userFilter,
-    aiFilter,
-    renderItemFields(sectionType, item),
-    renderItemHeaderExtra(sectionType, item),
-    { forceVisible: true, actionsInHeader: true }
-  );
+  const { item, theme } = visibleItems[index];
+  const themeLabel = theme ? THEME_LABELS[theme] || theme : '';
+  const cardHtml = renderItemCard(id, report, item, statusMap, userFilter, showAddressed, {
+    forceVisible: true,
+    actionsInHeader: true,
+  });
 
   const prevDisabled = index === 0 ? ' disabled' : '';
   const nextDisabled = index >= visibleItems.length - 1 ? ' disabled' : '';
@@ -635,8 +323,18 @@ function renderFocusPanel(id, report, statusMap, userFilter, aiFilter) {
 
   return `
     <div class="focus-panel">
-      ${renderFocusTopBar(counterText, sectionLabel, prevDisabled, nextDisabled)}
+      ${renderFocusTopBar(counterText, themeLabel, prevDisabled, nextDisabled)}
       ${cardHtml}
+    </div>
+  `;
+}
+
+function renderSchemaError(id, message) {
+  return `
+    <div class="error-state">
+      <p><a class="back-link" href="#/">← All reports</a></p>
+      <p>${escapeHtml(message)}</p>
+      <p>Delete <code>review-reports/${escapeHtml(id)}.json</code> and re-run <code>review-draft-report</code> on the draft.</p>
     </div>
   `;
 }
@@ -670,14 +368,6 @@ function getRoute() {
   return { view: 'list' };
 }
 
-function navigateToList() {
-  window.location.hash = '#/';
-}
-
-function navigateToReport(id) {
-  window.location.hash = `#/report/${encodeURIComponent(id)}`;
-}
-
 async function renderList() {
   setBodyLayout(false);
   unbindEditorShortcut();
@@ -707,6 +397,16 @@ async function renderList() {
     ids.map(async (id) => {
       try {
         const report = await loadReport(id);
+        if (!isValidReport(report)) {
+          return `
+            <li>
+              <div class="error-state">
+                Report <strong>${escapeHtml(id)}</strong> could not be loaded. Delete <code>review-reports/${escapeHtml(id)}.json</code> and re-run review.
+              </div>
+            </li>
+          `;
+        }
+
         const statusMap = loadStatus(id);
         const progress = getProgress(report, statusMap);
 
@@ -736,7 +436,7 @@ async function renderList() {
 
 let currentDetail = null;
 let currentFilter = DEFAULT_FILTER;
-let currentAiFilter = DEFAULT_AI_FILTER;
+let showAddressed = false;
 let currentViewMode = DEFAULT_VIEW_MODE;
 let focusIndex = 0;
 let focusMetaExpanded = false;
@@ -753,7 +453,7 @@ function loadPrefs() {
     if (!raw) return;
     const prefs = JSON.parse(raw);
     if (prefs.userFilter) currentFilter = prefs.userFilter;
-    if (prefs.aiFilter) currentAiFilter = prefs.aiFilter;
+    if (typeof prefs.showAddressed === 'boolean') showAddressed = prefs.showAddressed;
     if (prefs.viewMode) currentViewMode = prefs.viewMode;
     if (typeof prefs.focusMetaExpanded === 'boolean') focusMetaExpanded = prefs.focusMetaExpanded;
   } catch {
@@ -766,7 +466,7 @@ function savePrefs() {
     PREFS_KEY,
     JSON.stringify({
       userFilter: currentFilter,
-      aiFilter: currentAiFilter,
+      showAddressed,
       viewMode: currentViewMode,
       focusMetaExpanded,
     })
@@ -900,7 +600,7 @@ function onFocusKeydown(event) {
 
 function moveFocusPrev(id) {
   if (!id || !currentDetail?.report) return;
-  const visible = getVisibleFocusItems(currentDetail.report, loadStatus(id), currentFilter, currentAiFilter);
+  const visible = getVisibleFocusItems(currentDetail.report, loadStatus(id), currentFilter, showAddressed);
   if (focusIndex > 0) {
     focusIndex -= 1;
     refreshReviewPanel(id);
@@ -909,7 +609,7 @@ function moveFocusPrev(id) {
 
 function moveFocusNext(id) {
   if (!id || !currentDetail?.report) return;
-  const visible = getVisibleFocusItems(currentDetail.report, loadStatus(id), currentFilter, currentAiFilter);
+  const visible = getVisibleFocusItems(currentDetail.report, loadStatus(id), currentFilter, showAddressed);
   if (focusIndex < visible.length - 1) {
     focusIndex += 1;
     refreshReviewPanel(id);
@@ -958,8 +658,8 @@ function buildReviewHeader(id, report, statusMap) {
   const progress = getProgress(report, statusMap);
   const reviewRound = getReviewRound(report);
   const roundMeta = report.lastReviewedAt
-    ? `Review round ${reviewRound} · last reviewed ${formatDate(report.lastReviewedAt)}`
-    : `Review round ${reviewRound}`;
+    ? `Round ${reviewRound} · ${formatDate(report.lastReviewedAt)}`
+    : `Round ${reviewRound}`;
 
   return `
     <div class="detail-header">
@@ -970,34 +670,42 @@ function buildReviewHeader(id, report, statusMap) {
         · <span>${escapeHtml(formatDate(report.createdAt))}</span>
         · <span>${escapeHtml(roundMeta)}</span>
       </p>
-      ${renderProgress(progress)}
+      <div class="detail-actions">
+        ${renderProgress(progress)}
+        <button type="button" class="btn btn-danger" id="clear-progress">Clear my progress</button>
+      </div>
     </div>
-    ${renderFilterToolbar(currentFilter, currentAiFilter, currentViewMode)}
+    ${renderFilterToolbar(currentFilter, showAddressed, currentViewMode)}
   `;
 }
 
-function buildListBody(id, report, statusMap, userFilter, aiFilter) {
-  const sectionsHtml = (report.sections || [])
-    .map((section) => renderSection(section, id, report, statusMap, userFilter, aiFilter))
-    .join('');
-
-  return `${renderExecutiveSummary(report.executiveSummary, id)}${sectionsHtml}`;
+function buildListBody(id, report, statusMap, userFilter, showAddressedFlag) {
+  return `${renderSummary(report.summary)}${renderSuggestionsList(id, report, statusMap, userFilter, showAddressedFlag)}`;
 }
 
-function buildReviewContent(id, report, statusMap, userFilter, aiFilter) {
-  const header = buildReviewHeader(id, report, statusMap);
+function buildReviewPanelContent(id, report, statusMap, userFilter, showAddressedFlag) {
+  if (currentViewMode === 'focus') return '';
+  return buildListBody(id, report, statusMap, userFilter, showAddressedFlag);
+}
 
-  if (currentViewMode === 'focus') {
-    return header;
-  }
+function buildHeaderBar(id, report, statusMap) {
+  return buildReviewHeader(id, report, statusMap);
+}
 
-  return `${header}${buildListBody(id, report, statusMap, userFilter, aiFilter)}`;
+function updateFilterEmptyState() {
+  const items = document.querySelectorAll('.item');
+  const filterEmpty = document.getElementById('filter-empty');
+  if (!filterEmpty) return;
+
+  const anyVisible = [...items].some((el) => !el.classList.contains('is-hidden'));
+  filterEmpty.classList.toggle('is-hidden', anyVisible || items.length === 0);
 }
 
 function updateDetailLayoutMode() {
   const layout = document.querySelector('.detail-layout');
   const focusStack = document.getElementById('focus-stack');
   const reviewPanel = document.getElementById('review-panel');
+  const headerBar = document.getElementById('detail-header-bar');
   if (!layout) return;
 
   const isFocus = currentViewMode === 'focus';
@@ -1009,8 +717,12 @@ function updateDetailLayoutMode() {
     focusStack.hidden = !isFocus;
   }
 
+  if (headerBar) {
+    headerBar.hidden = isFocus && !focusMetaExpanded;
+  }
+
   if (reviewPanel) {
-    reviewPanel.hidden = isFocus && !focusMetaExpanded;
+    reviewPanel.hidden = isFocus;
   }
 
   const toggle = document.getElementById('focus-meta-toggle');
@@ -1028,8 +740,8 @@ function bindReviewEvents(id) {
     refreshReviewPanel(id);
   });
 
-  document.getElementById('filter-ai-status')?.addEventListener('change', (event) => {
-    currentAiFilter = event.target.value;
+  document.getElementById('filter-show-addressed')?.addEventListener('change', (event) => {
+    showAddressed = event.target.checked;
     savePrefs();
     refreshReviewPanel(id);
   });
@@ -1037,6 +749,11 @@ function bindReviewEvents(id) {
   document.getElementById('filter-view-mode')?.addEventListener('change', (event) => {
     currentViewMode = event.target.value;
     savePrefs();
+    refreshReviewPanel(id);
+  });
+
+  document.getElementById('clear-progress')?.addEventListener('click', () => {
+    clearStatus(id);
     refreshReviewPanel(id);
   });
 
@@ -1073,45 +790,39 @@ function bindReviewEvents(id) {
       });
     });
   });
-
-  app.querySelectorAll('.section-toggle').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const section = btn.closest('.collapsible-section');
-      if (!section) return;
-
-      const sectionId = section.dataset.sectionId;
-      const expanded = !section.classList.contains('is-expanded');
-
-      section.classList.toggle('is-expanded', expanded);
-      btn.setAttribute('aria-expanded', String(expanded));
-      saveSectionExpanded(id, sectionId, expanded);
-    });
-  });
 }
 
 async function refreshReviewPanel(id) {
   const report = await loadReport(id);
+  if (!isValidReport(report)) return;
+
   currentDetail = { id, report };
   const statusMap = loadStatus(id);
 
   if (currentViewMode === 'focus') {
-    const visible = getVisibleFocusItems(report, statusMap, currentFilter, currentAiFilter);
+    const visible = getVisibleFocusItems(report, statusMap, currentFilter, showAddressed);
     focusIndex = clampFocusIndex(focusIndex, visible.length);
   }
 
   const panel = document.getElementById('review-panel');
+  const headerBar = document.getElementById('detail-header-bar');
   if (!panel) return;
-  panel.innerHTML = buildReviewContent(id, report, statusMap, currentFilter, currentAiFilter);
+
+  if (headerBar) {
+    headerBar.innerHTML = buildHeaderBar(id, report, statusMap);
+  }
+  panel.innerHTML = buildReviewPanelContent(id, report, statusMap, currentFilter, showAddressed);
 
   const focusStack = document.getElementById('focus-stack');
   if (focusStack) {
     focusStack.innerHTML =
       currentViewMode === 'focus'
-        ? renderFocusPanel(id, report, statusMap, currentFilter, currentAiFilter)
+        ? renderFocusPanel(id, report, statusMap, currentFilter, showAddressed)
         : '';
   }
 
   updateDetailLayoutMode();
+  updateFilterEmptyState();
   bindReviewEvents(id);
 }
 
@@ -1148,6 +859,14 @@ async function renderDetail(id) {
     return;
   }
 
+  if (!isValidReport(report)) {
+    setBodyLayout(false);
+    unbindEditorShortcut();
+    unbindFocusShortcut();
+    app.innerHTML = renderSchemaError(id, 'This report file is not valid for the current tracker.');
+    return;
+  }
+
   currentDetail = { id, report };
   setBodyLayout(true);
   bindEditorShortcut();
@@ -1160,6 +879,7 @@ async function renderDetail(id) {
 
   app.innerHTML = `
     <div class="detail-layout">
+      <div class="detail-header-bar" id="detail-header-bar"></div>
       <div class="review-panel" id="review-panel"></div>
       <div class="editor-stack" id="editor-stack">
         <div class="focus-stack" id="focus-stack" hidden></div>
@@ -1177,19 +897,25 @@ async function renderDetail(id) {
     </div>
   `;
 
-  document.getElementById('review-panel').innerHTML = buildReviewContent(
+  const headerBar = document.getElementById('detail-header-bar');
+  if (headerBar) {
+    headerBar.innerHTML = buildHeaderBar(id, report, loadStatus(id));
+  }
+
+  document.getElementById('review-panel').innerHTML = buildReviewPanelContent(
     id,
     report,
     loadStatus(id),
     currentFilter,
-    currentAiFilter
+    showAddressed
   );
 
   const focusStack = document.getElementById('focus-stack');
   if (focusStack && currentViewMode === 'focus') {
-    focusStack.innerHTML = renderFocusPanel(id, report, loadStatus(id), currentFilter, currentAiFilter);
+    focusStack.innerHTML = renderFocusPanel(id, report, loadStatus(id), currentFilter, showAddressed);
   }
   updateDetailLayoutMode();
+  updateFilterEmptyState();
 
   bindReviewEvents(id);
   bindEditorEvents();

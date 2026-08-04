@@ -17,9 +17,9 @@ Then open:
 
 ## Draft review tracker
 
-Substantive draft reviews are written as JSON by the `review-draft-report` command (see `docs/text-review-guide.md` and `docs/review-report-schema.md`).
+Substantive draft reviews are written as JSON by the `review-draft-report` command (see `docs/text-review-guide.md` and `docs/review-report-schema.md`). Each report has a short summary plus a flat list of suggestions (`quote`, `issue`, `concrete example`).
 
-Reports live in `review-reports/{slug}.json` (gitignored). One draft slug = one report. Progress (done / discarded) is stored in the browser via `localStorage`.
+Reports live in `review-reports/{slug}.json` (gitignored). One draft slug = one report. Progress (done / discarded) is stored in the browser via `localStorage`. AI status (`open` / `addressed`) lives in the JSON.
 
 Start the tracker server (serves the site and supports saving drafts):
 
@@ -27,9 +27,9 @@ Start the tracker server (serves the site and supports saving drafts):
 npm run draft-review
 ```
 
-Then open http://localhost:8000/tools/draft-review/ to list reports, work through items, and edit the draft in the side panel. Use **Save** or `Ctrl+S` to write changes back to `txt/`.
+Then open http://localhost:8000/tools/draft-review/ to list reports, work through open items, and edit the draft in the side panel. Use **Save** or `Ctrl+S` to write changes back to `txt/`.
 
-**Re-review:** Run `review-draft-report` again on the same draft to get an incremental update. The AI re-evaluates every existing item against the current draft, sets `aiStatus` (`open`, `addressed`, `outdated`, or `superseded`), edits stale quotes in place, and can add new items. Your done/discarded progress in `localStorage` is preserved. Use AI filters in the UI to compare your status with the model's. Ask for a review **from scratch** only when you want to reset the report entirely (then use **Clear progress** if item ids changed).
+**Re-review:** Run `review-draft-report` again on the same draft for an incremental update. The AI re-evaluates each item, sets `aiStatus` and `aiNote`, and may add a few new items. Soft targets: 3-8 items on first review, 0-3 new per update; zero items is fine when the draft is already clear and well organized. Your done/discarded progress in `localStorage` is preserved. Use **Show addressed** to see items the AI already considers fixed. Delete the JSON file to start a new report from scratch.
 
 To preview OG images locally, generate them first:
 
