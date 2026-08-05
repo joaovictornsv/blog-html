@@ -415,8 +415,10 @@ function buildReviewHeader(id, report) {
 
   return `
     <div class="detail-header">
-      <a class="back-link" href="#/">← All reports</a>
-      <h2 class="detail-title">${escapeHtml(report.title || id)}</h2>
+      <div class="detail-header-row">
+        <a class="back-link" href="#/">← All reports</a>
+        <h2 class="detail-title">${escapeHtml(report.title || id)}</h2>
+      </div>
       <p class="detail-meta">
         <span>${escapeHtml(report.draftPath || '')}</span>
         · <span>${escapeHtml(formatDate(report.createdAt))}</span>

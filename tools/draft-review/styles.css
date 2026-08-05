@@ -105,7 +105,7 @@ body.has-editor-layout .app {
   max-width: var(--layout-max);
   margin: 0 auto;
   width: 100%;
-  padding: 1rem 1.25rem 1rem;
+  padding: 0.75rem 1.25rem 0.75rem;
 }
 
 body.has-editor-layout:not(.is-focus-view) .app {
@@ -127,6 +127,7 @@ body.has-editor-layout:not(.is-focus-view) .detail-layout {
   min-height: 0;
   grid-template-rows: auto minmax(0, 1fr);
   align-items: stretch;
+  gap: 0.5rem 1.25rem;
 }
 
 body.has-editor-layout:not(.is-focus-view) .review-panel {
@@ -508,27 +509,41 @@ body.has-editor-layout.is-focus-view .app {
 }
 
 .detail-header {
-  margin-bottom: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.detail-header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+  margin-bottom: 0.15rem;
 }
 
 .back-link {
   display: inline-block;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .detail-title {
-  margin: 0 0 0.25rem;
-  font-size: 1.65rem;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  min-width: 0;
 }
 
 .detail-meta {
-  margin: 0 0 1rem;
+  margin: 0;
   font-family: var(--font-ui);
-  font-size: 0.82rem;
+  font-size: 0.68rem;
+  line-height: 1.35;
   color: var(--ink-faint);
 }
 
@@ -1204,7 +1219,7 @@ body.has-editor-layout.is-focus-view .app {
   }
 
   .detail-title {
-    font-size: 1.4rem;
+    font-size: 0.95rem;
   }
 
   .toolbar {
