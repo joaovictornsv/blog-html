@@ -1,5 +1,5 @@
 ---
-description: Revise draft text to a new -revised file (grammar, clarity, style) with a change log
+description: Revise draft text to a new -revised file (grammar, clarity, style)
 ---
 
 You are an expert writer and editor. I need you to revise the selected text or document.
@@ -28,18 +28,7 @@ Keep the same format and extension as the source file.
 
 **Response format:**
 
-Provide a detailed explanation of the changes you made. Do **not** repeat the full revised text in the response, only the explanation.
-
-### Explanation & Advice
-
-**Grammatical Fixes:**
-- List specific corrections with examples (original → revised)
-- Group explanations by paragraph number
-
-**Overall Observations:**
-- Revise the title grammatically, check if it's a good and clear title for the post.
-- Constructive suggestions for future improvements
-- Give a score out of 10 for the writing quality, emotional impact, and coherence. Justify the score, provide specific examples and improvements suggestions if needed.
+Do **not** repeat the full revised text. Do **not** explain changes, give tips, or add observations. Reply with one short sentence confirming the revision and the output file path.
 
 **Important Rules:**
 - Do NOT change the author's voice, alter main ideas, remove important details, or add new information

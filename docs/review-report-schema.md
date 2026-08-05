@@ -4,6 +4,8 @@ Structured output for the draft review tracker UI at `tools/draft-review/`.
 
 **Related:** `docs/text-review-guide.md` (content), `.cursor/commands/review-draft-report.md` (command).
 
+**v2 reports are obsolete.** Delete `review-reports/{slug}.json` and re-run `review-draft-report` to generate v3.
+
 ---
 
 ## File layout
@@ -13,7 +15,7 @@ Structured output for the draft review tracker UI at `tools/draft-review/`.
 | `review-reports/{id}.json` | One report per draft slug |
 | `review-reports/index.json` | Manifest: `["slug-a", "slug-b"]` sorted alphabetically |
 
-`review-reports/` is gitignored. One draft = one report file. User progress lives in browser `localStorage`; AI status lives in the JSON.
+`review-reports/` is gitignored. One draft = one report file. Reports are read-only feedback; no user progress is stored.
 
 **Slug (`id`):** basename of the draft file without extension (e.g. `txt/we-are-batteries.txt` → `we-are-batteries`).
 
@@ -23,75 +25,67 @@ Structured output for the draft review tracker UI at `tools/draft-review/`.
 
 ```json
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "id": "we-are-batteries",
   "title": "We Are Batteries",
   "draftPath": "txt/we-are-batteries.txt",
   "createdAt": "2026-07-25T12:00:00.000Z",
   "reviewRound": 1,
   "lastReviewedAt": "2026-07-25T12:00:00.000Z",
-  "summary": "Two or three sentences: overall impression and whether clarity, flow, or logic need work.",
-  "items": []
+  "summary": "Two or three sentences: overall read and where the draft stands.",
+  "feedbacks": []
 }
 ```
 
 | Field | Required | Notes |
 |-------|----------|-------|
-| `schemaVersion` | yes | Must be `2` |
+| `schemaVersion` | yes | Must be `3` |
 | `id` | yes | Draft slug; matches filename |
 | `title` | yes | Human-readable title (from draft or first line) |
 | `draftPath` | yes | Path to the reviewed draft |
 | `createdAt` | yes | ISO 8601 UTC; set on first review, never changed |
-| `reviewRound` | yes | Starts at `1`; increment on each incremental update |
+| `reviewRound` | yes | Starts at `1`; increment on each re-review |
 | `lastReviewedAt` | yes | ISO 8601 UTC; set on every review |
-| `summary` | yes | 2-3 sentences; not checkable in UI |
-| `items` | yes | Flat array of checkable suggestions |
+| `summary` | yes | 2-3 sentences; orientation only |
+| `feedbacks` | yes | Array of six feedback cards (see below) |
 
 ---
 
-## AI status (per item)
+## Feedback sections (fixed set)
 
-| Value | Meaning |
-|-------|---------|
-| `open` | AI still sees the issue in the current draft |
-| `addressed` | AI believes the draft fixed the issue, or the passage was removed (use `aiNote` to explain) |
+Every report includes exactly **six** feedback cards, in this order:
 
-User status (`done` / `discarded`) stays in `localStorage`, not in JSON.
-
-| Field | Required | Notes |
-|-------|----------|-------|
-| `aiStatus` | yes | `open` \| `addressed` |
-| `aiNote` | no | Short note on update: why addressed, or why still open |
-| `addedInRound` | no | Set to current `reviewRound` when the item is new |
-| `lastAiReviewedAt` | no | ISO 8601 UTC when re-evaluated in update mode |
+| `id` | `label` | Covers |
+|------|---------|--------|
+| `title` | Title & hook | Title clarity and strength; opening pull (preserve voice and ideas) |
+| `clarity` | Clarity & phrasing | Confusing wording, referents, jargon, packed sentences |
+| `logic` | Logic & organization | Sequence, gaps, structure, repetition, closing |
+| `voice` | Voice & fairness | Steelman counterpoints, absolutes vs experience |
+| `emotional` | Emotional impact | Flat moments, drop-off risk, whether the piece lands |
 
 ---
 
-## Item object
+## Feedback object
 
 ```json
 {
-  "id": "item-1",
-  "quote": "Short quote from draft",
-  "issue": "One sentence: what a friend might miss or misread",
-  "example": "Concrete fix: sample rewrite or specific edit",
-  "theme": "clarity",
-  "aiStatus": "open",
-  "aiNote": null,
-  "addedInRound": 1
+  "id": "clarity",
+  "label": "Clarity & phrasing",
+  "stage": "Good enough: Mostly clear; one early bridge could help.",
+  "good": "The draft reads accessibly. Abstract ideas like \"mental translations\" and \"noise\" get grounded quickly in calendars, boards, spreadsheets, and the money examples.",
+  "needsAttention": "In the opening, the jump from the leaderboard joke to \"our routines\" is a small step the reader takes alone. One line naming these as everyday dashboards and lists (not sports) would close that gap."
 }
 ```
 
 | Field | Required | Notes |
 |-------|----------|-------|
-| `id` | yes | Stable ids: `item-1`, `item-2`, … never renumbered |
-| `quote` | yes | Short quote from the draft |
-| `issue` | yes | What is wrong or risky |
-| `example` | yes | Concrete sample rewrite or specific edit (not generic advice) |
-| `theme` | no | `clarity` \| `logic` \| `fairness` \| `flow` (UI grouping only) |
-| `aiStatus` | yes | `open` \| `addressed` |
-| `aiNote` | no | Required on update when status changes or stays `open` |
-| `addedInRound` | no | Round when item was first added |
+| `id` | yes | One of the six fixed ids above |
+| `label` | yes | Human-readable section title (use labels from table) |
+| `stage` | yes | Starts with a short indicator prefix, then one phrase. Use **`Strong:`**, **`Good enough:`**, or **`Needs attention:`** (pick what fits). Rest of line is a qualitative snapshot |
+| `good` | yes | What is already working in this aspect; one or two short paragraphs max |
+| `needsAttention` | yes | Substantive points worth reflecting on only. Use an empty string when nothing major stands out (UI hides the block). No nitpicks or optional polish |
+
+No status fields, no checkable items, no severity, no `aiStatus`.
 
 ---
 
@@ -100,28 +94,22 @@ User status (`done` / `discarded`) stays in `localStorage`, not in JSON.
 When `review-reports/{id}.json` does not exist, or the user explicitly requests a **new report**:
 
 1. Write a report per `docs/text-review-guide.md`
-2. Set `schemaVersion: 2`, `reviewRound: 1`, `lastReviewedAt` and `createdAt` to now
-3. Set `aiStatus: "open"` on every item (or omit `items` when zero findings)
-4. Soft target: 3-8 items; zero items is valid when the draft is already clear and well organized
+2. Set `schemaVersion: 3`, `reviewRound: 1`, `lastReviewedAt` and `createdAt` to now
+3. Include all six feedback sections with `stage`, `good`, and `needsAttention`
 
 ---
 
-## Update mode (incremental re-review)
+## Update mode (re-review)
 
 When `review-reports/{id}.json` exists (`reviewRound >= 1`) and the user did **not** ask for a new report:
 
 1. Read existing report and **current** draft
-2. **Never delete or renumber** existing item ids
-3. **Re-evaluate every existing item** against the draft today:
-   - `addressed` if fixed or passage removed (set `aiNote`, e.g. "Paragraph removed" or "You clarified this in ¶3")
-   - `open` if still stands: refresh `quote`, `issue`, `example` if needed; set `aiNote` explaining why
-4. Append new items only for genuinely new issues (`item-N` next id); set `addedInRound`
-5. Replace `summary` in place
-6. Bump `reviewRound` by 1; set `lastReviewedAt` to now; set `lastAiReviewedAt` on touched items
-7. Keep `createdAt`, `id`, and `schemaVersion` unchanged
-8. Do **not** modify user `localStorage` progress
+2. Rewrite `summary` in place
+3. Rewrite every feedback's `stage`, `good`, and `needsAttention` in place (same six ids and labels)
+4. Bump `reviewRound` by 1; set `lastReviewedAt` to now
+5. Keep `createdAt`, `id`, and `schemaVersion` unchanged
 
-Soft target: 0-3 new items per update round.
+No item merge, no stable item ids, no incremental append logic.
 
 ---
 
@@ -141,14 +129,13 @@ When writing `review-reports/{id}.json`:
 **Create mode:**
 
 1. Derive `id` from draft path
-2. Set `schemaVersion: 2`
-3. Fill `summary` and `items` per guide (zero items OK)
-4. Set `aiStatus: "open"` on all items
-5. Write `review-reports/{id}.json`; update `index.json`
-6. Reply with path, item count, `reviewRound: 1`; warn if more than 10 items
+2. Set `schemaVersion: 3`
+3. Fill `summary` and all six `feedbacks` per guide
+4. Write `review-reports/{id}.json`; update `index.json`
+5. Reply with path and `reviewRound: 1` only
 
 **Update mode:**
 
 1. Load existing report and current draft
-2. Merge per update rules above
-3. Reply with path, new `reviewRound`, counts: addressed this round, still open, new items
+2. Rewrite `summary` and all feedback text per update rules above
+3. Reply with path and new `reviewRound` only

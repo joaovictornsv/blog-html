@@ -14,7 +14,7 @@
   --open: #8a6a2a;
   --open-bg: #f5eed8;
   --radius: 6px;
-  --layout-max: 68rem;
+  --layout-max: 96rem;
   --font-body: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --font-ui: "Segoe UI", system-ui, sans-serif;
 }
@@ -96,16 +96,52 @@ body.has-editor-layout .header-inner {
   padding: 1.5rem 1.25rem 3rem;
 }
 
+body.has-editor-layout:not(.is-focus-view) {
+  height: 100dvh;
+  overflow: hidden;
+}
+
 body.has-editor-layout .app {
   max-width: var(--layout-max);
   margin: 0 auto;
   width: 100%;
-  padding: 1rem 1.25rem 1.5rem;
+  padding: 0.75rem 1.25rem 0.75rem;
+}
+
+body.has-editor-layout:not(.is-focus-view) .app {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 body.has-editor-layout .detail-layout {
   width: 100%;
   max-width: 100%;
+}
+
+body.has-editor-layout:not(.is-focus-view) .detail-layout {
+  flex: 1;
+  min-height: 0;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0.5rem 1.25rem;
+}
+
+body.has-editor-layout:not(.is-focus-view) .review-panel {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+body.has-editor-layout:not(.is-focus-view) .editor-panel {
+  position: relative;
+  top: auto;
+  align-self: stretch;
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
 }
 
 body.has-editor-layout.is-focus-view {
@@ -124,9 +160,9 @@ body.has-editor-layout.is-focus-view .app {
 
 .detail-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 40%);
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 55%);
   gap: 1.25rem;
-  align-items: stretch;
+  align-items: start;
 }
 
 .detail-layout--focus {
@@ -212,6 +248,14 @@ body.has-editor-layout.is-focus-view .app {
   overflow: hidden;
 }
 
+.detail-layout--focus .editor-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 .detail-layout--focus.detail-layout--focus-meta-collapsed .editor-panel {
   min-height: min(55vh, 100%);
 }
@@ -261,11 +305,10 @@ body.has-editor-layout.is-focus-view .app {
 }
 
 .editor-panel {
-  position: sticky;
-  top: 0.75rem;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 1.5rem);
+  width: 100%;
+  min-height: 0;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--bg-elevated);
@@ -278,9 +321,18 @@ body.has-editor-layout.is-focus-view .app {
   gap: 0.5rem;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
   padding: 0.65rem 0.75rem;
   border-bottom: 1px solid var(--border);
   background: #f7f4ee;
+}
+
+.editor-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .detail-layout--focus .editor-toolbar {
@@ -339,10 +391,12 @@ body.has-editor-layout.is-focus-view .app {
   flex: 1;
   width: 100%;
   min-height: 0;
+  height: 100%;
   margin: 0;
   padding: 1rem;
   border: none;
   resize: none;
+  overflow-y: auto;
   background: #fff;
   color: var(--ink);
   font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, monospace;
@@ -455,27 +509,41 @@ body.has-editor-layout.is-focus-view .app {
 }
 
 .detail-header {
-  margin-bottom: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.detail-header-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+  margin-bottom: 0.15rem;
 }
 
 .back-link {
   display: inline-block;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0;
   font-family: var(--font-ui);
-  font-size: 0.85rem;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .detail-title {
-  margin: 0 0 0.25rem;
-  font-size: 1.65rem;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  min-width: 0;
 }
 
 .detail-meta {
-  margin: 0 0 1rem;
+  margin: 0;
   font-family: var(--font-ui);
-  font-size: 0.82rem;
+  font-size: 0.68rem;
+  line-height: 1.35;
   color: var(--ink-faint);
 }
 
@@ -710,8 +778,68 @@ body.has-editor-layout.is-focus-view .app {
 }
 
 .summary-section,
-.suggestions-section {
+.feedbacks-list {
   margin-bottom: 1.25rem;
+}
+
+.section-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.feedback-stage {
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink-muted);
+  line-height: 1.4;
+}
+
+.feedback-stage--strong {
+  color: var(--done);
+}
+
+.feedback-stage--good-enough {
+  color: #6a5a2a;
+}
+
+.feedback-stage--needs-attention {
+  color: #7a4a3a;
+}
+
+.feedback-block + .feedback-block {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.feedback-block-title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+}
+
+.feedback-body p {
+  margin: 0 0 0.85rem;
+  font-size: 0.95rem;
+}
+
+.feedback-body p:last-child {
+  margin-bottom: 0;
+}
+
+.feedback-empty {
+  margin: 0;
+  color: var(--ink-faint);
+  font-size: 0.92rem;
 }
 
 .item-quote {
@@ -1054,10 +1182,30 @@ body.has-editor-layout.is-focus-view .app {
     grid-template-columns: 1fr;
   }
 
-  .detail-layout:not(.detail-layout--focus) .editor-panel {
-    position: static;
-    height: 60vh;
-    min-height: 320px;
+  body.has-editor-layout:not(.is-focus-view) {
+    height: auto;
+    overflow: auto;
+  }
+
+  body.has-editor-layout:not(.is-focus-view) .app {
+    height: auto;
+    overflow: visible;
+    display: block;
+  }
+
+  body.has-editor-layout:not(.is-focus-view) .detail-layout {
+    grid-template-rows: auto minmax(0, 1fr) minmax(280px, 45vh);
+    flex: none;
+  }
+
+  body.has-editor-layout:not(.is-focus-view) .review-panel {
+    max-height: 50vh;
+  }
+
+  body.has-editor-layout:not(.is-focus-view) .editor-panel {
+    height: auto;
+    max-height: 45vh;
+    min-height: 280px;
   }
 
   .detail-layout--focus .editor-panel {
@@ -1071,7 +1219,7 @@ body.has-editor-layout.is-focus-view .app {
   }
 
   .detail-title {
-    font-size: 1.4rem;
+    font-size: 0.95rem;
   }
 
   .toolbar {

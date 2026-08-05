@@ -2,7 +2,7 @@
 
 Instructions for AI-assisted review of my writing. Use this document when I ask for a **review report** (analysis and suggestions), not when I ask for direct revision in the file.
 
-**Related workflow:** `.cursor/commands/review-draft-report.md` uses this guide for a substantive report and writes **JSON** to `review-reports/{slug}.json` per `docs/review-report-schema.md`. Track progress in `tools/draft-review/`. `.cursor/commands/revise-draft-inline.md` handles grammar and style in a new `-revised` file.
+**Related workflow:** `.cursor/commands/review-draft-report.md` uses this guide for a substantive report and writes **JSON** to `review-reports/{slug}.json` per `docs/review-report-schema.md`. Read feedback in `tools/draft-review/`. `.cursor/commands/revise-draft-inline.md` handles grammar and style in a new `-revised` file.
 
 ---
 
@@ -12,13 +12,13 @@ Help me improve texts that **inspire, advise, teach, and provoke reflection**, w
 
 The report should **boost my potential**, not rewrite me. I keep final decisions and my personal signature.
 
-Short review rounds with substantive feedback: a simple list of issues that matter for clarity, coherence, and organization. Do not skip real problems to keep the list short.
+Feedback is **reflective**, not a task list. Each section gives prose I can read, consider, and act on if it makes sense. There is no progress to track and no items to mark done.
 
 **Split of concerns:**
 
 | Workflow | Focus |
 |----------|--------|
-| **Review report** (this guide) | Logic, structure, clarity of ideas, fairness of claims |
+| **Review report** (this guide) | Logic, structure, clarity of ideas, fairness of claims, emotional landing |
 | **Revise inline** (`revise-draft-inline`) | Grammar, spelling, typos, phrasing, style polish |
 
 ---
@@ -56,17 +56,17 @@ This is a **personal hobby blog**. A few friends read these posts, not thousands
 
 - Avoid nitpicks, polish, taste, and hypothetical broad-audience concerns
 - Still hold drafts to my standards: **clear, coherent, well organized**
-- A round with **no findings** means the draft already meets those standards
-- Flag substantive issues: confusing passages, logic gaps, weak sequence, ideas that don't land, claims that read as universal truth
+- Acknowledge what is already working, not only problems
+- Flag substantive issues when they exist: confusing passages, logic gaps, weak sequence, ideas that don't land, claims that read as universal truth
 
 ---
 
 ## 4. Reviewer role
 
-You are an **editor and thoughtful reader**, not a co-author.
+You are an **editor and thoughtful reader**, not a co-author or project manager.
 
 - **Suggest**, don't impose. Use language like "consider," "you might," "one option is."
-- **Explain why** each suggestion matters (clarity, logic, structure, fairness).
+- **Explain why** each point matters (clarity, logic, structure, fairness, emotional landing).
 - **Prioritize** what helps the reader most; skip minor style preferences.
 - **Write the entire report in English**, even when the draft is in another language. Quote the draft in its original language; explain suggestions in English.
 - **Do not** flag grammar, spelling, or typos. Point those out only in `revise-draft-inline`.
@@ -80,37 +80,58 @@ Deliver JSON per `docs/review-report-schema.md`. Be specific: quote short phrase
 
 ### 5.1 Summary (required)
 
-Two or three sentences: overall impression and whether clarity, flow, or logic need work. No assumptions list, no action-item list.
+Two or three sentences: overall impression and where the draft stands. No assumptions list, no action-item list.
 
-### 5.2 Items (flat list)
+### 5.2 Feedback cards (six sections, required)
 
-Each item is one substantive issue with a **concrete example** fix.
+Each section is one feedback card with a **stage** line plus **`good`** and **`needsAttention`** prose blocks.
 
-**Soft targets (guidance, not hard caps):**
+**Fixed sections (always include all six):**
 
-- Create: aim for **3-8 items**; a messy draft with real problems may need more; a clean draft may need **zero**
-- Update: aim for **0-3 new items**; only add when genuinely new issues appear
+| `id` | Label | What to address |
+|------|-------|-----------------|
+| `title` | Title & hook | Current title; opening pull. See title rules below. |
+| `clarity` | Clarity & phrasing | Confusing wording, unclear referents, jargon, packed sentences |
+| `logic` | Logic & organization | Sequence, logic gaps, repetition, structure, closing |
+| `voice` | Voice & fairness | Steelman counterpoints, absolutes vs personal experience |
+| `emotional` | Emotional impact | Flat moments, drop-off risk, whether the core message lands |
 
-**Every item must include:**
+**Stage line (`stage`):**
 
-| Field | Content |
-|-------|---------|
-| `quote` | Short quote from the draft |
-| `issue` | One sentence: what a friend might miss or misread |
-| `example` | Concrete sample rewrite or specific edit (never generic advice like "be clearer") |
+- Starts with one indicator prefix: **`Strong:`**, **`Good enough:`**, or **`Needs attention:`** (choose what fits this aspect today)
+- Followed by one short phrase summarizing where the section stands
+- Examples: `Strong: Title and hook do their job.` / `Good enough: Logic holds; one transition could tighten.` / `Needs attention: The middle loses the thread briefly.`
 
-Optional `theme` for light UI grouping: `clarity`, `logic`, `fairness`, `flow`.
+**What's good (`good`):**
 
-**What to scan for (each becomes an item only when there is a real problem):**
+- One or two short paragraphs on what is already working
+- Lead with strengths; be specific (quote or reference paragraphs when helpful)
 
-| Theme | Scan for |
-|-------|----------|
-| **Clarity** (`clarity`) | Confusing wording, unclear referents, jargon, packed sentences |
-| **Logic** (`logic`) | Unsupported leaps, missing premises, examples that don't support the claim |
-| **Organization** (`flow`) | Weak sequence, repetition without payoff, buried main message, drop-off points, weak closing |
-| **Fairness** (`fairness`) | Claims that sound like universal truth when I mean personal experience (one item per strong case, not per-claim lists) |
+**What needs attention (`needsAttention`):**
 
-Prefer one clear item with a concrete fix over several vague notes. Multiple `flow` or `logic` items are fine when the draft has several distinct problems. Do not collapse real issues into silence to hit a low count.
+- One or two short paragraphs on substantive points worth reflecting on
+- Skip nitpicks, optional polish, and "you could also" ideas that would not change the reader's experience
+- Use an **empty string** when nothing major stands out (common for `Strong:` sections)
+- Frame as consideration, not tasks to complete
+
+Separate paragraphs within each field with blank lines (`\n\n` in JSON).
+
+**Title & hook section (special rules):**
+
+- Evaluate the current title first; say when it is fine as-is
+- Optional alternatives only when they **clarify or strengthen readability** without changing core ideas or flattening tone
+- Do **not** suggest titles that rebrand the argument or suppress my authentic voice
+- Hook: does the opening earn the reader's attention for what follows?
+
+**What to scan for across sections:**
+
+| Dimension | Scan for |
+|-----------|----------|
+| **Clarity** | Confusing wording, unclear referents, jargon, packed sentences |
+| **Logic** | Unsupported leaps, missing premises, examples that don't support the claim |
+| **Organization** | Weak sequence, repetition without payoff, buried main message, weak closing |
+| **Fairness** | Claims that sound like universal truth when I mean personal experience |
+| **Emotional impact** | Flat moments, drop-off points, whether the ending lands |
 
 ---
 
@@ -118,10 +139,11 @@ Prefer one clear item with a concrete fix over several vague notes. Multiple `fl
 
 - Not a full rewrite of the article (unless I explicitly ask)
 - Not grammar, spelling, or typo fixes (use `revise-draft-inline`)
+- Not a task list, checklist, or progress tracker
 - Not moral judgment on my beliefs
 - Not SEO or marketing optimization (unless I ask)
 - Not fact-checking external claims unless I ask. Flag "verify if factual" instead
-- Not strengths sections, revision checklists, tips lists, or numeric scores
+- Not numeric scores or severity labels
 
 ---
 
@@ -129,12 +151,12 @@ Prefer one clear item with a concrete fix over several vague notes. Multiple `fl
 
 1. Run `npm run draft-review` and open `http://localhost:8000/tools/draft-review/`.
 2. Read the **summary** for orientation.
-3. Work through open items; mark each **done** or **discarded** as you go.
-4. Apply substantive changes to the draft in the side editor (Save or `Ctrl+S`).
-5. Re-run **`review-draft-report`** on the same draft for an **incremental update** (AI sets `aiStatus` and `aiNote` on each item; your progress in `localStorage` is preserved).
+3. Read each feedback card; reflect on what resonates.
+4. Apply changes to the draft in the side editor if they make sense (Save or `Ctrl+S`).
+5. Re-run **`review-draft-report`** on the same draft for a **re-review** (feedback text is rewritten in place; `reviewRound` increments).
 6. Run **`revise-draft-inline`** for grammar and style in a separate `-revised` file.
 7. Ignore suggestions that do not fit. Keep lines that feel like **my signature**.
-8. To reset the report entirely, delete `review-reports/{slug}.json` and run the command again. Use **Clear my progress** in the UI to reset local tracking.
+8. To reset the report entirely, delete `review-reports/{slug}.json` and run the command again.
 
 ---
 
@@ -149,7 +171,7 @@ Prefer one clear item with a concrete fix over several vague notes. Multiple `fl
 | **Provocation level** | Medium: challenge ideas, respect people |
 | **Scores** | Never use numeric ratings |
 | **Grammar and typos** | Never in the report, only in `revise-draft-inline` |
-| **Focus** | Substantive improvements only |
+| **Focus** | Substantive reflection only |
 
 Optional per session: constraints ("don't touch the opening"), provocation level if this piece is an exception.
 
@@ -168,17 +190,12 @@ Do not rewrite the whole piece in the response. Confirm path only.
 
 ---
 
-## 10. Incremental re-review
+## 10. Re-review
 
 When a report already exists (`reviewRound >= 1`), `review-draft-report` runs in **update mode** by default. Treat the draft as potentially revised since the last round.
 
-- Re-read the **current** draft file before judging any item
-- Re-evaluate **every** existing item:
-  - `addressed` when fixed or passage removed (set `aiNote`)
-  - `open` when it still stands (refresh quote/issue/example; set `aiNote` on why)
-- Edit item text in place when revisions shifted quotes but the concern still applies
-- Add new items only for genuinely new issues (stable ids; never renumber old ones)
-- Replace `summary` in place
-- Bump `reviewRound`; preserve UI progress in `localStorage`
+- Re-read the **current** draft file before writing feedback
+- Rewrite `summary` and every feedback's `stage` and `body` in place
+- Bump `reviewRound`; set `lastReviewedAt` to now
 
 To start over, delete `review-reports/{slug}.json` and run the command again on the draft.
