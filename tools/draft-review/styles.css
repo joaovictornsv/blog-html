@@ -96,16 +96,51 @@ body.has-editor-layout .header-inner {
   padding: 1.5rem 1.25rem 3rem;
 }
 
+body.has-editor-layout:not(.is-focus-view) {
+  height: 100dvh;
+  overflow: hidden;
+}
+
 body.has-editor-layout .app {
   max-width: var(--layout-max);
   margin: 0 auto;
   width: 100%;
-  padding: 1rem 1.25rem 1.5rem;
+  padding: 1rem 1.25rem 1rem;
+}
+
+body.has-editor-layout:not(.is-focus-view) .app {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
 body.has-editor-layout .detail-layout {
   width: 100%;
   max-width: 100%;
+}
+
+body.has-editor-layout:not(.is-focus-view) .detail-layout {
+  flex: 1;
+  min-height: 0;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-items: stretch;
+}
+
+body.has-editor-layout:not(.is-focus-view) .review-panel {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+body.has-editor-layout:not(.is-focus-view) .editor-panel {
+  position: relative;
+  top: auto;
+  align-self: stretch;
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
 }
 
 body.has-editor-layout.is-focus-view {
@@ -126,7 +161,7 @@ body.has-editor-layout.is-focus-view .app {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(380px, 55%);
   gap: 1.25rem;
-  align-items: stretch;
+  align-items: start;
 }
 
 .detail-layout--focus {
@@ -212,6 +247,14 @@ body.has-editor-layout.is-focus-view .app {
   overflow: hidden;
 }
 
+.detail-layout--focus .editor-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 .detail-layout--focus.detail-layout--focus-meta-collapsed .editor-panel {
   min-height: min(55vh, 100%);
 }
@@ -261,11 +304,10 @@ body.has-editor-layout.is-focus-view .app {
 }
 
 .editor-panel {
-  position: sticky;
-  top: 0.75rem;
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 1.5rem);
+  width: 100%;
+  min-height: 0;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--bg-elevated);
@@ -278,9 +320,18 @@ body.has-editor-layout.is-focus-view .app {
   gap: 0.5rem;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
   padding: 0.65rem 0.75rem;
   border-bottom: 1px solid var(--border);
   background: #f7f4ee;
+}
+
+.editor-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .detail-layout--focus .editor-toolbar {
@@ -339,10 +390,12 @@ body.has-editor-layout.is-focus-view .app {
   flex: 1;
   width: 100%;
   min-height: 0;
+  height: 100%;
   margin: 0;
   padding: 1rem;
   border: none;
   resize: none;
+  overflow-y: auto;
   background: #fff;
   color: var(--ink);
   font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, monospace;
@@ -1114,10 +1167,30 @@ body.has-editor-layout.is-focus-view .app {
     grid-template-columns: 1fr;
   }
 
-  .detail-layout:not(.detail-layout--focus) .editor-panel {
-    position: static;
-    height: 60vh;
-    min-height: 320px;
+  body.has-editor-layout:not(.is-focus-view) {
+    height: auto;
+    overflow: auto;
+  }
+
+  body.has-editor-layout:not(.is-focus-view) .app {
+    height: auto;
+    overflow: visible;
+    display: block;
+  }
+
+  body.has-editor-layout:not(.is-focus-view) .detail-layout {
+    grid-template-rows: auto minmax(0, 1fr) minmax(280px, 45vh);
+    flex: none;
+  }
+
+  body.has-editor-layout:not(.is-focus-view) .review-panel {
+    max-height: 50vh;
+  }
+
+  body.has-editor-layout:not(.is-focus-view) .editor-panel {
+    height: auto;
+    max-height: 45vh;
+    min-height: 280px;
   }
 
   .detail-layout--focus .editor-panel {

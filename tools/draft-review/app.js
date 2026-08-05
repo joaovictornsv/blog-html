@@ -509,7 +509,9 @@ async function renderDetail(id) {
             <button type="button" class="btn btn-primary" id="save-draft">Save</button>
           </div>
         </div>
-        <textarea id="draft-editor" class="draft-editor" spellcheck="true" aria-label="Draft text"></textarea>
+        <div class="editor-body">
+          <textarea id="draft-editor" class="draft-editor" spellcheck="true" aria-label="Draft text"></textarea>
+        </div>
       </aside>
     </div>
   `;
