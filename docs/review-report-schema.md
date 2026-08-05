@@ -71,8 +71,9 @@ Every report includes exactly **six** feedback cards, in this order:
 {
   "id": "clarity",
   "label": "Clarity & phrasing",
-  "stage": "Mostly clear; a few referents in ¶3 may lose readers.",
-  "body": "First paragraph...\n\nSecond paragraph..."
+  "stage": "Good enough: Mostly clear; one early bridge could help.",
+  "good": "The draft reads accessibly. Abstract ideas like \"mental translations\" and \"noise\" get grounded quickly in calendars, boards, spreadsheets, and the money examples.",
+  "needsAttention": "In the opening, the jump from the leaderboard joke to \"our routines\" is a small step the reader takes alone. One line naming these as everyday dashboards and lists (not sports) would close that gap."
 }
 ```
 
@@ -80,8 +81,9 @@ Every report includes exactly **six** feedback cards, in this order:
 |-------|----------|-------|
 | `id` | yes | One of the six fixed ids above |
 | `label` | yes | Human-readable section title (use labels from table) |
-| `stage` | yes | One short free-text phrase: qualitative snapshot of where this aspect stands now, including positives even when improvements exist |
-| `body` | yes | Multi-paragraph reflective feedback; separate paragraphs with `\n\n` |
+| `stage` | yes | Starts with a short indicator prefix, then one phrase. Use **`Strong:`**, **`Good enough:`**, or **`Needs attention:`** (pick what fits). Rest of line is a qualitative snapshot |
+| `good` | yes | What is already working in this aspect; one or two short paragraphs max |
+| `needsAttention` | yes | Substantive points worth reflecting on only. Use an empty string when nothing major stands out (UI hides the block). No nitpicks or optional polish |
 
 No status fields, no checkable items, no severity, no `aiStatus`.
 
@@ -93,7 +95,7 @@ When `review-reports/{id}.json` does not exist, or the user explicitly requests 
 
 1. Write a report per `docs/text-review-guide.md`
 2. Set `schemaVersion: 3`, `reviewRound: 1`, `lastReviewedAt` and `createdAt` to now
-3. Include all six feedback sections with `stage` and `body`
+3. Include all six feedback sections with `stage`, `good`, and `needsAttention`
 
 ---
 
@@ -103,7 +105,7 @@ When `review-reports/{id}.json` exists (`reviewRound >= 1`) and the user did **n
 
 1. Read existing report and **current** draft
 2. Rewrite `summary` in place
-3. Rewrite every feedback's `stage` and `body` in place (same six ids and labels)
+3. Rewrite every feedback's `stage`, `good`, and `needsAttention` in place (same six ids and labels)
 4. Bump `reviewRound` by 1; set `lastReviewedAt` to now
 5. Keep `createdAt`, `id`, and `schemaVersion` unchanged
 

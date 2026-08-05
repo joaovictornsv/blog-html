@@ -35,9 +35,9 @@ Always re-read the **current** draft file before writing feedback in update mode
 
 - Reflective prose feedback, not a task list
 - Six fixed feedback sections: title, clarity, logic, voice, emotional
-- Each section: `stage` (free-text qualitative line) + `body` (2-4 paragraphs)
-- Title suggestions: clarify/strengthen only; preserve voice and ideas
-- Stage must include positives when deserved, not only problems
+- Each section: `stage` (prefix + phrase), `good`, `needsAttention` (empty string if nothing major)
+- Stage prefix: `Strong:`, `Good enough:`, or `Needs attention:` (pick what fits)
+- Skip nitpicks and optional polish in `needsAttention`
 - Grammar and style → `revise-draft-inline`, not this workflow
 
 ## After writing

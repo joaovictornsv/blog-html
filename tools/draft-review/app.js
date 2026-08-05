@@ -73,17 +73,61 @@ function splitParagraphs(text) {
   return text.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
 }
 
+const STAGE_PREFIXES = [
+  { prefix: 'Needs attention:', className: 'feedback-stage--needs-attention' },
+  { prefix: 'Good enough:', className: 'feedback-stage--good-enough' },
+  { prefix: 'Strong:', className: 'feedback-stage--strong' },
+];
+
+function getStageMeta(stage) {
+  if (!stage) return { className: '' };
+  const match = STAGE_PREFIXES.find(({ prefix }) => stage.startsWith(prefix));
+  return match ? { className: match.className } : { className: '' };
+}
+
 function renderParagraphs(text) {
   const paragraphs = splitParagraphs(text);
-  if (!paragraphs.length) {
+  if (!paragraphs.length) return '';
+  return paragraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
+}
+
+function renderFeedbackContent(feedback) {
+  const goodHtml = renderParagraphs(feedback.good);
+  const attentionHtml = renderParagraphs(feedback.needsAttention);
+  const blocks = [];
+
+  if (goodHtml) {
+    blocks.push(`
+      <div class="feedback-block">
+        <h4 class="feedback-block-title">What's good</h4>
+        ${goodHtml}
+      </div>
+    `);
+  }
+
+  if (attentionHtml) {
+    blocks.push(`
+      <div class="feedback-block">
+        <h4 class="feedback-block-title">What needs attention</h4>
+        ${attentionHtml}
+      </div>
+    `);
+  }
+
+  if (!blocks.length) {
     return '<p class="feedback-empty">No feedback for this section.</p>';
   }
-  return paragraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
+
+  return blocks.join('');
 }
 
 function renderFeedbackSection(reportId, feedback) {
   const expanded = isSectionExpanded(reportId, feedback.id);
-  const stage = feedback.stage ? `<span class="feedback-stage">${escapeHtml(feedback.stage)}</span>` : '';
+  const stageMeta = getStageMeta(feedback.stage);
+  const stageClass = stageMeta.className ? ` ${stageMeta.className}` : '';
+  const stage = feedback.stage
+    ? `<span class="feedback-stage${stageClass}">${escapeHtml(feedback.stage)}</span>`
+    : '';
 
   return `
     <section class="section collapsible-section feedback-section${expanded ? ' is-expanded' : ''}" data-section-id="${escapeHtml(feedback.id)}">
@@ -96,7 +140,7 @@ function renderFeedbackSection(reportId, feedback) {
       </button>
       <div class="section-body">
         <div class="feedback-body">
-          ${renderParagraphs(feedback.body)}
+          ${renderFeedbackContent(feedback)}
         </div>
       </div>
     </section>

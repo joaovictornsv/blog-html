@@ -17,7 +17,7 @@ Then open:
 
 ## Draft review tracker
 
-Reflective draft reviews are written as JSON by the `review-draft-report` command (see `docs/text-review-guide.md` and `docs/review-report-schema.md`). Each report has a short summary plus six feedback cards (title, clarity, logic, voice, emotional), each with a qualitative stage line and multi-paragraph prose.
+Reflective draft reviews are written as JSON by the `review-draft-report` command (see `docs/text-review-guide.md` and `docs/review-report-schema.md`). Each report has a short summary plus six feedback cards (title, clarity, logic, voice, emotional). Each card has a stage line (Strong / Good enough / Needs attention), a **What's good** block, and a **What needs attention** block when something substantive applies.
 
 Reports live in `review-reports/{slug}.json` (gitignored). One draft slug = one report. Feedback is read-only; you read, reflect, and edit the draft if suggestions resonate.
 

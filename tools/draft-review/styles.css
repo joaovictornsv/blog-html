@@ -731,6 +731,34 @@ body.has-editor-layout.is-focus-view .app {
   line-height: 1.4;
 }
 
+.feedback-stage--strong {
+  color: var(--done);
+}
+
+.feedback-stage--good-enough {
+  color: #6a5a2a;
+}
+
+.feedback-stage--needs-attention {
+  color: #7a4a3a;
+}
+
+.feedback-block + .feedback-block {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.feedback-block-title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+}
+
 .feedback-body p {
   margin: 0 0 0.85rem;
   font-size: 0.95rem;

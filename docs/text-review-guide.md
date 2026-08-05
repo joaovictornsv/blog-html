@@ -84,7 +84,7 @@ Two or three sentences: overall impression and where the draft stands. No assump
 
 ### 5.2 Feedback cards (six sections, required)
 
-Each section is one feedback card with a **stage** line and a **body** of prose.
+Each section is one feedback card with a **stage** line plus **`good`** and **`needsAttention`** prose blocks.
 
 **Fixed sections (always include all six):**
 
@@ -98,18 +98,23 @@ Each section is one feedback card with a **stage** line and a **body** of prose.
 
 **Stage line (`stage`):**
 
-- One sentence max
-- Qualitative snapshot of where this aspect stands **right now**
-- Must include positives when deserved ("well structured", "voice is consistent"), not only problems
-- Examples: "Logic holds; one jump in ¶4 may lose readers." / "Strong throughout; closing could echo the opener."
+- Starts with one indicator prefix: **`Strong:`**, **`Good enough:`**, or **`Needs attention:`** (choose what fits this aspect today)
+- Followed by one short phrase summarizing where the section stands
+- Examples: `Strong: Title and hook do their job.` / `Good enough: Logic holds; one transition could tighten.` / `Needs attention: The middle loses the thread briefly.`
 
-**Body (`body`):**
+**What's good (`good`):**
 
-- 2-4 paragraphs when there is substance to discuss; 1-2 when the aspect is already strong
-- Open from what is **working**, then what to **consider** (not "fix" or "address")
-- Embed short quotes and paragraph refs in prose
-- Concrete rewrites welcome when they illustrate a point, framed as "one option" not a checklist item
-- Separate paragraphs with blank lines (`\n\n` in JSON)
+- One or two short paragraphs on what is already working
+- Lead with strengths; be specific (quote or reference paragraphs when helpful)
+
+**What needs attention (`needsAttention`):**
+
+- One or two short paragraphs on substantive points worth reflecting on
+- Skip nitpicks, optional polish, and "you could also" ideas that would not change the reader's experience
+- Use an **empty string** when nothing major stands out (common for `Strong:` sections)
+- Frame as consideration, not tasks to complete
+
+Separate paragraphs within each field with blank lines (`\n\n` in JSON).
 
 **Title & hook section (special rules):**
 
