@@ -710,8 +710,40 @@ body.has-editor-layout.is-focus-view .app {
 }
 
 .summary-section,
-.suggestions-section {
+.feedbacks-list {
   margin-bottom: 1.25rem;
+}
+
+.section-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.feedback-stage {
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink-muted);
+  line-height: 1.4;
+}
+
+.feedback-body p {
+  margin: 0 0 0.85rem;
+  font-size: 0.95rem;
+}
+
+.feedback-body p:last-child {
+  margin-bottom: 0;
+}
+
+.feedback-empty {
+  margin: 0;
+  color: var(--ink-faint);
+  font-size: 0.92rem;
 }
 
 .item-quote {
