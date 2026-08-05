@@ -51,7 +51,7 @@ function isSectionExpanded(reportId, sectionId) {
   if (Object.prototype.hasOwnProperty.call(map, sectionId)) {
     return map[sectionId];
   }
-  return true;
+  return false;
 }
 
 function isValidReport(report) {

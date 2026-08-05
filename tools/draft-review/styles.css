@@ -14,7 +14,7 @@
   --open: #8a6a2a;
   --open-bg: #f5eed8;
   --radius: 6px;
-  --layout-max: 68rem;
+  --layout-max: 96rem;
   --font-body: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --font-ui: "Segoe UI", system-ui, sans-serif;
 }
@@ -124,7 +124,7 @@ body.has-editor-layout.is-focus-view .app {
 
 .detail-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 40%);
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 55%);
   gap: 1.25rem;
   align-items: stretch;
 }
