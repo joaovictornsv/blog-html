@@ -82,11 +82,11 @@ Deliver JSON per `docs/review-report-schema.md`. Be specific: quote short phrase
 
 Two or three sentences: overall impression and where the draft stands. No assumptions list, no action-item list.
 
-### 5.2 Feedback cards (six sections, required)
+### 5.2 Feedback cards (five sections, required)
 
 Each section is one feedback card with a **stage** line plus **`good`** and **`needsAttention`** prose blocks.
 
-**Fixed sections (always include all six):**
+**Fixed sections (always include all five):**
 
 | `id` | Label | What to address |
 |------|-------|-----------------|

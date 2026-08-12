@@ -47,13 +47,13 @@ Structured output for the draft review tracker UI at `tools/draft-review/`.
 | `reviewRound` | yes | Starts at `1`; increment on each re-review |
 | `lastReviewedAt` | yes | ISO 8601 UTC; set on every review |
 | `summary` | yes | 2-3 sentences; orientation only |
-| `feedbacks` | yes | Array of six feedback cards (see below) |
+| `feedbacks` | yes | Array of five feedback cards (see below) |
 
 ---
 
 ## Feedback sections (fixed set)
 
-Every report includes exactly **six** feedback cards, in this order:
+Every report includes exactly **five** feedback cards, in this order:
 
 | `id` | `label` | Covers |
 |------|---------|--------|
@@ -79,7 +79,7 @@ Every report includes exactly **six** feedback cards, in this order:
 
 | Field | Required | Notes |
 |-------|----------|-------|
-| `id` | yes | One of the six fixed ids above |
+| `id` | yes | One of the five fixed ids above |
 | `label` | yes | Human-readable section title (use labels from table) |
 | `stage` | yes | Starts with a short indicator prefix, then one phrase. Use **`Strong:`**, **`Good enough:`**, or **`Needs attention:`** (pick what fits). Rest of line is a qualitative snapshot |
 | `good` | yes | What is already working in this aspect; one or two short paragraphs max |
@@ -95,7 +95,7 @@ When `review-reports/{id}.json` does not exist, or the user explicitly requests 
 
 1. Write a report per `docs/text-review-guide.md`
 2. Set `schemaVersion: 3`, `reviewRound: 1`, `lastReviewedAt` and `createdAt` to now
-3. Include all six feedback sections with `stage`, `good`, and `needsAttention`
+3. Include all five feedback sections with `stage`, `good`, and `needsAttention`
 
 ---
 
@@ -105,7 +105,7 @@ When `review-reports/{id}.json` exists (`reviewRound >= 1`) and the user did **n
 
 1. Read existing report and **current** draft
 2. Rewrite `summary` in place
-3. Rewrite every feedback's `stage`, `good`, and `needsAttention` in place (same six ids and labels)
+3. Rewrite every feedback's `stage`, `good`, and `needsAttention` in place (same five ids and labels)
 4. Bump `reviewRound` by 1; set `lastReviewedAt` to now
 5. Keep `createdAt`, `id`, and `schemaVersion` unchanged
 
@@ -130,7 +130,7 @@ When writing `review-reports/{id}.json`:
 
 1. Derive `id` from draft path
 2. Set `schemaVersion: 3`
-3. Fill `summary` and all six `feedbacks` per guide
+3. Fill `summary` and all five `feedbacks` per guide
 4. Write `review-reports/{id}.json`; update `index.json`
 5. Reply with path and `reviewRound: 1` only
 
