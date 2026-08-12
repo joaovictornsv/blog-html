@@ -34,7 +34,7 @@ Always re-read the **current** draft file before writing feedback in update mode
 ## Key rules
 
 - Reflective prose feedback, not a task list
-- Six fixed feedback sections: title, clarity, logic, voice, emotional
+- Five fixed feedback sections: title, clarity, logic, voice, emotional
 - Each section: `stage` (prefix + phrase), `good`, `needsAttention` (empty string if nothing major)
 - Stage prefix: `Strong:`, `Good enough:`, or `Needs attention:` (pick what fits)
 - Skip nitpicks and optional polish in `needsAttention`

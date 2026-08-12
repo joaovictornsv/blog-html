@@ -8,7 +8,7 @@ How this workflow evolved from real use. Writing is a hobby; the review should h
 
 v2 was shorter and clearer, but it still felt like a to-do list. Marking items done, counting what was open, going through suggestions one by one: that framed writing as fixing problems, not reflecting on a draft.
 
-v3 dropped all of that. Feedback is read-only prose in six themes (title, clarity, logic, voice, emotional). Each section says what's working, what might deserve a second look, and a short stage line like "Strong" or "Good enough." I read it, think about it, and change the text only if I want to. A new review round updates the feedback; there is no progress bar.
+v3 dropped all of that. Feedback is read-only prose in five themes (title, clarity, logic, voice, emotional). Each section says what's working, what might deserve a second look, and a short stage line like "Strong" or "Good enough." I read it, think about it, and change the text only if I want to. A new review round updates the feedback; there is no progress bar.
 
 **Feedback that drove this:**
 

@@ -20,7 +20,7 @@ Review the text I provide using the guide at `docs/text-review-guide.md`.
 ### Create mode
 
 - Set `schemaVersion: 3`
-- Full report per guide §5: `summary` + six `feedbacks` (title, clarity, logic, voice, emotional)
+- Full report per guide §5: `summary` + five `feedbacks` (title, clarity, logic, voice, emotional)
 - Each feedback: `stage` (indicator prefix + phrase), `good`, and `needsAttention` (empty when nothing major)
 - `reviewRound: 1`
 - Set `createdAt` and `lastReviewedAt` to now
@@ -31,7 +31,7 @@ When the report already exists (`reviewRound >= 1`), rewrite all feedback from t
 
 1. Read existing `review-reports/{slug}.json` and the **current** draft (full file)
 2. Rewrite `summary` in place
-3. Rewrite every feedback's `stage`, `good`, and `needsAttention` in place (same six ids and labels)
+3. Rewrite every feedback's `stage`, `good`, and `needsAttention` in place (same five ids and labels)
 4. Bump `reviewRound`; set `lastReviewedAt` to now
 5. Keep `createdAt`, `id`, and `schemaVersion` unchanged
 
@@ -40,7 +40,7 @@ When the report already exists (`reviewRound >= 1`), rewrite all feedback from t
 **Content (see guide §5):**
 
 - Summary: 2-3 sentences only
-- Six feedback cards with `good` / `needsAttention` blocks; skip nitpicks
+- Five feedback cards with `good` / `needsAttention` blocks; skip nitpicks
 - Title section: clarity/strength suggestions only; preserve voice and ideas
 - Stage line starts with `Strong:`, `Good enough:`, or `Needs attention:`
 - **No numeric scores**, no checkable items, no status fields
