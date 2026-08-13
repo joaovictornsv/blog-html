@@ -1,6 +1,9 @@
 :root {
   --color-bg: #f8f4ec;
   --color-text: #000;
+  --color-surface: #ebe3d4;
+  --color-surface-border: #d4c8b4;
+  --color-surface-accent: #a89578;
   --spacing: 1rem;
   --font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --font-size: 20px;
@@ -238,8 +241,8 @@ h1.title .github-avatar:hover img {
 }
 
 pre {
-  background-color: #f5f5f5;
-  border: 1px solid #e0e0e0;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
   border-radius: 4px;
   padding: var(--spacing);
   overflow-x: auto;
@@ -252,9 +255,9 @@ pre {
 }
 
 #post-body .callout {
-  background-color: #ebe3d4;
-  border: 1px solid #d4c8b4;
-  border-left: 4px solid #a89578;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
+  border-left: 4px solid var(--color-surface-accent);
   border-radius: 4px;
   padding: var(--spacing);
   margin-bottom: var(--spacing);
@@ -269,8 +272,8 @@ code {
 }
 
 .code-text {
-  background-color: #f5f5f5;
-  border: 1px solid #e0e0e0;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-surface-border);
   border-radius: 3px;
   padding: 0.1em 0.35em;
 }
