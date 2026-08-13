@@ -251,6 +251,19 @@ pre {
   white-space: pre-wrap;
 }
 
+#post-body .callout {
+  background-color: #ebe3d4;
+  border: 1px solid #d4c8b4;
+  border-left: 4px solid #a89578;
+  border-radius: 4px;
+  padding: var(--spacing);
+  margin-bottom: var(--spacing);
+}
+
+#post-body .callout p:last-child {
+  margin-bottom: 0;
+}
+
 code {
   font-family: monospace;
 }
