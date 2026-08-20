@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <title>Financial Projects Checkpoint: ibkr-ir, Portfolio Sharing, and OFX Conversion</title>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://blog.joaovictornsv.dev/devlog/financial-projects-checkpoint.html">
+  <meta name="description" content="A checkpoint of open-source financial side projects: ibkr-ir for Brazilian IR, a portfolio HTML generator, and a BTG Excel-to-OFX converter. All run offline.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://blog.joaovictornsv.dev/og/devlog/financial-projects-checkpoint.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JV's devlog">
+  <meta name="twitter:description" content="A checkpoint of open-source financial side projects: ibkr-ir for Brazilian IR, a portfolio HTML generator, and a BTG Excel-to-OFX converter. All run offline.">
+  <meta name="twitter:title" content="Financial Projects Checkpoint: ibkr-ir, Portfolio Sharing, and OFX Conversion">
+  <meta property="og:url" content="https://blog.joaovictornsv.dev/devlog/financial-projects-checkpoint.html">
+  <meta property="og:description" content="A checkpoint of open-source financial side projects: ibkr-ir for Brazilian IR, a portfolio HTML generator, and a BTG Excel-to-OFX converter. All run offline.">
+  <meta property="og:title" content="Financial Projects Checkpoint: ibkr-ir, Portfolio Sharing, and OFX Conversion">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <script type="application/ld+json" id="json-ld">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Financial Projects Checkpoint: ibkr-ir, Portfolio Sharing, and OFX Conversion",
+  "url": "https://blog.joaovictornsv.dev/devlog/financial-projects-checkpoint.html",
+  "description": "A checkpoint of open-source financial side projects: ibkr-ir for Brazilian IR, a portfolio HTML generator, and a BTG Excel-to-OFX converter. All run offline.",
+  "author": {
+    "@type": "Person",
+    "name": "João Victor",
+    "url": "https://joaovictornsv.dev"
+  },
+  "mainEntityOfPage": "https://blog.joaovictornsv.dev/devlog/financial-projects-checkpoint.html",
+  "publisher": {
+    "@type": "Person",
+    "name": "João Victor"
+  },
+  "datePublished": "2026-08-20"
+}
+</script>
+
+</head>
+<body>
+  <main>
+    <a href="index.html" class="back">&lt; back</a>
+
+    <article id="post-content">
+      <h1 id="post-title">Financial Projects Checkpoint: ibkr-ir, Portfolio Sharing, and OFX Conversion</h1>
+      <div id="post-body">
+<time class="post-date" datetime="2026-08-20">August 20, 2026</time>
+
+<p>Another checkpoint about personal projects. This one is about financial topics. Let's go.</p>
+
+<h2>ibkr-ir</h2>
+
+<p>I already talked about this one in <a href="ibkr-ir-brazilian-global-investors.html">Building ibkr-ir for Brazilian Global Investors</a>. In short, <a href="https://github.com/joaovictornsv/ibkr-ir" target="_blank" rel="noopener noreferrer">ibkr-ir</a> is a tool to easily fill the large and detailed annual Brazilian tax form (IR). You export a CSV from IBKR, run the tool, and get the numbers you need.</p>
+
+<h2>ibkr-report-generator</h2>
+
+<p><a href="https://github.com/joaovictornsv/ibkr-report-generator" target="_blank" rel="noopener noreferrer">ibkr-report-generator</a> is a simple browser extension that generates a static HTML file with your portfolio values on IBKR. I created it to share my portfolio without giving access to my account or needing to screenshot every part of the platform.</p>
+
+<h2>btg-ofx-converter</h2>
+
+<p>I need <span class="code-text">OFX</span> files for some demands, but BTG (a Brazilian bank and investment firm) does not offer this format to export bank or card statements, only PDF and Excel. So I created my own converter: <a href="https://github.com/joaovictornsv/btg-ofx-converter" target="_blank" rel="noopener noreferrer">btg-ofx-converter</a>, from Excel to OFX. Simple as that.</p>
+
+<h2>Privacy</h2>
+
+<p>All projects are open source and run offline. None of them touch internet servers to fetch or send any data. If you clone, fork, or download the code, you have total access to audit it. Financial data is sensitive, and you should have control of it.</p>
+
+<h2>Contributing</h2>
+
+<p>Contributions are welcome. Feel free to open an issue or PR for any of them. If you want to talk more, just get in touch: <a href="mailto:hi@joaovictornsv.dev">hi@joaovictornsv.dev</a>.</p>
+
+<p>See you next time!</p>
+</div>
+    </article>
+  </main>
+</body>
+</html>
