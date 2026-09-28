@@ -214,6 +214,14 @@ h1.title .github-avatar:hover img {
   font-weight: normal;
 }
 
+#post-body p,
+#post-body li,
+main > p.about,
+main > .list li,
+.link-description {
+  text-align: justify;
+}
+
 #post-body p {
   margin-bottom: var(--spacing);
 }
