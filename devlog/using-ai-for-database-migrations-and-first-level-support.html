@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <title>Using AI for Database Migrations and First-Level Support</title>
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://blog.joaovictornsv.dev/devlog/using-ai-for-database-migrations-and-first-level-support.html">
+  <meta name="description" content="How I use AI for customer database migrations and first-level support, while I still review the output and click Send myself.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://blog.joaovictornsv.dev/og/devlog/using-ai-for-database-migrations-and-first-level-support.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="JV's devlog">
+  <meta name="twitter:description" content="How I use AI for customer database migrations and first-level support, while I still review the output and click Send myself.">
+  <meta name="twitter:title" content="Using AI for Database Migrations and First-Level Support">
+  <meta property="og:url" content="https://blog.joaovictornsv.dev/devlog/using-ai-for-database-migrations-and-first-level-support.html">
+  <meta property="og:description" content="How I use AI for customer database migrations and first-level support, while I still review the output and click Send myself.">
+  <meta property="og:title" content="Using AI for Database Migrations and First-Level Support">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <script type="application/ld+json" id="json-ld">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Using AI for Database Migrations and First-Level Support",
+  "url": "https://blog.joaovictornsv.dev/devlog/using-ai-for-database-migrations-and-first-level-support.html",
+  "description": "How I use AI for customer database migrations and first-level support, while I still review the output and click Send myself.",
+  "author": {
+    "@type": "Person",
+    "name": "João Victor",
+    "url": "https://joaovictornsv.dev"
+  },
+  "mainEntityOfPage": "https://blog.joaovictornsv.dev/devlog/using-ai-for-database-migrations-and-first-level-support.html",
+  "publisher": {
+    "@type": "Person",
+    "name": "João Victor"
+  },
+  "datePublished": "2026-10-01"
+}
+</script>
+
+</head>
+<body>
+  <main>
+    <a href="index.html" class="back">&lt; back</a>
+
+    <article id="post-content">
+      <h1 id="post-title">Using AI for Database Migrations and First-Level Support</h1>
+      <div id="post-body">
+<time class="post-date" datetime="2026-10-01">October 1, 2026</time>
+
+<p>Last month was frenetic in the AI world: new top-tier models, JEV, amazing use cases, and so on. It's nice to follow the news, but the day-to-day work is still almost the same for me. AI speeds up the output, and I review it rigorously and automate every step I can.</p>
+
+<p>Here are a few things I've been using it for recently.</p>
+
+<h2>Migrating databases</h2>
+
+<p>I was assigned to migrate some customer databases, more than 30 of them. A few steps involve small manual actions, and those are mine. The rest, probably 90% of the steps, is AI's job: prepare the applications so they stay stable during the migration, monitor database and application logs, watch Kubernetes resources, and fix things whenever an unexpected issue appears. Even customer communication gets help from AI. It drafts the emails for clients when a migration is about to start and when it finishes. I just need to click Send.</p>
+
+<p>For every migration that hit issues, AI wrote an incident document with the timeline, including commands, root cause, and the solution. Those docs are shared internally with the team. Some incidents were similar, so AI already knows what to do without a deep investigation.</p>
+
+<h2>Support</h2>
+
+<p>Right now I'm on first-level support. I'm the first person who reads new tickets and either replies or delegates. I created a few automations to help, and the point is to support the customer without the reply looking like it came from a bot.</p>
+
+<p>The first is a command that runs an initial investigation from the customer ticket. It checks the customer's cloud infrastructure, network and resource metrics, and logs, then crosses all of that data. It also checks the platform documentation for more context.</p>
+
+<p>For each ticket, the output says whether I can reply quickly, or whether I should send an initial reply and promise a follow-up soon. It also tells me whether I should delegate to the DevOps team.</p>
+
+<p>The second is a command I use to review ticket replies. Sometimes a customer sends a long email asking several things, and I need a clear, complete answer. This command checks whether:</p>
+
+<ul>
+  <li>the text is clear enough</li>
+  <li>every customer question was answered</li>
+  <li>the follow-up promise is a defined deadline, not a vague sentence such as "I'll let you know"</li>
+  <li>the reply includes what the customer needs, like images or links to docs</li>
+</ul>
+
+<p>Every review teaches me something different.</p>
+
+<p>This support setup is still evolving. I have plans to improve it even more.</p>
+
+<h2>Conclusion</h2>
+
+<p>I'm not handing 100% of this to AI and accepting the output as-is. Everything above was built after many rounds of tests and a rigorous quality review, and it is still being validated all the time. Whenever I find a chance to improve a detail, I do it.</p>
+
+<p>And you? What have you been building?</p>
+
+<p>See you next time!</p>
+      </div>
+    </article>
+  </main>
+</body>
+</html>
